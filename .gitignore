@@ -1,0 +1,16 @@
+*.egg-info/
+*__pycache__/
+.vscode/
+*build/
+*node_modules/
+
+.DS_Store
+.env
+.keys
+
+reseval/assets/client/public/evaluation-files/*
+!reseval/assets/client/public/evaluation-files/.gitkeep
+reseval/assets/client/src/json/*
+!reseval/assets/client/src/json/.gitkeep
+evaluations/
+!evaluations/.gitkeep

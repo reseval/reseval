@@ -1,0 +1,86 @@
+import csv
+import json
+
+import dotenv
+import yaml
+
+import reseval
+
+
+###############################################################################
+# File loading
+###############################################################################
+
+
+def config_by_name(name):
+    """Load configuration of an existing evaluation"""
+    return config_from_file(reseval.EVALUATION_DIRECTORY / name / 'config.yaml')
+
+
+def config_from_file(file):
+    """Load configuration from file"""
+    with open(file) as file:
+        return yaml.full_load(file)
+
+
+def credentials_by_name(name, group):
+    """Load credentials by evaluation name"""
+    file = (
+        reseval.EVALUATION_DIRECTORY /
+        name /
+        'credentials' /
+        f'{group}.json')
+    return credentials_from_file(file)
+
+
+def credentials_from_file(file):
+    """Load credentials corresponding to an evaluation from file"""
+    with open(file) as file:
+        return json.load(file)
+
+
+def environment_variables_by_name(name):
+    """Load environment variables corresponding to an evaluation"""
+    file = reseval.EVALUATION_DIRECTORY / name / 'credentials' / '.env'
+    dotenv.load_dotenv(file)
+
+
+###############################################################################
+# Database table loading
+###############################################################################
+
+
+def conditions(name):
+    """Load the table of conditions used in a subjective evaluation"""
+    return load_table(name, 'conditions')
+
+
+def evaluators(name):
+    """Load the table of evaluators from a subjective evaluation"""
+    return load_table(name, 'evaluators')
+
+
+def participants(name):
+    """Load the table of participants from a subjective evaluation"""
+    return load_table(name, 'participants')
+
+
+def responses(config):
+    """Load the table of responses from a subjective evaluation"""
+    return load_table(config, 'responses')
+
+
+###############################################################################
+# Utilities
+###############################################################################
+
+
+def load_table(name, table):
+    """Load a database table that has been downloaded to local storage"""
+    file = (
+        reseval.EVALUATION_DIRECTORY /
+        name /
+        'tables' /
+        f'{table}.csv')
+    with open(file) as file:
+        return [row for row in csv.DictReader(file)]
