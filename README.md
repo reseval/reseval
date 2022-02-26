@@ -63,7 +63,6 @@ M. Morrison, B. Tang, G. Tan, and B. Pardo, "Reproducible Subjective Evaluation,
 - [Advanced usage](#advanced-usage)
     * [CLI](#cli)
     * [API](#api)
-- [Attribution](#attribution)
 
 
 ## Installation
@@ -384,12 +383,3 @@ reseval.run(config, directory)
 # Production
 reseval.run(config, directory, production=True)
 ```
-
-
-## Attribution
-
-ReSEval was developed by
-[Max Morrison](https://www.github.com/maxrmorrison),
-[Brian Tang](https://www.github.com/btangsp),
-[Gefei Tan](https://github.com/Gefei-Tan),
-and [Bryan Pardo](https://github.com/bryan-pardo).
