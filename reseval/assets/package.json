@@ -1,7 +1,7 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "",
+  "description": "Reproducible Subjective Evaluation (ReSEval) server",
   "engines": {
     "node": "17.4.0",
     "npm": "8.3.1"
@@ -13,8 +13,13 @@
     "start": "ts-node server.ts",
     "build": "cd client/ && npm run build"
   },
-  "author": "",
-  "license": "ISC",
+  "contributors": [
+    {"name": "Max Morrison"},
+    {"name": "Brian Tang"},
+    {"name": "Gefei Tan"},
+    {"name": "Bryan Pardo"}
+  ],
+  "license": "MIT",
   "devDependencies": {
     "nodemon": "^2.0.15"
   },
