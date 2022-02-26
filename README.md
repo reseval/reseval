@@ -67,6 +67,7 @@ M. Morrison, B. Tang, G. Tan, and B. Pardo, "Reproducible Subjective Evaluation,
 
 ## Installation
 
+**TODO** - deploy to pypi
 `pip install -e .`
 
 
@@ -253,7 +254,7 @@ python -m reseval.credentials \
     --heroku_api_key <heroku_api_key>
 ```
 
- The `.keys` file is used to set local environment variables and is not pushed to GitHub or uploaded to any remote storage.
+ API keys are saved in `.keys`. The `.keys` file is used to set local environment variables and is not pushed to GitHub or uploaded to any remote storage.
 
  Arguments for the following command-line interfaces are as follows.
 
