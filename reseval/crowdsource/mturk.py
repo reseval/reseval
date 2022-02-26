@@ -6,7 +6,6 @@ import xmltodict as xmltodict
 
 import reseval
 
-
 ###############################################################################
 # Constants
 ###############################################################################
@@ -66,7 +65,7 @@ def create(config, url, production=False):
     print(f'Created HIT {hit_id}. You can preview your HIT at {preview_url}.')
 
     # Return crowdsource credentials
-    return { 'HIT_ID': hit_id, 'PRODUCTION': production }
+    return {'HIT_ID': hit_id, 'PRODUCTION': production}
 
 
 def destroy(credentials):
@@ -114,8 +113,8 @@ def pay(config, credentials):
     for participant in participants:
         pid = participant['ID']
         participant_responses[pid] = (
-            participant |
-            {'responses': filter(responses, lambda x: x['ID'] == pid)})
+                participant |
+                {'responses': filter(responses, lambda x: x['ID'] == pid)})
 
     # Iterate over participants
     for result in mturk_results:
@@ -124,7 +123,7 @@ def pay(config, credentials):
         match = None
         for pid in participant_responses:
             if (participant_responses[pid]['completion_code'] ==
-                result['completion_code']):
+                    result['completion_code']):
                 match = pid
 
         # Only process payment if the participant has not already been paid
@@ -144,7 +143,7 @@ def pay(config, credentials):
             # If they passed prescreening and completed evaluation, give
             # the participant a bonus
             if (len(participant_responses[pid]['responses']) ==
-                config['samples_per_participant']):
+                    config['samples_per_participant']):
                 bonus(config, credentials, result['assignment_id'])
 
 
@@ -229,6 +228,8 @@ def bonus(config, credentials, assignment_id, worker_id):
         WorkerId=worker_id,
         BonusAmount=config['crowdsource']['payment']['completion'],
         AssignmentId=assignment_id,
+        # use assignment_id as Unique token, because we would send_bonus only once per assignment
+        UniqueRequestToken=assignment_id,
         Reason='Passed prescreening and completed evaluation. Thank you!')
 
     # TODO - check response
@@ -250,10 +251,10 @@ def qualifications(config):
     # Country of origin
     cfg = config['crowdsource']['filter']
     if 'countries' in cfg:
-        locales = [{'Country': country} for country in cfg['countries'] ]
+        locales = [{'Country': country} for country in cfg['countries']]
         qualifications.append({
             'QualificationTypeId': '00000000000000000071',
-            'Comparator':'In',
+            'Comparator': 'In',
             'LocaleValues': locales,
             'RequiredToPreview': True})
 
@@ -261,7 +262,7 @@ def qualifications(config):
     if 'approved_tasks' in cfg:
         qualifications.append({
             'QualificationTypeId': '00000000000000000040',
-            'Comparator':'GreaterThan',
+            'Comparator': 'GreaterThan',
             'IntegerValues': [cfg['approved_tasks']],
             'RequiredToPreview': True})
 
@@ -293,7 +294,6 @@ def results(credentials):
     """Get a list of all assignment IDs and completion codes"""
     result = []
     for assignment in assignments(credentials):
-
         # Parse XML
         xml_doc = xmltodict.parse(assignment['Answer'])
 
