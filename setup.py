@@ -8,6 +8,7 @@ with open('README.md', encoding='utf8') as file:
 # Package data
 module_directory = Path(__file__).parent / 'reseval'
 assets_directory = module_directory / 'assets'
+# TODO - don't ship node_modules, build, or client json directories
 files = [
     str(file.relative_to(module_directory))
     for file in assets_directory.rglob('*')]

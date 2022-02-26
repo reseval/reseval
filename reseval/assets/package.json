@@ -8,10 +8,10 @@
   },
   "main": "server.ts",
   "scripts": {
-    "dev": "npm install && npm run build && npm run server",
+    "dev": "npm run build && npm run server",
     "server": "nodemon --watch server server.ts",
     "start": "ts-node server.ts",
-    "build": "cd client/ && npm install && npm run build"
+    "build": "cd client/ && npm run build"
   },
   "author": "",
   "license": "ISC",
