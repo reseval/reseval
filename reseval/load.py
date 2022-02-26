@@ -1,5 +1,6 @@
 import csv
 import json
+import os
 
 import dotenv
 import yaml
@@ -10,6 +11,14 @@ import reseval
 ###############################################################################
 # File loading
 ###############################################################################
+
+
+def api_keys():
+    """Load cached API keys as environment variables"""
+    with open(reseval.KEYS_FILE) as file:
+        for line in file.readlines():
+            key, value = line.rstrip().split('=', 1)
+            os.environ[key] = value
 
 
 def config_by_name(name):

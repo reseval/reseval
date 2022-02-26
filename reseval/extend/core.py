@@ -12,6 +12,9 @@ def extend(
     monitor=False,
     interval=120):
     """Extend a subjective evaluation"""
+    # Extend crowdsourcing task
+    reseval.crowdsource.extend(name, participants)
+
     # Get saved configuration
     config_file = reseval.EVALUATION_DIRECTORY / name / 'config.yaml'
     with open(config_file) as file:

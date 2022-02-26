@@ -10,15 +10,24 @@ import reseval
 
 def active(name):
     """Returns True if the evaluation is still running"""
-    # Skip if performing local development
-    if reseval.is_local(name):
-        return
-
     # Get config
     config = reseval.load.config_by_name(name)
 
+    # Local dev is active until we have enough participants and responses
+    if reseval.is_local(name):
+        try:
+            responses = reseval.load.responses(name)
+            participants = len(set(
+                response['Participant'] for response in responses))
+            samples = \
+                config['participants'] * config['samples_per_participant']
+            return (
+                responses < samples or participants < config['participants'])
+        except FileNotFoundError:
+            return True
+
     # Get credentials
-    credentials = reseval.load.credentials_by_name(name)
+    credentials = reseval.load.credentials_by_name(name, 'crowdsource')
 
     # Check if the evaluation is active
     module(config).active(config, credentials)
@@ -54,10 +63,26 @@ def destroy(name):
     config = reseval.load.config_by_name(name)
 
     # Get credentials
-    credentials = reseval.load.credentials_by_name(name)
+    credentials = reseval.load.credentials_by_name(name, 'crowdsource')
 
     # Destroy crowdsource task
     module(config).destroy(credentials)
+
+
+def extend(name, participants):
+    """Extend a subjectve evaluation"""
+    # Skip if performing local development
+    if reseval.is_local(name):
+        return
+
+    # Get config
+    config = reseval.load.config_by_name(name)
+
+    # Get credentials
+    credentials = reseval.load.credentials_by_name(name, 'crowdsource')
+
+    # Extend task
+    module(config).extend(credentials, participants)
 
 
 def paid(name):
@@ -70,7 +95,7 @@ def paid(name):
     config = reseval.load.config_by_name(name)
 
     # Get credentials
-    credentials = reseval.load.credentials_by_name(name)
+    credentials = reseval.load.credentials_by_name(name, 'crowdsource')
 
     # Check if participants have been paid
     module(config).paid(credentials)
@@ -86,7 +111,7 @@ def pay(name):
     config = reseval.load.config_by_name(name)
 
     # Get credentials
-    credentials = reseval.load.credentials_by_name(name)
+    credentials = reseval.load.credentials_by_name(name, 'crowdsource')
 
     # Pay participants
     module(config).pay(credentials)
@@ -102,7 +127,7 @@ def progress(name):
     config = reseval.load.config_by_name(name)
 
     # Get credentials
-    credentials = reseval.load.credentials_by_name(name)
+    credentials = reseval.load.credentials_by_name(name, 'crowdsource')
 
     # Check current progress
     return module(config).progress(credentials)
@@ -114,7 +139,7 @@ def resume(name):
     config = reseval.load.config_by_name(name)
 
     # Get credentials
-    credentials = reseval.load.credentials_by_name(name)
+    credentials = reseval.load.credentials_by_name(name, 'crowdsource')
 
     # Stop evaluation
     module(config).resume(config, credentials)
@@ -130,7 +155,7 @@ def stop(name):
     config = reseval.load.config_by_name(name)
 
     # Get credentials
-    credentials = reseval.load.credentials_by_name(name)
+    credentials = reseval.load.credentials_by_name(name, 'crowdsource')
 
     # Stop evaluation
     module(config).stop(credentials)

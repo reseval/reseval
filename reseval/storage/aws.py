@@ -1,5 +1,7 @@
 import boto3
 
+import reseval
+
 
 ###############################################################################
 # Constants
@@ -29,6 +31,9 @@ def create(config, directory):
     """Create an AWS S3 bucket for file storage"""
     name = config['name']
 
+    # Load API keys into environment variables
+    reseval.load.api_keys()
+
     # Connect to S3
     client = boto3.client('s3')
 
@@ -44,6 +49,9 @@ def create(config, directory):
 
 def destroy(name):
     """Delete an AWS S3 bucket"""
+    # Load API keys into environment variables
+    reseval.load.api_keys()
+
     # Connect to S3
     client = boto3.resource('s3')
 
@@ -59,6 +67,9 @@ def destroy(name):
 
 def upload(name, file_or_directory):
     """Upload directory to AWS S3 bucket"""
+    # Load API keys into environment variables
+    reseval.load.api_keys()
+
     # Connect to S3
     client = boto3.client('s3')
 

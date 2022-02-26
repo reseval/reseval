@@ -31,6 +31,8 @@ def create(config, directory, local=False, production=False):
     name = cfg['name']
 
     # Don't create subjective evaluation that has already finished
+    # TODO - if a participant submits survey to MTurk without using our
+    #        app, they won't be counted here
     try:
         participants = len(reseval.load.participants(name))
         if participants >= cfg['participants']:
@@ -71,9 +73,8 @@ def create(config, directory, local=False, production=False):
     # Indicate if we're running local development
     local_file = reseval.EVALUATION_DIRECTORY / name / '.local'
     if local:
-        with open(local_file, 'w') as file:
-            pass
-    else:
+        local_file.touch()
+    elif local_file.exists():
         local_file.unlink()
 
     # Create file storage and upload
