@@ -115,10 +115,10 @@ prescreen_questions:
 
 # Instructions presented to the participant during evaluation
 survey_instructions: "
-  ## **Instructions** \nListen to both audio files. After listening to both
-  files, select the higher-quality audio file. The higher-quality audio file is
-  the one that is more natural sounding, or has fewer audio artifacts (e.g.,
-  clicks, pops, or background noise)."
+  ## **Instructions** \nListen to all audio files. Then, move the sliders
+  to rate the quality of each audio file from 0 (worst) to 100 (best). The
+  higher-quality audio files are the ones that are more natural sounding, or
+  have fewer audio artifacts (e.g., clicks, pops, or background noise)."
 
 # Questions presented to the participant after evaluation
 followup_questions:

@@ -1,3 +1,6 @@
+import contextlib
+import os
+
 import reseval
 
 
@@ -37,6 +40,17 @@ def run(config, directory, local=False, production=False, interval=120):
 ###############################################################################
 # Utilities
 ###############################################################################
+
+
+@contextlib.contextmanager
+def chdir(directory):
+    """Change working directory"""
+    curr_dir = os.getcwd()
+    try:
+        os.chdir(directory)
+        yield
+    finally:
+        os.chdir(curr_dir)
 
 
 def is_local(name):

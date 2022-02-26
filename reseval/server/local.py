@@ -1,13 +1,6 @@
-import contextlib
-import http.client
-import os
-import time
-
 import psutil
 import subprocess
 import webbrowser
-
-from pathlib import Path
 
 import requests
 from requests.adapters import HTTPAdapter, Retry
@@ -23,7 +16,7 @@ import reseval
 def create(config):
     """Deploy a local server"""
     # Launch server process
-    with chdir(reseval.ASSETS_DIR):
+    with reseval.chdir(reseval.ASSETS_DIR):
         # shell=True is not considered best practice for two reasons:
         #   1) It assumes the binary is the program you expect it to be. In
         #      this case, npm.
@@ -54,19 +47,3 @@ def destroy(config, credentials):
     for child in parent.children(recursive=True):
         child.kill()
     parent.kill()
-
-
-###############################################################################
-# Utilities
-###############################################################################
-
-
-@contextlib.contextmanager
-def chdir(directory):
-    """Change working directory"""
-    curr_dir = os.getcwd()
-    try:
-        os.chdir(directory)
-        yield
-    finally:
-        os.chdir(curr_dir)
