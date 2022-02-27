@@ -261,7 +261,7 @@ def upload_previous(name):
                 return
 
             # Format MySQL command
-            keys = rows[0].keys()
+            keys = list(rows[0].keys())
             columns, values, update = '', '', ''
             for i, key in enumerate(keys):
                 columns += f'`{key}`'
@@ -276,9 +276,9 @@ def upload_previous(name):
                 f'ON DUPLICATE KEY UPDATE {update}')
 
             # Maybe specify data order
-            items = [tuple(row[key] for key in row) for row in rows]
+            items = [tuple(row[key] for key in keys) for row in rows]
             if table == 'evaluators':
-                items = sorted(items, lambda item: item['ID'])
+                items = items.sort(key=lambda item: item[keys.index('ID')])
 
             # Execute insertions
             cursor.executemany(command, items)

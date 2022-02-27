@@ -12,13 +12,21 @@ import reseval
 
 def create(config, directory, local=False, production=False):
     """Setup a subjective evaluation"""
+    # Copy client and server to cache
+    for path in reseval.ASSETS_DIR.rglob('*'):
+        if path.is_dir():
+            continue
+        destination = reseval.CACHE / path.relative_to(reseval.ASSETS_DIR)
+        destination.parent.mkdir(exist_ok=True, parents=True)
+        shutil.copy(path, destination)
+
     # Maybe install server
-    if local and not (reseval.ASSETS_DIR / 'node_modules').exists():
-        with reseval.chdir(reseval.ASSETS_DIR):
+    if local and not (reseval.CACHE / 'node_modules').exists():
+        with reseval.chdir(reseval.CACHE):
             subprocess.call('npm install', shell=True)
 
     # Maybe install client
-    client_directory = reseval.ASSETS_DIR / 'client'
+    client_directory = reseval.CACHE / 'client'
     if local and not (client_directory / 'node_modules').exists():
         with reseval.chdir(client_directory):
             subprocess.call('npm install', shell=True)
@@ -38,8 +46,8 @@ def create(config, directory, local=False, production=False):
         if participants >= cfg['participants']:
             raise ValueError(
                 f'Not creating subjective evaluation {name}, which has already '
-                 'finished. If you want to extend an evaluation, use '
-                 'reseval.extend.')
+                'finished. If you want to extend an evaluation, use '
+                'reseval.extend.')
     except FileNotFoundError:
         pass
 
@@ -49,7 +57,7 @@ def create(config, directory, local=False, production=False):
         if prod_file.exists():
             raise ValueError(
                 f'Not overwriting results of evaluation {name}',
-                 'which has been run in production')
+                'which has been run in production')
 
     # Save configuration as json for the frontend to access
     with open(reseval.CLIENT_CONFIGURATION_FILE, 'w') as file:

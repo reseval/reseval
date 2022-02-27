@@ -21,7 +21,7 @@ export default function RadioButtonGroup({ response, setResponse, active }) {
 		// Render a button
 		return (
 			<RadioButtonText
-				onClick={() => active && setResponse(index)}
+				onClick={() => active && setResponse(index + 1)}
 				state={state}
 				text={index + 1}
 			/>
