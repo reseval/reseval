@@ -13,37 +13,10 @@ def package_data():
     module_directory = Path(__file__).parent / 'reseval'
     assets_directory = module_directory / 'assets'
 
-    # # Directories within assets directory to include
-    # directories = ['client/public', 'client/src', 'server']
-    # directories = [Path(directory) for directory in directories]
-
-    # # Loose files within assets directory to include
-    # files = [
-    #     'client/package-lock.json',
-    #     'client/package.json',
-    #     'client/Procfile',
-    #     'client/static.json'
-    #     'package-lock.json',
-    #     'package.json',
-    #     'Procfile',
-    #     'server.ts',
-    #     'tsconfig.json']
-    # files = [Path(file) for file in files]
-
-    # # Add all files in directories
-    # for directory in directories:
-    #     files.extend(
-    #         file.relative_to(assets_directory)
-    #         for file in (assets_directory / directory).rglob('*'))
-
-    # # Add directories themselves
-    # files.extend(directories)
-
-    # # Non-recursively add client directory
-    # files.append(Path('client'))
-
     # Package data should be paths relative to package
-    return {'reseval': [str(path) for path in assets_directory.rglob('*')]}
+    return {'reseval': [
+        str(path.relative_to(module_directory))
+        for path in assets_directory.rglob('*')]}
 
 
 # Setup

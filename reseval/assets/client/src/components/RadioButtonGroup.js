@@ -14,7 +14,7 @@ export default function RadioButtonGroup({ response, setResponse, active }) {
 
 		// Get radio button state
 		let state = active ? 'active' : '';
-		if (index === response) {
+		if (index + 1 === response) {
 			state = 'active selected';
 		}
 

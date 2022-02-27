@@ -46,8 +46,8 @@ def create(config, directory, local=False, production=False):
         if participants >= cfg['participants']:
             raise ValueError(
                 f'Not creating subjective evaluation {name}, which has already '
-                'finished. If you want to extend an evaluation, use '
-                'reseval.extend.')
+                 'finished. If you want to extend an evaluation, use '
+                 'reseval.extend.')
     except FileNotFoundError:
         pass
 
@@ -57,7 +57,7 @@ def create(config, directory, local=False, production=False):
         if prod_file.exists():
             raise ValueError(
                 f'Not overwriting results of evaluation {name}',
-                'which has been run in production')
+                 'which has been run in production')
 
     # Save configuration as json for the frontend to access
     with open(reseval.CLIENT_CONFIGURATION_FILE, 'w') as file:
