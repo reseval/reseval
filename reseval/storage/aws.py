@@ -1,3 +1,5 @@
+import os
+
 import boto3
 
 import reseval
@@ -31,11 +33,8 @@ def create(config, directory):
     """Create an AWS S3 bucket for file storage"""
     name = config['name']
 
-    # Load API keys into environment variables
-    reseval.load.api_keys()
-
     # Connect to S3
-    client = boto3.client('s3')
+    client = connect()
 
     # Create bucket
     client.create_bucket(Bucket=name)
@@ -49,11 +48,8 @@ def create(config, directory):
 
 def destroy(name):
     """Delete an AWS S3 bucket"""
-    # Load API keys into environment variables
-    reseval.load.api_keys()
-
     # Connect to S3
-    client = boto3.resource('s3')
+    client = connect()
 
     # Get bucket to delete
     bucket = client.Bucket(name)
@@ -67,11 +63,8 @@ def destroy(name):
 
 def upload(name, file_or_directory):
     """Upload directory to AWS S3 bucket"""
-    # Load API keys into environment variables
-    reseval.load.api_keys()
-
     # Connect to S3
-    client = boto3.client('s3')
+    client = connect()
 
     # Upload directory
     if file_or_directory.is_dir():
@@ -87,3 +80,21 @@ def upload(name, file_or_directory):
     return (
         f'http://{name}.s3-website-us-east-1.amazonaws.com/' +
         file_or_directory)
+
+
+###############################################################################
+# Utilities
+###############################################################################
+
+
+def connect():
+    """Connect to AWS"""
+    # Load API keys into environment variables
+    reseval.load.api_keys()
+
+    # Add credentials and connect
+    return boto3.Session(
+        aws_access_key_id=os.environ['AWSAccessKeyId'],
+        aws_secret_access_key=os.environ['AWSSecretKey'],
+    ).client('s3')
+
