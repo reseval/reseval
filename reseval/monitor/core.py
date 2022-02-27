@@ -23,7 +23,9 @@ def monitor(name=None, interval=120):
         for cfg in configs]
 
     # Setup monitoring display
-    analyses = [reseval.analyze(name) for name in names]
+    analyses = [
+        reseval.results(name, reseval.EVALUATION_DIRECTORY / name)
+        for name in names]
 
     # Render display and monitor
     content = displays(names, totals, analyses)
@@ -42,7 +44,9 @@ def monitor(name=None, interval=120):
                 if count != analyses[index]['samples']:
 
                     # Get current statistics
-                    analysis = reseval.analyze(name)
+                    analysis = reseval.results(
+                        name,
+                        reseval.EVALUATION_DIRECTORY / name)
                     analyses[index] = analysis
 
                     # Update display

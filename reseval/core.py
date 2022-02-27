@@ -23,8 +23,8 @@ def run(config, directory, local=False, production=False, interval=120):
         # Pay participants
         reseval.pay(name)
 
-        # Download and analyze results
-        reseval.analyze(name)
+        # Get results
+        reseval.results(name, reseval.EVALUATION_DIRECTORY / name)
 
     except (Exception, KeyboardInterrupt) as exception:
 

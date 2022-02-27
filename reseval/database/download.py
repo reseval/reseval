@@ -15,13 +15,13 @@ def parse_args():
         description='Download the database tables of a subjective evaluation')
     parser.add_argument('name', help='The name of the evaluation')
     parser.add_argument(
+        'directory',
+        default=Path(),
+        help='The directory to populate with the database contents')
+    parser.add_argument(
         '--tables',
         default=reseval.database.TABLES,
         help='The tables to download')
-    parser.add_argument(
-        '--directory',
-        default=Path(),
-        help='The directory to populate with the database contents')
     return parser.parse_args()
 
 
