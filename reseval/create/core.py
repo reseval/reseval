@@ -41,6 +41,10 @@ def create(config, directory, local=False, production=False):
     # Don't create subjective evaluation that has already finished
     # TODO - if a participant submits survey to MTurk without using our
     #        app, they won't be counted here
+    # TODO - For local development, try to download the responses from the
+    #        database. Except + pass if the database doesn't exist. Raise
+    #        if the number of participants in the database >=
+    #        cfg['participants].
     try:
         participants = len(reseval.load.participants(name))
         if participants >= cfg['participants']:

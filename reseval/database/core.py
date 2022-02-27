@@ -179,7 +179,7 @@ def destroy(name):
     (reseval.EVALUATION_DIRECTORY / name / 'credentials' / '.env').unlink()
 
 
-def download(name, tables=TABLES):
+def download(name, directory, tables=TABLES):
     """Download the contents of the MySQL database"""
     # Load database credentials
     reseval.load.environment_variables_by_name(name)

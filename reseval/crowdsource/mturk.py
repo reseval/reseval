@@ -105,7 +105,10 @@ def pay(config, credentials):
     mturk_results = results(credentials)
 
     # Get participants and responses from database
-    reseval.database.download(config, ['participants', 'responses'])
+    reseval.database.download(
+        config['name'],
+        reseval.EVALUATION_DIRECTORY / config['name'] / 'tables',
+        ['participants', 'responses'])
     participants = reseval.load.participants(config['name'])
     responses = reseval.load.responses(config['name'])
 

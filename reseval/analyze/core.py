@@ -11,7 +11,10 @@ import reseval
 def analyze(name):
     """Download and analyze the results of a subjective evaluation"""
     # Download database tables
-    reseval.database.download(name)
+    reseval.database.download(
+        name,
+        reseval.EVALUATION_DIRECTORY / name / 'tables',
+        ['conditions', 'responses'])
 
     # Load responses
     config = reseval.load.config_by_name(name)
