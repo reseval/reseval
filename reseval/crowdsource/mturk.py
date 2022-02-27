@@ -2,6 +2,7 @@ import datetime
 import itertools
 import json
 import re
+from hashlib import md5
 from pathlib import Path
 
 import boto3
@@ -104,7 +105,6 @@ def extend(credentials, participants, name):
             json.dump(data, json_file)
 
     # Extend HIT
-    # TODO - handle unique request token
     try:
         response = mturk.create_additional_assignments_for_hit(
             HITId=credentials['HIT_ID'],
@@ -117,7 +117,6 @@ def extend(credentials, participants, name):
             token_file.unlink(True)
         else:
             raise e
-    # TODO - check response
 
 
 def paid(credentials):
@@ -195,8 +194,6 @@ def resume(config, credentials):
         HITId=credentials['HIT_ID'],
         ExpireAt=datetime.datetime.now() + timedelta)
 
-    # TODO - check response
-
 
 def stop(credentials):
     """Stop an active HIT"""
@@ -207,8 +204,6 @@ def stop(credentials):
     response = mturk.update_expiration_for_hit(
         HITId=credentials['HIT_ID'],
         ExpireAt=datetime.datetime.now())
-
-    # TODO - check response
 
 
 ###############################################################################
@@ -231,11 +226,11 @@ def approve(credentials, assignment_id):
     # Connect to MTurk
     mturk = connect(credentials['PRODUCTION'])
 
-    # Approve assignment
-    response = mturk.approve_assignment(AssignmentId=assignment_id)
-
-    # TODO - check response
-    pass
+    if mturk.get_assignment(AssignmentId=assignment_id)['Assignment']['AssignmentStatus'] == 'Approved':
+        pass
+    else:
+        # Approve assignment
+        response = mturk.approve_assignment(AssignmentId=assignment_id)
 
 
 def assignments(credentials, statuses=None):
@@ -258,22 +253,26 @@ def assignments(credentials, statuses=None):
 
 
 def bonus(config, credentials, assignment_id, worker_id):
+    # use md5(assignment_id) as Unique token, because we would send_bonus only once per assignment
+    unique_token = md5(assignment_id.encode('utf-8')).hexdigest()
     """Give a participant a bonus"""
     # Connect to MTurk
     mturk = connect(credentials['PRODUCTION'])
+    try:
+        # Approve assignment
+        response = mturk.send_bonus(
+            WorkerId=worker_id,
+            BonusAmount=config['crowdsource']['payment']['completion'],
+            AssignmentId=assignment_id,
+            UniqueRequestToken=unique_token,
+            Reason='Passed prescreening and completed evaluation. Thank you!')
 
-    # Approve assignment
-    # TODO - handle unique request token
-    response = mturk.send_bonus(
-        WorkerId=worker_id,
-        BonusAmount=config['crowdsource']['payment']['completion'],
-        AssignmentId=assignment_id,
-        # use assignment_id as Unique token, because we would send_bonus only once per assignment
-        UniqueRequestToken=assignment_id,
-        Reason='Passed prescreening and completed evaluation. Thank you!')
-
-    # TODO - check response
-    pass
+    except Exception as e:
+        # if exception args contain md5(assignment_id), we assume this assignment has bonus already.
+        if re.search(re.escape(unique_token), e.args[0]) is not None:
+            pass
+        else:
+            raise e
 
 
 def connect(production=False):
@@ -321,13 +320,14 @@ def reject(credentials, assignment_id, reason):
     """Reject assignment by ID"""
     # Connect to MTurk
     mturk = connect(credentials['PRODUCTION'])
-
-    # Reject assignment
-    response = mturk.reject_assignment(
-        AssignmentId=assignment_id,
-        RequesterFeedback=reason)
-
-    # TODO - check response
+    # skip if already rejected
+    if mturk.get_assignment(AssignmentId=assignment_id)['Assignment']['AssignmentStatus'] == 'Rejected':
+        pass
+    else:
+        # Reject assignment
+        response = mturk.reject_assignment(
+            AssignmentId=assignment_id,
+            RequesterFeedback=reason)
 
 
 def results(credentials):
