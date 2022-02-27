@@ -55,7 +55,7 @@ M. Morrison, B. Tang, G. Tan, and B. Pardo, "Reproducible Subjective Evaluation,
 - [Usage](#usage)
     * [Create](#create)
     * [Monitor](#monitor)
-    * [Analyze](#analyze)
+    * [Results](#results)
     * [Pay](#pay)
     * [Destroy](#destroy)
     * [Resume](#resume)
@@ -68,6 +68,7 @@ M. Morrison, B. Tang, G. Tan, and B. Pardo, "Reproducible Subjective Evaluation,
 ## Installation
 
 **TODO** - deploy to pypi
+
 `pip install -e .`
 
 
@@ -297,12 +298,12 @@ python -m reseval.monitor --interval 30
 ```
 
 
-### Analyze
+### Results
 
 ```
-# Download and analyze the results of a subjective evaluation.
-# Results are stored in evaluations/<name>.
-python -m reseval.analyze <name>
+# Get the results of a subjective evaluation.
+# Results are stored in <directory>.
+python -m reseval.results <name> <directory>
 ```
 
 

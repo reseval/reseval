@@ -48,7 +48,10 @@ class Base(ABC):
         index = 0
         samples = self.samples_per_participant
         assignments, residual = [], []
-        while len(assignments) < self.participants:
+
+        # We use twice the expected number of participants in case some
+        # participants leave during evaluation
+        while len(assignments) < 2 * self.participants:
 
             # Shuffle and reset index whenever we reach the end
             while index + samples - len(residual) >= len(files):

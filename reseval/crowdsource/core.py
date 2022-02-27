@@ -16,13 +16,16 @@ def active(name):
     # Local dev is active until we have enough participants and responses
     if reseval.is_local(name):
         try:
+            # TODO - try to download the responses
+
             responses = reseval.load.responses(name)
             participants = len(set(
                 response['Participant'] for response in responses))
             samples = \
                 config['participants'] * config['samples_per_participant']
             return (
-                responses < samples or participants < config['participants'])
+                len(responses) < samples or
+                participants < config['participants'])
         except FileNotFoundError:
             return True
 

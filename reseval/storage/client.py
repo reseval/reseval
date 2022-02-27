@@ -1,3 +1,4 @@
+from genericpath import exists
 import shutil
 
 import reseval
@@ -16,17 +17,21 @@ def create(config, directory):
 
 def destroy(config):
     """Remove all evaluation files in client public directory"""
-    for path in reseval.CLIENT_PUBLIC_DIRECTORY.iterdir():
-        if path.name != '.gitkeep':
-            try:
-                shutil.rmtree(path)
-            except NotADirectoryError:
-                path.unlink()
+    try:
+        for path in reseval.CLIENT_PUBLIC_DIRECTORY.iterdir():
+            if path.name != '.gitkeep':
+                try:
+                    shutil.rmtree(path)
+                except NotADirectoryError:
+                    path.unlink()
+    except FileNotFoundError:
+        pass
 
 
 def upload(name, file_or_directory):
     """Upload a file or directory to client storage"""
     destination = reseval.CLIENT_PUBLIC_DIRECTORY / file_or_directory.name
+    reseval.CLIENT_PUBLIC_DIRECTORY.mkdir(exist_ok=True, parents=True)
 
     # Upload directory
     if file_or_directory.is_dir():

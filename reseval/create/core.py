@@ -12,16 +12,24 @@ import reseval
 
 def create(config, directory, local=False, production=False):
     """Setup a subjective evaluation"""
+    # Copy client and server to cache
+    for path in reseval.ASSETS_DIR.rglob('*'):
+        if path.is_dir():
+            continue
+        destination = reseval.CACHE / path.relative_to(reseval.ASSETS_DIR)
+        destination.parent.mkdir(exist_ok=True, parents=True)
+        shutil.copy(path, destination)
+
     # Maybe install server
-    if local and not (reseval.ASSETS_DIR / 'node_modules').exists():
-        with reseval.chdir(reseval.ASSETS_DIR):
-            subprocess.Popen('npm install', shell=True)
+    if local and not (reseval.CACHE / 'node_modules').exists():
+        with reseval.chdir(reseval.CACHE):
+            subprocess.call('npm install', shell=True)
 
     # Maybe install client
-    client_directory = reseval.ASSETS_DIR / 'client'
+    client_directory = reseval.CACHE / 'client'
     if local and not (client_directory / 'node_modules').exists():
         with reseval.chdir(client_directory):
-            subprocess.Popen('npm install', shell=True)
+            subprocess.call('npm install', shell=True)
 
     if local and production:
         raise ValueError('Cannot deploy production build locally')
@@ -33,6 +41,10 @@ def create(config, directory, local=False, production=False):
     # Don't create subjective evaluation that has already finished
     # TODO - if a participant submits survey to MTurk without using our
     #        app, they won't be counted here
+    # TODO - For local development, try to download the responses from the
+    #        database. Except + pass if the database doesn't exist. Raise
+    #        if the number of participants in the database >=
+    #        cfg['participants].
     try:
         participants = len(reseval.load.participants(name))
         if participants >= cfg['participants']:

@@ -34,7 +34,7 @@ def create(config):
             'tsconfig.json']
         with tarfile.open(tarball, 'w:gz') as tar:
             for file in files:
-                tar.add(reseval.ASSETS_DIR / file)
+                tar.add(reseval.CACHE / file)
 
         # Upload tarball and get a URL
         tarball_url = reseval.storage.upload(config['name'], tarball)

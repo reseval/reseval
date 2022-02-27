@@ -23,7 +23,9 @@ def monitor(name=None, interval=120):
         for cfg in configs]
 
     # Setup monitoring display
-    analyses = [reseval.analyze(name) for name in names]
+    analyses = [
+        reseval.results(name, reseval.EVALUATION_DIRECTORY / name)
+        for name in names]
 
     # Render display and monitor
     content = displays(names, totals, analyses)
@@ -42,7 +44,9 @@ def monitor(name=None, interval=120):
                 if count != analyses[index]['samples']:
 
                     # Get current statistics
-                    analysis = reseval.analyze(name)
+                    analysis = reseval.results(
+                        name,
+                        reseval.EVALUATION_DIRECTORY / name)
                     analyses[index] = analysis
 
                     # Update display
@@ -60,16 +64,25 @@ def monitor(name=None, interval=120):
 
 def display(name, total, analysis):
     """Format one evaluation for display"""
+    grid = rich.progress.Table.grid()
+    grid.add_column()
+
     # Format a table of statistics
-    table = rich.progress.Table(title=name)
-    table.add_column('total')
-    table.add_column('samples')
-    keys = analysis['conditions'].keys()
-    values = [
-        format_stats(value) for value in analysis['conditions'].values()]
-    for key in keys:
-        table.add_column(key)
-    table.add_row(str(total), str(analysis['samples']), *values)
+    table = rich.progress.Table.grid(padding=(0, 2))
+    table.add_column(justify='right')
+    table.add_column(justify='center')
+    table.add_column(justify='center')
+    table.add_column(justify='right')
+    table.add_row('total', str(total))
+    table.add_row(str('samples'), str(analysis['samples']))
+    for condition, items in analysis['conditions'].items():
+        for i, (test, values) in enumerate(items.items()):
+            for j, (key, val) in enumerate(values.items()):
+                table.add_row(
+                    condition if i == 0 and j == 0 else None,
+                    test if j == 0 else None,
+                    key,
+                    str(val))
 
     # Create progress bar
     bar = rich.progress.Progress(
@@ -80,22 +93,19 @@ def display(name, total, analysis):
     # Add task to progress bar
     bar.add_task(name, total=total, completed=analysis['samples'])
 
-    return table, bar
+    # Add table and bar to grid
+    grid.add_row(bar)
+    grid.add_row(table)
+
+    # return table, bar
+    return rich.panel.Panel(grid, title=name)
 
 
 def displays(names, totals, analyses):
     """Format multiple evaluations for display"""
     displays = rich.progress.Table.grid()
     for name, total, analysis in zip(names, totals, analyses):
-
-        # Get stats and renderables
-        table, bar = display(name, total, analysis)
-
-        # Add table and progress bar to display
-        displays.add_row(
-            rich.panel.Panel.fit(table, padding=(2, 2)),
-            rich.panel.Panel.fit(bar, padding=(2, 2)))
-
+        displays.add_row(display(name, total, analysis))
     return displays
 
 

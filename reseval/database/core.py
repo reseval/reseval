@@ -179,7 +179,7 @@ def destroy(name):
     (reseval.EVALUATION_DIRECTORY / name / 'credentials' / '.env').unlink()
 
 
-def download(name, tables=TABLES):
+def download(name, directory, tables=TABLES):
     """Download the contents of the MySQL database"""
     # Load database credentials
     reseval.load.environment_variables_by_name(name)
@@ -261,7 +261,7 @@ def upload_previous(name):
                 return
 
             # Format MySQL command
-            keys = rows[0].keys()
+            keys = list(rows[0].keys())
             columns, values, update = '', '', ''
             for i, key in enumerate(keys):
                 columns += f'`{key}`'
@@ -275,10 +275,13 @@ def upload_previous(name):
                 f'INSERT INTO {table} ({columns}) VALUES ({values}) '
                 f'ON DUPLICATE KEY UPDATE {update}')
 
-            # Execute command
-            cursor.executemany(
-                command,
-                [tuple(row[key] for key in row) for row in rows])
+            # Maybe specify data order
+            items = [tuple(row[key] for key in keys) for row in rows]
+            if table == 'evaluators':
+                items = items.sort(key=lambda item: item[keys.index('ID')])
+
+            # Execute insertions
+            cursor.executemany(command, items)
 
         # Communicate with database
         connection.commit()

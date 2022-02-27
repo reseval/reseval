@@ -16,17 +16,19 @@ class AB(Base):
         condition_counts, stem_counts = cls.counts(conditions, responses)
 
         # Two-sided Binomial test
-        results = reseval.stats.binomial(
-            [condition_counts[condition] for condition in conditions])
+        results = {
+            'binomial': reseval.stats.binomial(
+                [condition_counts[condition] for condition in conditions])}
+        inverse_results = results.copy()
+        inverse_results['binomial']['Sample mean'] = \
+            1 - results['binomial']['Sample mean']
 
         # Format results
         results = {
             'samples': sum(condition_counts.values()),
             'conditions': {
                 conditions[0]: results,
-                conditions[1]: {
-                    'Sample mean': 1 - results['Sample mean'],
-                    'p-value': results['p-value']}}}
+                conditions[1]: inverse_results}}
 
         return results, stem_counts
 
