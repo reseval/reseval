@@ -22,7 +22,8 @@ def active(name):
             samples = \
                 config['participants'] * config['samples_per_participant']
             return (
-                responses < samples or participants < config['participants'])
+                len(responses) < samples or
+                participants < config['participants'])
         except FileNotFoundError:
             return True
 

@@ -27,7 +27,7 @@ def mannwhitney(x, y):
     """Performs a two-sided Mann-Whitney test"""
     # Handle no data
     if len(x) == 0 or len(y) == 0:
-        return math.nan, math.nan
+        return {'Test statistic': math.nan, 'p-value': math.nan}
 
     # Perform test
     result = scipy.stats.mannwhitneyu(x, y)

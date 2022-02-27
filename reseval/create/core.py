@@ -15,13 +15,13 @@ def create(config, directory, local=False, production=False):
     # Maybe install server
     if local and not (reseval.ASSETS_DIR / 'node_modules').exists():
         with reseval.chdir(reseval.ASSETS_DIR):
-            subprocess.Popen('npm install', shell=True)
+            subprocess.call('npm install', shell=True)
 
     # Maybe install client
     client_directory = reseval.ASSETS_DIR / 'client'
     if local and not (client_directory / 'node_modules').exists():
         with reseval.chdir(client_directory):
-            subprocess.Popen('npm install', shell=True)
+            subprocess.call('npm install', shell=True)
 
     if local and production:
         raise ValueError('Cannot deploy production build locally')
