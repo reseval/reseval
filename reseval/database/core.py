@@ -275,10 +275,13 @@ def upload_previous(name):
                 f'INSERT INTO {table} ({columns}) VALUES ({values}) '
                 f'ON DUPLICATE KEY UPDATE {update}')
 
-            # Execute command
-            cursor.executemany(
-                command,
-                [tuple(row[key] for key in row) for row in rows])
+            # Maybe specify data order
+            items = [tuple(row[key] for key in row) for row in rows]
+            if table == 'evaluators':
+                items = sorted(items, lambda item: item['ID'])
+
+            # Execute insertions
+            cursor.executemany(command, items)
 
         # Communicate with database
         connection.commit()
