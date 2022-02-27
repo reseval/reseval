@@ -5,13 +5,28 @@ from setuptools import find_packages, setup
 with open('README.md', encoding='utf8') as file:
     long_description = file.read()
 
-# Package data
-module_directory = Path(__file__).parent / 'reseval'
-assets_directory = module_directory / 'assets'
-# TODO - don't ship node_modules, build, or client json directories
-files = [
-    str(file.relative_to(module_directory))
-    for file in assets_directory.rglob('*')]
+
+def package_data():
+    """Get the non-python files that should be included in release"""
+    module_directory = Path(__file__).parent / 'reseval'
+    assets_directory = module_directory / 'assets'
+    files = [
+        str(file.relative_to(assets_directory))
+        for file in assets_directory.rglob('*')]
+
+    # Don't ship node_modules, survey template, or client build artifacts
+    files = [
+        file for file in files
+        if file.parts[0] != 'node_modules' and
+        file.parts[1] not in ['build', 'node_modules'] and
+        file.stem not in ['assignments.json', 'config.json', 'survey.xml']]
+
+    # Package data should be paths relative to package
+    return {
+        'reseval': [
+            (module_directory / 'assets' / file).relative_to(module_directory)
+            for file in files]}
+
 
 # Setup
 setup(
@@ -32,7 +47,7 @@ setup(
         'xmltodict==0.12.0',
         'heroku3==5.1.4'],
     packages=find_packages(),
-    package_data={'reseval': files},
+    package_data=package_data(),
     long_description=long_description,
     long_description_content_type='text/markdown',
     keywords=[
