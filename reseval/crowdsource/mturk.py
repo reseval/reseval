@@ -1,8 +1,12 @@
 import datetime
 import itertools
+import json
+import re
+from pathlib import Path
 
 import boto3
 import xmltodict as xmltodict
+import uuid
 
 import reseval
 
@@ -70,26 +74,49 @@ def create(config, url, production=False):
 
 def destroy(credentials):
     """Delete a HIT"""
-    # Connect to MTurk
-    mturk = connect(credentials['PRODUCTION'])
+    # first check if hit exists
+    if credentials['HIT_ID'] not in list_all_hit(credentials):
+        print('Warning: the hit you are trying to destroy no longer exist, skipping...')
+    else:
+        # Connect to MTurk
+        mturk = connect(credentials['PRODUCTION'])
 
-    # Delete HIT
-    response = mturk.delete_hit(HITId=credentials['HIT_ID'])
-
-    # TODO - check response
+        # Delete HIT
+        response = mturk.delete_hit(HITId=credentials['HIT_ID'])
 
 
-def extend(credentials, participants):
+def extend(credentials, participants, name):
     """Extend a HIT with additional assignments"""
     # Connect to MTurk
     mturk = connect(credentials['PRODUCTION'])
 
+    token_file = Path(reseval.EVALUATION_DIRECTORY + f'/{name}/tokens.json')
+
+    if token_file.exists():
+        # last response was bad, retry using same token
+        with open(token_file) as json_file:
+            unique_token = json.load(json_file)['extend_token']
+    else:
+        # create a new unique token and write it to token.json
+        unique_token = str(uuid.uuid4())
+        data = {'extend_token': unique_token}
+        with open(token_file, 'w') as json_file:
+            json.dump(data, json_file)
+
     # Extend HIT
     # TODO - handle unique request token
-    response = mturk.create_additional_assignments_for_hit(
-        HITId=credentials['HIT_ID'],
-        NumberOfAdditionalAssignments=participants)
-
+    try:
+        response = mturk.create_additional_assignments_for_hit(
+            HITId=credentials['HIT_ID'],
+            UniqueRequestToken=unique_token,
+            NumberOfAdditionalAssignments=participants)
+    except Exception as e:
+        # if unique_token is in the exception args, we assume it is because the token is already used.
+        if re.search(re.escape(unique_token), e.args[0]) is not None:
+            # delete the token
+            token_file.unlink(True)
+        else:
+            raise e
     # TODO - check response
 
 
@@ -187,6 +214,16 @@ def stop(credentials):
 ###############################################################################
 # Utilities
 ###############################################################################
+
+# return all hit_id of requester in an string list. e.g.: ['1234566', '56819382']
+def list_all_hit(credentials):
+    mturk = connect(credentials['PRODUCTION'])
+    res = mturk.list_hits()
+    result = []
+    if res['HITs']:
+        result = res['HITs']
+        result = map(lambda x: x['HITId'], result)
+    return list(result)
 
 
 def approve(credentials, assignment_id):
