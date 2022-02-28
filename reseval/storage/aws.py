@@ -1,27 +1,9 @@
+import json
 import os
 
 import boto3
 
 import reseval
-
-
-###############################################################################
-# Constants
-###############################################################################
-
-
-# Public read-only policy for AWS S3 bucket
-BUCKET_POLICY = '{' \
-    '"Id":"Policy1644520445235",' \
-    '"Version":"2012-10-17",' \
-    '"Statement":[{' \
-        '"Sid":"Stmt1644520441991",' \
-        '"Action":["s3:GetObject"],' \
-        '"Effect":"Allow",' \
-        '"Resource":"arn:aws:s3:::{}/*",' \
-        '"Principal":"*"' \
-    '}]' \
-'}'
 
 
 ###############################################################################
@@ -39,8 +21,15 @@ def create(config, directory):
     # Create bucket
     client.create_bucket(Bucket=name)
 
+    # Load read-only policy as JSON string
+    with open(reseval.ASSETS_DIR / 'policy.json') as file:
+        policy = json.load(file)
+        policy['Statement'][0]['Resource'][0] = \
+            policy['Statement'][0]['Resource'][0].format(name)
+        policy = json.dumps(policy)
+
     # Set bucket policy to public read-only
-    client.put_bucket_policy(Bucket=name, Policy=BUCKET_POLICY.format(name))
+    client.put_bucket_policy(Bucket=name, Policy=policy)
 
     # Upload files
     upload(name, directory)
@@ -69,8 +58,11 @@ def upload(name, file_or_directory):
     # Upload directory
     if file_or_directory.is_dir():
         directory = file_or_directory
-        for file in [item for item in directory.rglob('*') if item.is_dir()]:
-            client.upload_file(file, name, file.relative_to(directory))
+        for file in [item for item in directory.rglob('*') if not item.is_dir()]:
+            client.upload_file(
+                str(file).replace('\\', '/'),
+                name,
+                str(file.relative_to(directory)).replace('\\', '/'))
 
     # Upload file
     else:
@@ -79,7 +71,7 @@ def upload(name, file_or_directory):
     # Return URL
     return (
         f'http://{name}.s3-website-us-east-1.amazonaws.com/' +
-        file_or_directory)
+        str(file_or_directory).replace('\\', '/'))
 
 
 ###############################################################################
@@ -97,4 +89,3 @@ def connect():
         aws_access_key_id=os.environ['AWSAccessKeyId'],
         aws_secret_access_key=os.environ['AWSSecretKey'],
     ).client('s3')
-

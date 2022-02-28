@@ -64,7 +64,7 @@ def remote_credentials(
         # Load existing credentials
         with open(reseval.KEYS_FILE) as file:
             lines = [line.rstrip() for line in file]
-        keys = dict([line.split('=')] for line in lines)
+        keys = dict([line.split('=') for line in lines])
 
     else:
 
