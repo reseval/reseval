@@ -1,4 +1,5 @@
 import json
+from msilib.schema import File
 
 import reseval
 
@@ -30,7 +31,10 @@ def active(name):
             return True
 
     # Get credentials
-    credentials = reseval.load.credentials_by_name(name, 'crowdsource')
+    try:
+        credentials = reseval.load.credentials_by_name(name, 'crowdsource')
+    except FileNotFoundError:
+        return False
 
     # Check if the evaluation is active
     module(config).active(config, credentials)
@@ -97,8 +101,16 @@ def paid(name):
     # Get config
     config = reseval.load.config_by_name(name)
 
-    # Get credentials
-    credentials = reseval.load.credentials_by_name(name, 'crowdsource')
+    try:
+
+        # Get credentials
+        credentials = reseval.load.credentials_by_name(name, 'crowdsource')
+
+    except FileNotFoundError:
+
+        # We assume that the evaluation was never started or already finished
+        # if we do not have the credentials
+        return True
 
     # Check if participants have been paid
     module(config).paid(credentials)
