@@ -29,7 +29,7 @@ def run(config, directory, local=False, production=False, interval=120):
     except (Exception, KeyboardInterrupt) as exception:
 
         # Make sure credentials get deleted for local development
-        if local:
+        if not production:
             reseval.destroy(name, True)
         raise exception
 

@@ -105,10 +105,10 @@ def create(config, directory, local=False, production=False):
     # If heroku is used for either the database or server, setup the app here
     if (not local and
         (cfg['server'] == 'heroku' or cfg['database'] == 'heroku')):
-        reseval.server.heroku.create_app(cfg['name'])
+        reseval.app.heroku.create(cfg)
 
     # Maybe create database
-    if not (credentials_directory / 'storage.json').exists():
+    if not (credentials_directory / 'database.json').exists():
 
         try:
 
@@ -148,7 +148,7 @@ def create(config, directory, local=False, production=False):
         if (credentials_directory / 'crowdsource.json').exists():
             reseval.crowdsource.resume(name)
         else:
-            reseval.crowdsource.create(cfg, production, url, local)
+            reseval.crowdsource.create(cfg, url, local, production)
 
     except (Exception, KeyboardInterrupt) as exception:
 

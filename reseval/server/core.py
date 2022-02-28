@@ -10,6 +10,8 @@ import reseval
 
 def create(config, local=False):
     """Create a server"""
+    print('Creating server...')
+
     # Create server
     credentials = module(config, local).create(config)
 

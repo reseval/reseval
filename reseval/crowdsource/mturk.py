@@ -1,6 +1,7 @@
 import datetime
 import itertools
 import json
+import os
 import re
 from hashlib import md5
 from pathlib import Path
@@ -55,7 +56,7 @@ def create(config, url, production=False):
         Title=cfg['title'],
         Description=cfg['description'],
         Keywords=cfg['keywords'],
-        Reward=cfg['payment']['base'],
+        Reward=str(cfg['payment']['base']),
         MaxAssignments=config['participants'],
         LifetimeInSeconds=cfg['duration']['total'],
         AssignmentDurationInSeconds=cfg['duration']['assignment'],
@@ -66,7 +67,7 @@ def create(config, url, production=False):
     # Log HIT
     hit_id = hit['HIT']['HITId']
     url_key = 'production' if production else 'development'
-    preview_url = PREVIEW_URL[url_key].format(hit['HIT']['GroupId'])
+    preview_url = PREVIEW_URL[url_key].format(hit['HIT']['HITGroupId'])
     print(f'Created HIT {hit_id}. You can preview your HIT at {preview_url}.')
 
     # Return crowdsource credentials
@@ -142,6 +143,7 @@ def pay(config, credentials):
         ['participants', 'responses'])
     participants = reseval.load.participants(config['name'])
     responses = reseval.load.responses(config['name'])
+    import pdb; pdb.set_trace()
 
     # Match participants with responses
     participant_responses = {}
@@ -149,7 +151,7 @@ def pay(config, credentials):
         pid = participant['ID']
         participant_responses[pid] = (
                 participant |
-                {'responses': filter(responses, lambda x: x['ID'] == pid)})
+                {'responses': list(filter(lambda x: x['ID'] == pid, responses))})
 
     # Iterate over participants
     for result in mturk_results:
@@ -184,7 +186,7 @@ def pay(config, credentials):
 
 def progress(credentials):
     """Retrieve the number of participants that have taken the evaluation"""
-    return assignments(credentials)['NumResults']
+    return len(assignments(credentials))
 
 
 def resume(config, credentials):
@@ -196,6 +198,7 @@ def resume(config, credentials):
     timedelta = datetime.timedelta(
         0,
         config['crowdsource']['duration']['total'])
+    import pdb; pdb.set_trace()
     mturk.update_expiration_for_hit(
         HITId=credentials['HIT_ID'],
         ExpireAt=datetime.datetime.now() + timedelta)
@@ -234,7 +237,7 @@ def assignments(credentials, statuses=None):
     """Retrieve a list of all assignments for a HIT"""
     # Default to all statuses
     statuses = (
-        ['Submitted' | 'Approved' | 'Rejected']
+        ['Submitted', 'Approved', 'Rejected']
         if statuses is None else statuses)
 
     # Connect to MTurk
@@ -246,8 +249,9 @@ def assignments(credentials, statuses=None):
         HITId=credentials['HIT_ID'],
         AssignmentStatuses=statuses)
 
-    # Get all assignments
-    return itertools.chain.from_iterable(iterator)
+    # Get assignments
+    return list(itertools.chain.from_iterable(
+        page['Assignments'] for page in iterator))
 
 
 def bonus(config, credentials, assignment_id, worker_id):
@@ -279,7 +283,14 @@ def bonus(config, credentials, assignment_id, worker_id):
 
 def connect(production=False):
     """Connect to MTurk"""
-    return boto3.client(
+    # Load API keys
+    reseval.load.api_keys()
+
+    # Connect to MTurk
+    return boto3.Session(
+        aws_access_key_id=os.environ['AWSAccessKeyId'],
+        aws_secret_access_key=os.environ['AWSSecretKey']
+    ).client(
         'mturk',
         region_name='us-east-1',
         endpoint_url=URL['production' if production else 'development'])
@@ -296,9 +307,9 @@ def list_hits(credentials):
 
     # Extract HIT Ids
     if responses:
-        return itertools.chain.from_iterable([
+        return list(itertools.chain.from_iterable([
             [hit['HITId'] for hit in response['HITs']]
-            for response in responses])
+            for response in responses]))
 
     return []
 

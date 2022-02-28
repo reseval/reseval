@@ -1,6 +1,7 @@
 import contextlib
 import csv
 import os
+from threading import local
 
 import mysql.connector
 
@@ -97,6 +98,8 @@ TABLES = ['conditions', 'files', 'participants', 'evaluators', 'responses']
 
 def create(config, test, local=False):
     """Write database environment variable file and initialize the database"""
+    print('Creating database...')
+
     # Create new database and retrieve credentials
     credentials = module(config, local).create(config)
 
@@ -234,8 +237,10 @@ def connect():
     finally:
 
         # Close database connection
-        cursor.close()
-        connection.close()
+        if 'cursor' in locals():
+            cursor.close()
+        if 'connection' in locals():
+            connection.close()
 
 
 def upload_previous(name):

@@ -1,6 +1,7 @@
 import http.client
 import json
 import os
+import subprocess
 import tarfile
 import tempfile
 import time
@@ -19,6 +20,9 @@ def create(config):
     # Connect to Heroku
     connection = http.client.HTTPSConnection('api.heroku.com')
 
+    with reseval.chdir(reseval.CACHE / 'client'):
+        process = subprocess.Popen('npm run build', shell=True)
+
     # Create a tarball of all files needed by the Heroku server
     with tempfile.TemporaryDirectory() as directory:
         tarball = Path(directory) / 'reseval.tar.gz'
@@ -27,7 +31,6 @@ def create(config):
             'server',
             'package-lock.json',
             'package.json',
-            'Procfile',
             'server.ts',
             'tsconfig.json']
         with tarfile.open(tarball, 'w:gz') as tar:
@@ -48,18 +51,22 @@ def create(config):
             'Authorization': f'Bearer {os.environ["HerokuAccessKey"]}'}
 
         # Create server
+        name = reseval.load.credentials_by_name(config['name'], 'app')['name']
         connection.request(
             'POST',
-            f'/apps/{config["name"]}/builds',
+            f'/apps/{name}/builds',
             json.dumps(data),
             headers=headers)
 
         # Get response from server
-        response = connection.getresponse()
+        response = json.loads(connection.getresponse().read().decode())
 
         # if app doesn't exist, raise error
-        if json.loads(response.read().decode())['id'] == 'not_found':
+        if response['id'] == 'not_found':
             raise ValueError(f'app name: {config["name"]} does not exist')
+
+    # Close the connection
+    connection.close()
 
     # Wait until server is setup
     # TODO - Should we use retries here as well?
@@ -69,8 +76,8 @@ def create(config):
     if status(config['name']) == 'failure':
         raise ValueError('Heroku server failed to start')
 
-    # TODO - return credentials (just the URL)
-    return {'URL': ''}
+    # Return application URL
+    return {'URL': f'http://{name}.herokuapp.com/'}
 
 
 def status(name):
@@ -79,13 +86,18 @@ def status(name):
     connection = http.client.HTTPSConnection('api.heroku.com')
 
     # Send request
+    reseval.load.api_keys()
     headers = {
         'Accept': 'application/vnd.heroku+json; version=3',
         'Authorization': f'Bearer {os.environ["HerokuAccessKey"]}'}
-    connection.request('GET', f'/apps/{name}/builds', headers=headers)
+    unique_name = reseval.load.credentials_by_name(name, 'app')['name']
+    connection.request('GET', f'/apps/{unique_name}/builds', headers=headers)
 
     # Get response
     data = json.loads(connection.getresponse().read().decode())
+
+    # Close connection
+    connection.close()
 
     # Get most recent build status from response
     status = list(map(lambda x: x['status'], data))

@@ -48,6 +48,8 @@ def create(config, url, local=False, production=False):
     if local:
         return
 
+    print('Creating crowdsource task...')
+
     # Create crowdsource task
     credentials = module(config).create(config, url, production)
 
@@ -131,7 +133,7 @@ def pay(name):
     credentials = reseval.load.credentials_by_name(name, 'crowdsource')
 
     # Pay participants
-    module(config).pay(credentials)
+    module(config).pay(config, credentials)
 
 
 def progress(name):
