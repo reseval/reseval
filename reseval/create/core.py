@@ -38,20 +38,28 @@ def create(config, directory, local=False, production=False):
     cfg = reseval.load.config_from_file(config)
     name = cfg['name']
 
-    # Don't create subjective evaluation that has already finished
-    # TODO - if a participant submits survey to MTurk without using our
-    #        app, they won't be counted here
-    # TODO - For local development, try to download the responses from the
-    #        database. Except + pass if the database doesn't exist. Raise
-    #        if the number of participants in the database >=
-    #        cfg['participants].
     try:
-        participants = len(reseval.load.participants(name))
+        if local:
+
+            # Get number of participants from database
+            reseval.database.download(
+                name,
+                reseval.EVALUATION_DIRECTORY / name / 'tables',
+                ['participants'])
+            participants = len(reseval.load.participants(name))
+
+        else:
+
+            # Get number of participants from crowdsource platform
+            participants = reseval.crowdsource.progress(name)
+
+        # Don't create subjective evaluation that has already finished
         if participants >= cfg['participants']:
             raise ValueError(
                 f'Not creating subjective evaluation {name}, which has already '
                  'finished. If you want to extend an evaluation, use '
                  'reseval.extend.')
+
     except FileNotFoundError:
         pass
 
@@ -95,8 +103,8 @@ def create(config, directory, local=False, production=False):
         reseval.storage.create(cfg, directory, local)
 
     # If heroku is used for either the database or server, setup the app here
-    # TODO - This should throw an error if the app exists. Does it? Yes
-    if not local and (cfg['server'] == 'heroku' or cfg['database'] == 'heroku'):
+    if (not local and
+        (cfg['server'] == 'heroku' or cfg['database'] == 'heroku')):
         reseval.server.heroku.create_app(cfg['name'])
 
     # Maybe create database

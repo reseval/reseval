@@ -34,9 +34,13 @@ def create(config):
 def destroy(config, credentials):
     """Destroy a MySQL database on Heroku"""
     try:
+
+        # Destroy app
         list_apps()[config['name']].delete()
-    # if app doesn't exist, just pass
+
     except KeyError:
+
+        # Handle app not existing
         pass
 
 

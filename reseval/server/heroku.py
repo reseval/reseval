@@ -93,9 +93,13 @@ def status(name):
 def destroy(config, credentials):
     """Destroy a Heroku server"""
     try:
+
+        # Destroy app
         list_apps()[config['name']].delete()
-    # if app doesn't exist, just pass
+
     except KeyError:
+
+        # Handle app not existing
         pass
 
 
