@@ -59,7 +59,9 @@ def create(config):
         # Get response from server
         response = connection.getresponse()
 
-        # TODO - check response
+        # if app doesn't exist, raise error
+        if json.loads(response.read().decode())['id'] == 'not_found':
+            raise ValueError(f'app name: {config["name"]} does not exist')
 
     # Wait until server is setup
     while status(config['name']) == 'pending':
@@ -90,8 +92,11 @@ def status(name):
 
 def destroy(config, credentials):
     """Destroy a Heroku server"""
-    # TODO - potentially handle double-deletion error via try/except
-    list_apps()[config['name']].delete()
+    try:
+        list_apps()[config['name']].delete()
+    # if app doesn't exist, just pass
+    except KeyError:
+        pass
 
 
 ###############################################################################

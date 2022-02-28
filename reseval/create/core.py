@@ -95,7 +95,7 @@ def create(config, directory, local=False, production=False):
         reseval.storage.create(cfg, directory, local)
 
     # If heroku is used for either the database or server, setup the app here
-    # TODO - This should throw an error if the app exists. Does it?
+    # TODO - This should throw an error if the app exists. Does it? Yes
     if not local and (cfg['server'] == 'heroku' or cfg['database'] == 'heroku'):
         reseval.server.heroku.create_app(cfg['name'])
 

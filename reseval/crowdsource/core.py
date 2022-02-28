@@ -89,7 +89,7 @@ def extend(name, participants):
     credentials = reseval.load.credentials_by_name(name, 'crowdsource')
 
     # Extend task
-    module(config).extend(credentials, participants)
+    module(config).extend(credentials, participants,name)
 
 
 def paid(name):

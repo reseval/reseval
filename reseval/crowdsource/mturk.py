@@ -1,11 +1,15 @@
 import datetime
 import itertools
+import json
+import re
+from hashlib import md5
+from pathlib import Path
 
 import boto3
 import xmltodict as xmltodict
+import uuid
 
 import reseval
-
 
 ###############################################################################
 # Constants
@@ -66,32 +70,53 @@ def create(config, url, production=False):
     print(f'Created HIT {hit_id}. You can preview your HIT at {preview_url}.')
 
     # Return crowdsource credentials
-    return { 'HIT_ID': hit_id, 'PRODUCTION': production }
+    return {'HIT_ID': hit_id, 'PRODUCTION': production}
 
 
 def destroy(credentials):
     """Delete a HIT"""
-    # Connect to MTurk
-    mturk = connect(credentials['PRODUCTION'])
+    # first check if hit exists
+    if credentials['HIT_ID'] not in list_all_hit(credentials):
+        print('Warning: the hit you are trying to destroy no longer exist, skipping...')
+    else:
+        # Connect to MTurk
+        mturk = connect(credentials['PRODUCTION'])
 
-    # Delete HIT
-    response = mturk.delete_hit(HITId=credentials['HIT_ID'])
-
-    # TODO - check response
+        # Delete HIT
+        response = mturk.delete_hit(HITId=credentials['HIT_ID'])
 
 
-def extend(credentials, participants):
+def extend(credentials, participants, name):
     """Extend a HIT with additional assignments"""
     # Connect to MTurk
     mturk = connect(credentials['PRODUCTION'])
 
-    # Extend HIT
-    # TODO - handle unique request token
-    response = mturk.create_additional_assignments_for_hit(
-        HITId=credentials['HIT_ID'],
-        NumberOfAdditionalAssignments=participants)
+    token_file = Path(reseval.EVALUATION_DIRECTORY + f'/{name}/tokens.json')
 
-    # TODO - check response
+    if token_file.exists():
+        # last response was bad, retry using same token
+        with open(token_file) as json_file:
+            unique_token = json.load(json_file)['extend_token']
+    else:
+        # create a new unique token and write it to token.json
+        unique_token = str(uuid.uuid4())
+        data = {'extend_token': unique_token}
+        with open(token_file, 'w') as json_file:
+            json.dump(data, json_file)
+
+    # Extend HIT
+    try:
+        response = mturk.create_additional_assignments_for_hit(
+            HITId=credentials['HIT_ID'],
+            UniqueRequestToken=unique_token,
+            NumberOfAdditionalAssignments=participants)
+    except Exception as e:
+        # if unique_token is in the exception args, we assume it is because the token is already used.
+        if re.search(re.escape(unique_token), e.args[0]) is not None:
+            # delete the token
+            token_file.unlink(True)
+        else:
+            raise e
 
 
 def paid(credentials):
@@ -117,8 +142,8 @@ def pay(config, credentials):
     for participant in participants:
         pid = participant['ID']
         participant_responses[pid] = (
-            participant |
-            {'responses': filter(responses, lambda x: x['ID'] == pid)})
+                participant |
+                {'responses': filter(responses, lambda x: x['ID'] == pid)})
 
     # Iterate over participants
     for result in mturk_results:
@@ -127,7 +152,7 @@ def pay(config, credentials):
         match = None
         for pid in participant_responses:
             if (participant_responses[pid]['completion_code'] ==
-                result['completion_code']):
+                    result['completion_code']):
                 match = pid
 
         # Only process payment if the participant has not already been paid
@@ -147,7 +172,7 @@ def pay(config, credentials):
             # If they passed prescreening and completed evaluation, give
             # the participant a bonus
             if (len(participant_responses[pid]['responses']) ==
-                config['samples_per_participant']):
+                    config['samples_per_participant']):
                 bonus(config, credentials, result['assignment_id'])
 
 
@@ -169,8 +194,6 @@ def resume(config, credentials):
         HITId=credentials['HIT_ID'],
         ExpireAt=datetime.datetime.now() + timedelta)
 
-    # TODO - check response
-
 
 def stop(credentials):
     """Stop an active HIT"""
@@ -182,12 +205,20 @@ def stop(credentials):
         HITId=credentials['HIT_ID'],
         ExpireAt=datetime.datetime.now())
 
-    # TODO - check response
-
 
 ###############################################################################
 # Utilities
 ###############################################################################
+
+# return all hit_id of requester in an string list. e.g.: ['1234566', '56819382']
+def list_all_hit(credentials):
+    mturk = connect(credentials['PRODUCTION'])
+    res = mturk.list_hits()
+    result = []
+    if res['HITs']:
+        result = res['HITs']
+        result = map(lambda x: x['HITId'], result)
+    return list(result)
 
 
 def approve(credentials, assignment_id):
@@ -195,11 +226,11 @@ def approve(credentials, assignment_id):
     # Connect to MTurk
     mturk = connect(credentials['PRODUCTION'])
 
-    # Approve assignment
-    response = mturk.approve_assignment(AssignmentId=assignment_id)
-
-    # TODO - check response
-    pass
+    if mturk.get_assignment(AssignmentId=assignment_id)['Assignment']['AssignmentStatus'] == 'Approved':
+        pass
+    else:
+        # Approve assignment
+        response = mturk.approve_assignment(AssignmentId=assignment_id)
 
 
 def assignments(credentials, statuses=None):
@@ -222,20 +253,26 @@ def assignments(credentials, statuses=None):
 
 
 def bonus(config, credentials, assignment_id, worker_id):
+    # use md5(assignment_id) as Unique token, because we would send_bonus only once per assignment
+    unique_token = md5(assignment_id.encode('utf-8')).hexdigest()
     """Give a participant a bonus"""
     # Connect to MTurk
     mturk = connect(credentials['PRODUCTION'])
+    try:
+        # Approve assignment
+        response = mturk.send_bonus(
+            WorkerId=worker_id,
+            BonusAmount=config['crowdsource']['payment']['completion'],
+            AssignmentId=assignment_id,
+            UniqueRequestToken=unique_token,
+            Reason='Passed prescreening and completed evaluation. Thank you!')
 
-    # Approve assignment
-    # TODO - handle unique request token
-    response = mturk.send_bonus(
-        WorkerId=worker_id,
-        BonusAmount=config['crowdsource']['payment']['completion'],
-        AssignmentId=assignment_id,
-        Reason='Passed prescreening and completed evaluation. Thank you!')
-
-    # TODO - check response
-    pass
+    except Exception as e:
+        # if exception args contain md5(assignment_id), we assume this assignment has bonus already.
+        if re.search(re.escape(unique_token), e.args[0]) is not None:
+            pass
+        else:
+            raise e
 
 
 def connect(production=False):
@@ -253,10 +290,10 @@ def qualifications(config):
     # Country of origin
     cfg = config['crowdsource']['filter']
     if 'countries' in cfg:
-        locales = [{'Country': country} for country in cfg['countries'] ]
+        locales = [{'Country': country} for country in cfg['countries']]
         qualifications.append({
             'QualificationTypeId': '00000000000000000071',
-            'Comparator':'In',
+            'Comparator': 'In',
             'LocaleValues': locales,
             'RequiredToPreview': True})
 
@@ -264,7 +301,7 @@ def qualifications(config):
     if 'approved_tasks' in cfg:
         qualifications.append({
             'QualificationTypeId': '00000000000000000040',
-            'Comparator':'GreaterThan',
+            'Comparator': 'GreaterThan',
             'IntegerValues': [cfg['approved_tasks']],
             'RequiredToPreview': True})
 
@@ -283,20 +320,20 @@ def reject(credentials, assignment_id, reason):
     """Reject assignment by ID"""
     # Connect to MTurk
     mturk = connect(credentials['PRODUCTION'])
-
-    # Reject assignment
-    response = mturk.reject_assignment(
-        AssignmentId=assignment_id,
-        RequesterFeedback=reason)
-
-    # TODO - check response
+    # skip if already rejected
+    if mturk.get_assignment(AssignmentId=assignment_id)['Assignment']['AssignmentStatus'] == 'Rejected':
+        pass
+    else:
+        # Reject assignment
+        response = mturk.reject_assignment(
+            AssignmentId=assignment_id,
+            RequesterFeedback=reason)
 
 
 def results(credentials):
     """Get a list of all assignment IDs and completion codes"""
     result = []
     for assignment in assignments(credentials):
-
         # Parse XML
         xml_doc = xmltodict.parse(assignment['Answer'])
 
