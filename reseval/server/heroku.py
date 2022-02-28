@@ -6,8 +6,6 @@ import tempfile
 import time
 from pathlib import Path
 
-import heroku3
-
 import reseval
 
 
@@ -64,11 +62,15 @@ def create(config):
             raise ValueError(f'app name: {config["name"]} does not exist')
 
     # Wait until server is setup
+    # TODO - Should we use retries here as well?
     while status(config['name']) == 'pending':
         time.sleep(5)
 
     if status(config['name']) == 'failure':
         raise ValueError('Heroku server failed to start')
+
+    # TODO - return credentials (just the URL)
+    return {'URL': ''}
 
 
 def status(name):
@@ -92,41 +94,4 @@ def status(name):
 
 def destroy(config, credentials):
     """Destroy a Heroku server"""
-    try:
-
-        # Destroy app
-        list_apps()[config['name']].delete()
-
-    except KeyError:
-
-        # Handle app not existing
-        pass
-
-
-###############################################################################
-# Utilities
-###############################################################################
-
-# create a heroku application
-def create_app(app_name):
-    app = connect().create_app(name=app_name)
-    return app
-
-
-def connect():
-    """Connect to Heroku"""
-    return heroku3.from_key(os.environ['HerokuAccessKey'])
-
-
-def list_apps():
-    """List the applications currently active on Heroku"""
-    return connect().apps()
-
-
-def set_environment_variable(name, key, value):
-    """Set an environment variable on a Heroku server"""
-    # Get Heroku application
-    app = list_apps()[name]
-
-    # Set environment variable
-    app.config()[key] = value
+    reseval.app.heroku.destroy(config)
