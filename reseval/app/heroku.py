@@ -19,8 +19,12 @@ def connect():
 
 def create(config):
     """Create a Heroku web application"""
-    # TODO - name must be globally unique. Create credentials management for app.
+    # TODO - create unique name
+
+    # Create Heroku app
     connect().create_app(name=config['name'])
+
+    # TODO - save name as credentials
 
 
 def destroy(config):
@@ -34,6 +38,8 @@ def destroy(config):
 
         # Handle app not existing
         pass
+
+    # TODO - Destroy credentials
 
 
 def list():
