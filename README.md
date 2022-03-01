@@ -297,6 +297,7 @@ python -m reseval.create <config> <directory> --production
 python -m reseval.monitor
 
 # Monitor one subjective evaluation
+# The name of the evaluation can be found in its configuration file
 python -m reseval.monitor <name>
 ```
 

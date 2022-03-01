@@ -84,6 +84,7 @@ export default function QualificationPage({
             navigation.go('end');
         } else {
             // Upload response to database
+            // TODO - insert is failing
             fetch(url + '/api/participants/' + route, {
                 method: 'post',
                 headers: {
@@ -99,6 +100,7 @@ export default function QualificationPage({
                         .then(response => setFiles(assignments[response]))
 
                         // Get list of evaluation conditions
+                        // TODO - this fetch is failing
                         .then(_ => {
                             fetch(url + '/api/conditions')
                                 .then(response => response.json())
