@@ -38,7 +38,10 @@ def monitor(name=None, interval=120):
             for index, (name, total) in enumerate(zip(names, totals)):
 
                 # Get current progress
-                count = reseval.crowdsource.progress(name)
+                reseval.database.download(
+                    name,
+                    reseval.EVALUATION_DIRECTORY / 'tables')
+                count = len(reseval.load.responses(name))
 
                 # Update display if we have new results
                 if count != analyses[index]['samples']:

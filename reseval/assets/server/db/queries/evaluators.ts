@@ -2,7 +2,8 @@ import { Query } from '..';
 
 function insert(Participant: string) {
     return Query(
-        'INSERT INTO `evaluators` (`Participant`) VALUES ("' + Participant + '")');
+        'INSERT INTO `evaluators` (`ID`, `Participant`) ' +
+        'VALUES (NULL, "' + Participant + '")');
 }
 
 function one(Participant: string) {

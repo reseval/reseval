@@ -108,7 +108,7 @@ def create(config, directory, local=False, production=False):
         reseval.app.heroku.create(cfg)
 
     # Maybe create database
-    if not (credentials_directory / 'database.json').exists():
+    if not (credentials_directory / '.env').exists():
 
         try:
 

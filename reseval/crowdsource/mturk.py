@@ -143,7 +143,6 @@ def pay(config, credentials):
         ['participants', 'responses'])
     participants = reseval.load.participants(config['name'])
     responses = reseval.load.responses(config['name'])
-    import pdb; pdb.set_trace()
 
     # Match participants with responses
     participant_responses = {}
@@ -151,7 +150,7 @@ def pay(config, credentials):
         pid = participant['ID']
         participant_responses[pid] = (
                 participant |
-                {'responses': list(filter(lambda x: x['ID'] == pid, responses))})
+                {'responses': list(filter(lambda x: x['Participant'] == pid, responses))})
 
     # Iterate over participants
     for result in mturk_results:
@@ -198,7 +197,6 @@ def resume(config, credentials):
     timedelta = datetime.timedelta(
         0,
         config['crowdsource']['duration']['total'])
-    import pdb; pdb.set_trace()
     mturk.update_expiration_for_hit(
         HITId=credentials['HIT_ID'],
         ExpireAt=datetime.datetime.now() + timedelta)

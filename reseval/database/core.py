@@ -64,7 +64,7 @@ SCHEMA = [
     # ID - The evaluator ID
     # Participant - The participant ID
     'CREATE TABLE `evaluators` ('
-    '  `ID` int AUTO_INCREMENT,'
+    '  `ID` int NOT NULL AUTO_INCREMENT,'
     '  `Participant` char(32) UNIQUE,'
     '  PRIMARY KEY (`ID`)'
     ')',
@@ -150,6 +150,10 @@ def create(config, test, local=False):
             # Communicate with database
             cursor.execute(command)
 
+        # Set evaluators to start from zero
+        # TODO - This isn't working. The first insertion is always getting a value of four for some reason
+        cursor.execute('ALTER TABLE evaluators AUTO_INCREMENT = 1')
+
     # Upload conditions and filenames
     upload_test(test)
 
@@ -179,7 +183,12 @@ def destroy(name):
     module(config, local).destroy(config)
 
     # Cleanup credentials
-    (reseval.EVALUATION_DIRECTORY / name / 'credentials' / '.env').unlink()
+    (
+        reseval.EVALUATION_DIRECTORY /
+        name /
+        'credentials' /
+        '.env'
+    ).unlink(missing_ok=True)
 
 
 def download(name, directory, tables=TABLES):

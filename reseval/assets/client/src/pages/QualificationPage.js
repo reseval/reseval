@@ -105,8 +105,15 @@ export default function QualificationPage({
                         // Get evaluation files for this evaluator
                         fetch(url + '/api/evaluators/' + values['ID'])
                             .then(response => response.json())
-                            .then(response => setFiles(
-                                assignments[response[0].ID - 1]))
+                            .then(response => {
+                                console.log(response);
+                                const id = response[0].ID;
+                                console.log(id);
+                                console.log(assignments);
+                                const assignment = assignments[id - 1];
+                                console.log(assignment);
+                                return setFiles(assignment);
+                            })
 
                             // Get list of evaluation conditions
                             .then(_ => {

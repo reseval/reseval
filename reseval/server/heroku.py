@@ -21,7 +21,7 @@ def create(config):
     connection = http.client.HTTPSConnection('api.heroku.com')
 
     with reseval.chdir(reseval.CACHE / 'client'):
-        process = subprocess.Popen('npm run build', shell=True)
+        subprocess.call('npm run build', shell=True)
 
     # Create a tarball of all files needed by the Heroku server
     with tempfile.TemporaryDirectory() as directory:
@@ -31,6 +31,7 @@ def create(config):
             'server',
             'package-lock.json',
             'package.json',
+            'Procfile',
             'server.ts',
             'tsconfig.json']
         with tarfile.open(tarball, 'w:gz') as tar:
@@ -69,9 +70,8 @@ def create(config):
     connection.close()
 
     # Wait until server is setup
-    # TODO - Should we use retries here as well?
     while status(config['name']) == 'pending':
-        time.sleep(5)
+        time.sleep(3)
 
     if status(config['name']) == 'failure':
         raise ValueError('Heroku server failed to start')

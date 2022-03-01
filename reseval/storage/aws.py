@@ -79,6 +79,13 @@ def destroy(name):
         # Bucket has already been deleted
         pass
 
+    (
+        reseval.EVALUATION_DIRECTORY /
+        name /
+        'credentials' /
+        'storage.json'
+    ).unlink(missing_ok=True)
+
 
 def upload(name, file_or_directory):
     """Upload directory to AWS S3 bucket"""
