@@ -20,6 +20,8 @@ def create(config):
     # Connect to Heroku
     connection = http.client.HTTPSConnection('api.heroku.com')
 
+    # TODO - install client dependencies if they don't exist
+
     with reseval.chdir(reseval.CACHE / 'client'):
         subprocess.call('npm run build', shell=True, stdout=subprocess.DEVNULL)
 
