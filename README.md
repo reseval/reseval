@@ -67,9 +67,25 @@ M. Morrison, B. Tang, G. Tan, and B. Pardo, "Reproducible Subjective Evaluation,
 
 ## Installation
 
-**TODO** - deploy to pypi
+Install the Python module.
 
 `pip install -e .`
+
+[Download Node.js](https://nodejs.org/en/). You can check that your installation is correct by running `node --version` and `npm --version`.
+
+ReSEval uses Node.js version 17.4.0 and is not guaranteed to work on all versions. If needed, Linux and OS X users can use `n` to change their version of Node.js, and Windows users can use [NVM for Windows](https://github.com/coreybutler/nvm-windows).
+
+**Note** - You may need to run your terminal with administrator privileges to change your version of Node.js.
+
+```
+# Linux or OS X
+npm install -g n
+n 17.4.0
+
+# Windows
+nvm install 17.4.0
+nvm use 17.4.0
+```
 
 
 ## Configuration
@@ -182,23 +198,17 @@ mushra
 
 ## Local development
 
-[Download Node.js](https://nodejs.org/en/). You can check that your installation is correct by running `npm --version`. Then, install `npm` packages via `npm install`.
-
-ReSEval uses Node.js version 17.4.0 and is not guaranteed to work on all versions. If needed, Linux and OS X users can use `n` to change their version of Node.js, and Windows users can use [NVM for Windows](https://github.com/coreybutler/nvm-windows).
-
-**Note** - You may need to run your terminal with administrator privileges to change your version of Node.js.
+Setup a local MySQL database. MacOS users can use the following to setup MySQL and set a password for the root user.
 
 ```
-# Linux or OS X
-npm install -g n
-n 17.4.0
-
-# Windows
-nvm install 17.4.0
-nvm use 17.4.0
+brew install mysql
+brew services start mysql
+mysql_secure_installation
 ```
 
-Next, [Setup a local MySQL database](https://ladvien.com/data-analytics-mysql-localhost-setup/). Then, run the following to store the username and password you used during database setup in a `.env` file.
+Windows users can use [this guide](https://ladvien.com/data-analytics-mysql-localhost-setup/) to setup MySQL and obtain a user and password.
+
+Run the following to store the username and password in a `.env` file.
 
 ```
 python -m reseval.credentials \
