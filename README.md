@@ -42,7 +42,7 @@ M. Morrison, B. Tang, G. Tan, and B. Pardo, "Reproducible Subjective Evaluation,
 
 ## Table of contents
 - [Installation](#installation)
-    * [Local development](#local-development)
+    * [Deploying locally](#deploying-locally)
 - [Configuration](#configuration)
 - [Adding files](#adding-files)
     * [AB](#ab)
@@ -89,21 +89,11 @@ nvm use 17.4.0
 ```
 
 
-### Local development
+### Deploying locally
 
-To be able to preview your subjective evaluation locally, you must setup a
-local MySQL database. MacOS users can use the following to setup MySQL and
-set a password for the root user.
-
-```
-brew install mysql
-brew services start mysql
-mysql_secure_installation
-```
-
-Windows users can use
-[this guide](https://ladvien.com/data-analytics-mysql-localhost-setup/) to
-setup MySQL and obtain a user and password.
+To be able to preview your subjective evaluation locally, you must
+[setup a local MySQL database](https://ladvien.com/data-analytics-mysql-localhost-setup/)
+and obtain a username and password. The default username is `root`.
 
 Run the following to store the username and password in
 `reseval.CACHE / '.env'`.
@@ -263,7 +253,7 @@ Follow the instructions [here](https://docs.aws.amazon.com/AWSMechTurk/latest/AW
 
 Once you have your configuration file and a properly formatted directory of evaluation files, you are ready to deploy a subjective evaluation. Example configuration files and corresponding evaluation files can be found in `examples/`.
 
-If you are not performing local development, add your API keys.
+If you are not deploying locally, add your API keys.
 
 ```
 python -m reseval.credentials \
