@@ -53,7 +53,7 @@ export default function Survey() {
     // Render current page
     switch (step.id) {
         case 'welcome':
-            return <WelcomePage navigation={navigation} />;
+            return <WelcomePage navigation={navigation}/>;
         case 'prescreen':
             return <QualificationPage
                 participant={participant}

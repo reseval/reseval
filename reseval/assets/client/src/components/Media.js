@@ -29,20 +29,28 @@ export default function Media(props) {
         }
     }
 
+    let media;
     switch (config.datatype) {
         case 'audio':
-            return <Audio {...props} />;
+            media = <Audio {...props} />;
+            break;
         case 'image':
             props.onEnded();
             delete props.onEnded;
-            return <Image {...props} />;
+            media = <Image {...props} />;
+            break;
         case 'text':
             props.onEnded();
             delete props.onEnded;
-            return <Text {...props} />;
+            media = <Text {...props} />;
+            break;
         case 'video':
-            return <Video {...props} />;
+            media = <Video {...props} />;
+            break;
         default:
             throw new Error(`Datatype ${config.datatype} is not recognized`);
     }
+
+    return (
+        <div style={{display: 'flex', justifyContent: 'center', padding: '10px'}}>{media}</div>);
 }

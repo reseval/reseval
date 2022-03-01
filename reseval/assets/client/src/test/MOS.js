@@ -48,7 +48,7 @@ export default function MOS({
 
     // Render
     return (
-        <div className='container'>
+        <>
             <Media
                 src={condition + '/' + file}
                 reference={reference}
@@ -70,6 +70,6 @@ export default function MOS({
             >
                 Next
             </Button>
-        </div>
+        </>
     );
 };

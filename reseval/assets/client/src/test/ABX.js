@@ -63,14 +63,12 @@ export default function ABX({
 
     // Render
     return (
-        <div className='container'>
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <Media
-                    src={'reference/' + file}
-                    reference={refX}
-                    onEnded={() => setXEnded(true)}
-                />
-            </div>
+        <>
+            <Media
+                src={'reference/' + file}
+                reference={refX}
+                onEnded={() => setXEnded(true)}
+            />
             <MediaRadioButtonGroup
                 file={file}
                 conditions={permuted_conditions}
@@ -91,6 +89,6 @@ export default function ABX({
             >
                 Next
             </Button>
-        </div>
+        </>
     );
 };

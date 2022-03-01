@@ -56,7 +56,7 @@ export default function MUSHRA({ file, conditions, setResponse, onClick }) {
 
     // Render
     return (
-        <div className='container'>
+        <>
             <MediaSliderGroup
                 file={file}
                 conditions={permuted_conditions}
@@ -77,6 +77,6 @@ export default function MUSHRA({ file, conditions, setResponse, onClick }) {
             >
                 Next
             </Button>
-        </div>
+        </>
     );
 };

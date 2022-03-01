@@ -10,7 +10,10 @@ Radio buttons
 
 export default function RadioButtonGroup({ response, setResponse, active }) {
 	/* Create a group of radio buttons */
-	const buttons = [...Array(5).keys()].map(index => {
+	const choices = 5;
+
+	// Radio buttons
+	const buttons = [...Array(choices).keys()].map(index => {
 
 		// Get radio button state
 		let state = active ? 'active' : '';
@@ -31,7 +34,10 @@ export default function RadioButtonGroup({ response, setResponse, active }) {
 	// Render button group
 	return (
 		<ul>
-			<li className='grid'>
+			<li
+				className='grid'
+				style={{gridTemplateColumns: `repeat(${choices}, 1fr)`}}
+			>
 				{buttons}
 			</li>
 		</ul>

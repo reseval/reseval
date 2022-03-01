@@ -55,7 +55,7 @@ export default function AB({
 
     // Render
     return (
-        <div className='container'>
+        <>
             <MediaRadioButtonGroup
                 file={file}
                 conditions={permuted_conditions}
@@ -75,6 +75,6 @@ export default function AB({
             >
                 Next
             </Button>
-        </div>
+        </>
     );
 };

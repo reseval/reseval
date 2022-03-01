@@ -5,7 +5,6 @@ export default function MultipleChoice({ response, setResponse, answers }) {
             {answers.map((item, key) =>
                 <Choice
                     key={key}
-                    index={key}
                     response={response}
                     setResponse={setResponse}
                     label={item} />
@@ -14,21 +13,20 @@ export default function MultipleChoice({ response, setResponse, answers }) {
     )
 }
 
-function Choice({ index, response, setResponse, label }) {
+function Choice({ response, setResponse, label }) {
     /* Render one choice of a multiple choice question */
     return (
-        <li className='grid'>
-            <div
-                className={`check active col-1 ${label === response ? 'selected' : ''}`}
-                onClick={() => setResponse(label)}>
-                <div className='inside' />
+        <li className='grid grid-20-80'>
+            <div style={{display: 'flex', justifyContent: 'center', width: '100%'}}>
+                <div
+                    className={`check active col-1 ${label === response ? 'selected' : ''}`}
+                    onClick={() => setResponse(label)}>
+                    <div className='inside' />
+                </div>
             </div>
-            <label
-                htmlFor=''
-                className='col-3'
-                onClick={() => setResponse(label)}>
-                {label}
-            </label>
+            <div style={{display: 'flex', width: '100%' }}>
+                <label onClick={() => setResponse(label)}>{label}</label>
+            </div>
         </li>
     )
 }

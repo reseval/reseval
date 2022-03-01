@@ -20,12 +20,16 @@ label .audio-single {
 
 .grid {
 	display: grid;
-	grid-template-columns: repeat(5, 1fr);
-	grid-auto-rows: auto;
-	gap: 20px;
-	justify-content: center;
 	align-items: center;
 	height: 100%;
+}
+
+.grid-20-80 {
+	grid-template-columns: 20fr 80fr;
+}
+
+.grid-question {
+	grid-template-columns: repeat(5, 1fr);
 }
 
 .col-1 {
@@ -54,7 +58,7 @@ label .audio-single {
 	position: relative;
 	margin: 0px auto;
 	height: auto;
-	padding-top: 40px;
+	padding-top: 32px;
 	width: 800px;
 }
 

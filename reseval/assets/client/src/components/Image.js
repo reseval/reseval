@@ -7,6 +7,6 @@ export default function Image({ src, ref }) {
         alt={'Subjective evaluation media'}
         ref={ref}
         src={src}
-        style={{minWidth: '128px'}}
+        style={{minWidth: '150px'}}
     />;
 };
