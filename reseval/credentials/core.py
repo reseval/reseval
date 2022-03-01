@@ -49,6 +49,7 @@ def local_credentials(mysql_local_user=None, mysql_local_password=None):
         creds['MYSQL_PASS'] = mysql_local_password
 
     # Write to environment file
+    reseval.ENVIRONMENT_FILE.parent.mkdir(exist_ok=True, parents=True)
     with open(reseval.ENVIRONMENT_FILE, 'w') as file:
         for key, value in creds.items():
             file.write(f'{key}={value}\n')

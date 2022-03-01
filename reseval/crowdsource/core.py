@@ -1,5 +1,4 @@
 import json
-from msilib.schema import File
 
 import reseval
 
