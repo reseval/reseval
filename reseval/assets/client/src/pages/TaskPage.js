@@ -103,12 +103,11 @@ export default function TaskPage({
 
     // Render
     return (
-        <div className='section col-all'>
+        <div className='container'>
             <Markdown>
                 {`**Question ${index + 1} of ${files.length}**\n` +
                  config.survey_instructions}
             </Markdown>
-            <br />
             {test}
         </div>
     );

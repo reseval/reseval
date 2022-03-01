@@ -63,25 +63,23 @@ export default function ABX({
 
     // Render
     return (
-        <div className='container grid'>
-            <div className='section col-all'>
+        <div className='container'>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <Media
                     src={'reference/' + file}
                     reference={refX}
                     onEnded={() => setXEnded(true)}
                 />
             </div>
-            <div className='section col-all'>
-                <MediaRadioButtonGroup
-                    file={file}
-                    conditions={permuted_conditions}
-                    response={response}
-                    setResponse={setResponse}
-                    references={[refA, refB]}
-                    active={XEnded && AEnded && BEnded}
-                    onEndeds={[() => setAEnded(true), () => setBEnded(true)]}
-                />
-            </div>
+            <MediaRadioButtonGroup
+                file={file}
+                conditions={permuted_conditions}
+                response={response}
+                setResponse={setResponse}
+                references={[refA, refB]}
+                active={XEnded && AEnded && BEnded}
+                onEndeds={[() => setAEnded(true), () => setBEnded(true)]}
+            />
             <Button
                 onClick={() => {
                     typeof response !== 'undefined' &&

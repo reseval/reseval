@@ -28,23 +28,16 @@ function MediaRadioButton({
 	// Render radio button and media
 	return (
 		<li className='grid'>
-			<input
-				type='radio'
-				id={condition}
-				value={condition}
-				name={condition}
-			/>
             <div
 				className={`check col-1 ${state}`}
 				onClick={() => active && setResponse(condition)}>
                 <div className='inside' />
             </div>
-			<label htmlFor={condition} className='col-3'>
-				<Media
-					src={condition + '/' + file}
-					reference={reference}
-					onEnded={onEnded}/>
-			</label>
+			<Media
+				src={condition + '/' + file}
+				reference={reference}
+				onEnded={onEnded}
+			/>
 		</li>
 	);
 };

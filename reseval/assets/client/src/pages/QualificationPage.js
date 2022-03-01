@@ -128,7 +128,7 @@ export default function QualificationPage({
 
     // Render
     return (
-        <div className='container grid'>
+        <div className='container'>
             <Markdown>
                 {`**Question ${index + 1}** ${questions[index].text}`}
             </Markdown>

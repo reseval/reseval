@@ -21,6 +21,7 @@ label .audio-single {
 .grid {
 	display: grid;
 	grid-template-columns: repeat(5, 1fr);
+	grid-auto-rows: auto;
 	gap: 20px;
 	justify-content: center;
 	align-items: center;
@@ -48,21 +49,13 @@ label .audio-single {
     grid-column: auto / span 5;
 }
 
-.col-all {
-    grid-column: 1 / -1;
-}
-
 .container {
 	display: block;
 	position: relative;
-	margin: 40px auto;
+	margin: 0px auto;
 	height: auto;
+	padding-top: 40px;
 	width: 800px;
-	padding: 20px;
-}
-
-.container a {
-	color: #333;
 }
 
 .container ul{
@@ -111,8 +104,7 @@ ul li label{
 	font-weight: 300;
 	font-size: 1.35em;
 	padding: 25px 25px 25px 80px;
-	margin: 10px auto;
-	height: 30px;
+	min-height: 30px;
 	z-index: 9;
 	min-width: 300px;
 	cursor: pointer;
@@ -185,7 +177,6 @@ textarea {
     max-width: 1050px;
     margin-left: auto;
     margin-right: auto;
-    padding: 0.5rem 0.8rem;
 }
 
 .mediaSliderGrid {

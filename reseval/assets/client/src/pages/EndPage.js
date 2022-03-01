@@ -18,11 +18,9 @@ export default function EndPage({ completionCode }) {
 
     // Render
     return (
-        <div className='container grid'>
-            <div className='section col-all'>
-                <Markdown>{message}</Markdown>
-                <h1>{completionCode}</h1>
-            </div>
+        <div className='container'>
+            <Markdown>{message}</Markdown>
+            <h1>{completionCode}</h1>
         </div>
     );
 }

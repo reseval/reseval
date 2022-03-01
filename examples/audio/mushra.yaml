@@ -1,5 +1,5 @@
 # A name to give to this evaluation configuration
-name: reseval-mushra-example
+name: mushra-audio-example
 
 # The type of test to run. One of [ab, abx, mos, mushra].
 test: mushra

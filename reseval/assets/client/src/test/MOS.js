@@ -48,23 +48,19 @@ export default function MOS({
 
     // Render
     return (
-        <div className='container grid'>
-            <div className='section col-all'>
-                <Media
-                    src={condition + '/' + file}
-                    reference={reference}
-                    onEnded={() => setEnded(true)}
-                />
-            </div>
-            <div className='section col-all'>
-                <RadioButtonGroup
-                    response={
-                        typeof response === 'undefined' ? response :
-                        Number(response.slice(-1))}
-                    setResponse={index => setResponse(`${condition}-${index}`)}
-                    active={ended}
-                />
-            </div>
+        <div className='container'>
+            <Media
+                src={condition + '/' + file}
+                reference={reference}
+                onEnded={() => setEnded(true)}
+            />
+            <RadioButtonGroup
+                response={
+                    typeof response === 'undefined' ? response :
+                    Number(response.slice(-1))}
+                setResponse={index => setResponse(`${condition}-${index}`)}
+                active={ended}
+            />
             <Button
                 onClick={() => {
                     typeof response !== 'undefined' &&

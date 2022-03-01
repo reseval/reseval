@@ -65,7 +65,7 @@ export default function FeedbackPage({ navigation, participant }) {
 
     // Render
     return (
-        <div className='container grid'>
+        <div className='container'>
             <Markdown>
                 {
                     `## **Post-Evaluation Survey**\n` +

@@ -55,18 +55,16 @@ export default function AB({
 
     // Render
     return (
-        <div className='container grid'>
-            <div className='section col-all'>
-                <MediaRadioButtonGroup
-                    file={file}
-                    conditions={permuted_conditions}
-                    response={response}
-                    setResponse={setResponse}
-                    references={[refA, refB]}
-                    active={AEnded && BEnded}
-                    onEndeds={[() => setAEnded(true), () => setBEnded(true)]}
-                />
-            </div>
+        <div className='container'>
+            <MediaRadioButtonGroup
+                file={file}
+                conditions={permuted_conditions}
+                response={response}
+                setResponse={setResponse}
+                references={[refA, refB]}
+                active={AEnded && BEnded}
+                onEndeds={[() => setAEnded(true), () => setBEnded(true)]}
+            />
             <Button
                 onClick={() => {
                     typeof response !== 'undefined' &&

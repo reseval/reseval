@@ -18,7 +18,6 @@ function Choice({ index, response, setResponse, label }) {
     /* Render one choice of a multiple choice question */
     return (
         <li className='grid'>
-            <input type='radio' name='' id={index} />
             <div
                 className={`check active col-1 ${label === response ? 'selected' : ''}`}
                 onClick={() => setResponse(label)}>

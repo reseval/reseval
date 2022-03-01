@@ -10,10 +10,8 @@ import config from '../json/config.json'
 export default function WelcomePage({ navigation }) {
 	/* Renders the first page that participants visit */
 	return (
-		<div className='container grid'>
-			<div className='section col-all'>
-				<Markdown>{config.welcome_text}</Markdown>
-			</div>
+		<div className='container'>
+			<Markdown>{config.welcome_text}</Markdown>
 			<Button onClick={navigation.next}>I Agree</Button>
 		</div>
 	);
