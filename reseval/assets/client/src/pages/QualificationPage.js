@@ -96,10 +96,7 @@ export default function QualificationPage({
                     // Get evaluation files for this evaluator
                     fetch(url + '/api/evaluators/')
                         .then(response => response.json())
-                        .then(response => {
-                            console.log(response);
-                            console.log(assignments[response]);
-                            return setFiles(assignments[response]);
+                        .then(response => setFiles(assignments[response]));
                         })
 
                         // Get list of evaluation conditions

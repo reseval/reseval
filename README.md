@@ -318,7 +318,8 @@ python -m reseval.pay <name>
 ### Destroy
 
 ```
-# Destroy a subjective evaluation
+# Destroy the compute resources of a subjective evaluation (e.g., any cloud
+# storage, databases, or servers)
 python -m reseval.destroy <name>
 
 # Destroy a subjective evaluation even if it is still active.
