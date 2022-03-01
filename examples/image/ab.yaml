@@ -1,0 +1,135 @@
+# A name to give to this evaluation configuration
+name: reseval-ab-example
+
+# The type of test to run. One of [ab, abx, mos, mushra].
+test: ab
+
+# The type of data to use. One of [audio, image].
+datatype: image
+
+# The location to store files used for evaluation. One of [aws].
+storage: aws
+
+# The third-party platform hosting the MySQL database. One of [heroku].
+database: heroku
+
+# The third-party platform hosting the server. One of [heroku].
+server: heroku
+
+# Crowdsourcing configuration
+crowdsource:
+
+  # The crowdsourcing platform used for evaluation. One of [mturk].
+  platform: mturk
+
+  # The survey title shown to potential participants
+  title: Title
+
+  # The survey description shown to potential participants
+  description: Description
+
+  # Keywords that participants can use to find your survey
+  keywords: Keywords
+
+  # Filter participants
+  filter:
+
+    # Only allow participants from a certain countries
+    countries: ['US']
+
+    # Only allow participants who have previously completed at least this
+    # number of tasks
+    approved_tasks: 0
+
+    # Only allow participants who have a sufficiently high acceptance rating
+    approval_rating: 0
+
+  # How much you pay participants (in US dollars)
+  # E.g., 2.00 is two dollars; 0.50 is fifty cents
+  payment:
+
+    # The amount that you pay even if they don't pass prescreening
+    base: 0.05
+
+    # The additional amount that you pay participants who complete evaluation
+    completion: 0.45
+
+  # How long to wait for things (in seconds)
+  duration:
+
+    # Total lifespan of the evaluation, after which the evaluation is no
+    # longer available for participants to take
+    total: 86400
+
+    # The maximum time you will allow a participant to spend on your task
+    assignment: 1800
+
+    # Duration after which payment is automatically made
+    autoapprove: 172800
+
+# The number of participants
+participants: 2
+
+# The number of evaluations each participant performs
+samples_per_participant: 2
+
+# A seed to use for deterministic random sampling
+random_seed: 0
+
+# Introduction text to display on the first page participants visit
+welcome_text: "
+  # **Welcome!**\n
+  We are conducting a research study to evaluate the
+  quality of an image processing algorithm. If you agree to participate, you
+  will be asked to fill out a brief questionnaire. You will then be asked to
+  evaluate a series of images.\n
+  ### **Privacy**\nThis survey is completely anonymous. We will NOT collect
+  any personally identifiable information. Your participation in this study
+  does not involve any risk to you beyond that of your everyday life.\n
+  ### **Consent**\nBy pressing **I Agree**, you confirm you are willing
+  to participate in this research. However, you are free to withdraw your
+  participation at any time.\n
+  ### **Contact Information**\nIf you have any questions or feedback,
+  please contact <contact info>."
+
+# Questions that participants must answer before they are permitted to
+# perform evaluation. If a multiple choice question has correct_answer
+# defined, the participant must select that answer to be able to continue
+# to the evaluation.
+prescreen_questions:
+
+  # Test question
+  - name: DummyQuestion
+
+    # The type of question. One of [free-response, multiple-choice].
+    type: multiple-choice
+
+    # Question text
+    text: Would you like to take a subjective evaluation?
+
+    # Possible answers
+    answers: ['Yes', 'No']
+
+    # Indicate a correct answer
+    correct_answer: 'Yes'
+
+# Instructions presented to the participant during evaluation
+survey_instructions: "
+  ## **Instructions** \nSelect the higher-quality image. The higher-quality
+  image is the one that looks the most natural, or has fewer artifacts (e.g.,
+  blur or noise)."
+
+# Questions presented to the participant after evaluation
+followup_questions:
+
+  # Ask whether the listening environment has changed
+  - name: DummyFollowup
+
+    # The type of question. One of [free-response, multiple-choice].
+    type: free-response
+
+    # Question text
+    text: "How was the evaluation?"
+
+    # Placeholder text
+    placeholder: Good.

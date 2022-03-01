@@ -15,7 +15,7 @@ export default function Question({ question, response, setResponse}) {
     // Maybe render free response
     if (question.type === 'free-response') {
         return <FreeResponse
-            response={response}
+            placeholder={question.placeholder}
             setResponse={setResponse}
         />;
     }
