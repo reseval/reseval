@@ -60,7 +60,7 @@ def create(config, directory, local=False, production=False):
                  'finished. If you want to extend an evaluation, use '
                  'reseval.extend.')
 
-    except (KeyError, FileNotFoundError):
+    except (KeyError, FileNotFoundError, TypeError):
         pass
 
     # Don't overwrite production data
