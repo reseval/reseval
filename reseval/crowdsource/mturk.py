@@ -197,6 +197,7 @@ def resume(config, credentials):
     timedelta = datetime.timedelta(
         0,
         config['crowdsource']['duration']['total'])
+    # TODO - this is failing, saying the increment in seconds is negative
     mturk.update_expiration_for_hit(
         HITId=credentials['HIT_ID'],
         ExpireAt=datetime.datetime.now() + timedelta)
@@ -327,7 +328,7 @@ def qualifications(config):
             'RequiredToPreview': True})
 
     # Number of approved tasks
-    if 'approved_tasks' in cfg:
+    if 'approved_tasks' in cfg and cfg['approved_tasks'] > 0:
         qualifications.append({
             'QualificationTypeId': '00000000000000000040',
             'Comparator': 'GreaterThan',
@@ -335,7 +336,7 @@ def qualifications(config):
             'RequiredToPreview': True})
 
     # Approval rating
-    if 'approval_rating' in cfg:
+    if 'approval_rating' in cfg and cfg['approval_rating'] > 0:
         qualifications.append({
             'QualificationTypeId': '000000000000000000L0',
             'Comparator': 'GreaterThanOrEqualTo',

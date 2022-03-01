@@ -117,7 +117,7 @@ def paid(name):
         return True
 
     # Check if participants have been paid
-    module(config).paid(credentials)
+    return module(config).paid(credentials)
 
 
 def pay(name):

@@ -64,11 +64,6 @@ def conditions(name):
     return load_table(name, 'conditions')
 
 
-def evaluators(name):
-    """Load the table of evaluators from a subjective evaluation"""
-    return load_table(name, 'evaluators')
-
-
 def participants(name):
     """Load the table of participants from a subjective evaluation"""
     return load_table(name, 'participants')

@@ -93,42 +93,27 @@ export default function QualificationPage({
             }).then(_ => {
                 if (index + 1 >= questions.length) {
 
-                    // Create unique evaluator ID
-                    fetch(url + '/api/evaluators/insert', {
-                        method: 'post',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ Participant: values['ID'] })
-                    }).then(_ => {
+                    // Get evaluation files for this evaluator
+                    fetch(url + '/api/evaluators/')
+                        .then(response => response.json())
+                        .then(response => {
+                            console.log(response);
+                            console.log(assignments[response]);
+                            return setFiles(assignments[response]);
+                        })
 
-                        // Get evaluation files for this evaluator
-                        fetch(url + '/api/evaluators/' + values['ID'])
-                            .then(response => response.json())
-                            .then(response => {
-                                console.log(response);
-                                const id = response[0].ID;
-                                console.log(id);
-                                console.log(assignments);
-                                const assignment = assignments[id - 1];
-                                console.log(assignment);
-                                return setFiles(assignment);
-                            })
+                        // Get list of evaluation conditions
+                        .then(_ => {
+                            fetch(url + '/api/conditions')
+                                .then(response => response.json())
+                                .then(response => {
+                                    setConditions(
+                                        response.map(
+                                            cond => cond.Condition))
 
-                            // Get list of evaluation conditions
-                            .then(_ => {
-                                fetch(url + '/api/conditions')
-                                    .then(response => response.json())
-                                    .then(response => {
-                                        setConditions(
-                                            response.map(
-                                                cond => cond.Condition))
-
-                                    // Go to evaluation
-                                    }).then(_ => navigation.next())
-                            })
-                        }
-                    )
+                                // Go to evaluation
+                                }).then(_ => navigation.next())
+                        });
                 }
             });
         }

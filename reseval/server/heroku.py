@@ -21,7 +21,7 @@ def create(config):
     connection = http.client.HTTPSConnection('api.heroku.com')
 
     with reseval.chdir(reseval.CACHE / 'client'):
-        subprocess.call('npm run build', shell=True)
+        subprocess.call('npm run build', shell=True, stdout=subprocess.DEVNULL)
 
     # Create a tarball of all files needed by the Heroku server
     with tempfile.TemporaryDirectory() as directory:

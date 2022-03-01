@@ -57,18 +57,6 @@ SCHEMA = [
     '  PRIMARY KEY (`ID`)'
     ')',
 
-    # Evaluator information
-    # An evaluator is a participant who has passed prescreening and begins
-    # performing evaluation.
-    #
-    # ID - The evaluator ID
-    # Participant - The participant ID
-    'CREATE TABLE `evaluators` ('
-    '  `ID` int NOT NULL AUTO_INCREMENT,'
-    '  `Participant` char(32) UNIQUE,'
-    '  PRIMARY KEY (`ID`)'
-    ')',
-
     # Participant's responses
     # The format of the response depends on the test being taken. For example,
     # an ABX test has as responses a character A, B, or X, and an MOS test has
@@ -88,7 +76,7 @@ SCHEMA = [
     ')']
 
 # Names of tables in the database
-TABLES = ['conditions', 'files', 'participants', 'evaluators', 'responses']
+TABLES = ['conditions', 'files', 'participants', 'responses']
 
 
 ###############################################################################
@@ -149,10 +137,6 @@ def create(config, test, local=False):
 
             # Communicate with database
             cursor.execute(command)
-
-        # Set evaluators to start from zero
-        # TODO - This isn't working. The first insertion is always getting a value of four for some reason
-        cursor.execute('ALTER TABLE evaluators AUTO_INCREMENT = 1')
 
     # Upload conditions and filenames
     upload_test(test)
@@ -255,7 +239,7 @@ def connect():
 def upload_previous(name):
     """Upload previous results from this evaluation to database"""
     # Check if we have previous results to upload
-    tables = ['participants', 'evaluators', 'responses']
+    tables = ['participants', 'responses']
     directory = reseval.EVALUATION_DIRECTORY / name / 'tables'
     if not all((directory / f'{table}.csv').exists() for table in tables):
         return
@@ -289,10 +273,8 @@ def upload_previous(name):
                 f'INSERT INTO {table} ({columns}) VALUES ({values}) '
                 f'ON DUPLICATE KEY UPDATE {update}')
 
-            # Maybe specify data order
+            # Specify data order
             items = [tuple(row[key] for key in keys) for row in rows]
-            if table == 'evaluators':
-                items = items.sort(key=lambda item: item[keys.index('ID')])
 
             # Execute insertions
             cursor.executemany(command, items)
