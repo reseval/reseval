@@ -1,6 +1,7 @@
 # Reproducible Subjective Evaluation (ReSEval)
 <!-- [![PyPI](https://img.shields.io/pypi/v/reseval.svg)](https://pypi.python.org/pypi/reseval) -->
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9-blue.svg)](https://www.python.org/downloads/release/python-390/)
 <!-- [![Downloads](https://pepy.tech/badge/reseval)](https://pepy.tech/project/reseval) -->
 
 ReSEval is a framework for quickly building subjective evaluations that are
@@ -41,13 +42,13 @@ M. Morrison, B. Tang, G. Tan, and B. Pardo, "Reproducible Subjective Evaluation,
 
 ## Table of contents
 - [Installation](#installation)
+    * [Local development](#local-development)
 - [Configuration](#configuration)
 - [Adding files](#adding-files)
     * [AB](#ab)
     * [ABX](#abx)
     * [MOS](#mos)
     * [MUSHRA](#mushra)
-- [Local development](#local-development)
 - [Credentials](#credentials)
     * [Heroku](#heroku)
     * [Amazon Web Services](#amazon-web-services)
@@ -67,11 +68,11 @@ M. Morrison, B. Tang, G. Tan, and B. Pardo, "Reproducible Subjective Evaluation,
 
 ## Installation
 
-Install the Python module. ReSEval was tested using Python 3.9.
+First, install the Python module. ReSEval requires Python 3.9 or higher.
 
 `pip install -e .`
 
-[Download Node.js](https://nodejs.org/en/). You can check that your installation is correct by running `node --version` and `npm --version`.
+Next, [download Node.js](https://nodejs.org/en/). You can check that your installation is correct by running `node --version` and `npm --version`.
 
 ReSEval uses Node.js version 17.4.0 and is not guaranteed to work on all versions. If needed, Linux and OS X users can use `n` to change their version of Node.js, and Windows users can use [NVM for Windows](https://github.com/coreybutler/nvm-windows).
 
@@ -86,6 +87,35 @@ n 17.4.0
 nvm install 17.4.0
 nvm use 17.4.0
 ```
+
+
+### Local development
+
+To be able to preview your subjective evaluation locally, you must setup a
+local MySQL database. MacOS users can use the following to setup MySQL and
+set a password for the root user.
+
+```
+brew install mysql
+brew services start mysql
+mysql_secure_installation
+```
+
+Windows users can use
+[this guide](https://ladvien.com/data-analytics-mysql-localhost-setup/) to
+setup MySQL and obtain a user and password.
+
+Run the following to store the username and password in
+`reseval.CACHE / '.env'`.
+
+```
+python -m reseval.credentials \
+    --mysql_local_user <mysql_user> \
+    --mysql_local_password <mysql_local_password>
+```
+
+The `.env` file is used to set local environment variables and is not pushed to
+GitHub or uploaded to any remote storage.
 
 
 ## Configuration
@@ -196,29 +226,6 @@ mushra
 ```
 
 
-## Local development
-
-Setup a local MySQL database. MacOS users can use the following to setup MySQL and set a password for the root user.
-
-```
-brew install mysql
-brew services start mysql
-mysql_secure_installation
-```
-
-Windows users can use [this guide](https://ladvien.com/data-analytics-mysql-localhost-setup/) to setup MySQL and obtain a user and password.
-
-Run the following to store the username and password in a `.env` file.
-
-```
-python -m reseval.credentials \
-    --mysql_local_user <mysql_user> \
-    --mysql_local_password <mysql_local_password>
-```
-
-The `.env` file is used to set local environment variables and is not pushed to GitHub or uploaded to any remote storage.
-
-
 ## Credentials
 
 API keys are required to use the third-party services that ReSEval depends on.
@@ -265,7 +272,7 @@ python -m reseval.credentials \
     --heroku_api_key <heroku_api_key>
 ```
 
- API keys are saved in `.keys`. The `.keys` file is used to set local environment variables and is not pushed to GitHub or uploaded to any remote storage.
+ API keys are saved in `reseval.CACHE / '.keys'`. The `.keys` file is used to set local environment variables and is not pushed to GitHub or uploaded to any remote storage.
 
  Arguments for the following command-line interfaces are as follows.
 
@@ -298,7 +305,7 @@ python -m reseval.monitor
 
 # Monitor one subjective evaluation
 # The name of the evaluation can be found in its configuration file
-python -m reseval.monitor <name>
+python -m reseval.monitor --name <name>
 ```
 
 **Note** - By default, the monitor updates once every two minutes. You can update the monitor more or less often by providing an update interval in seconds.
