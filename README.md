@@ -67,7 +67,7 @@ M. Morrison, B. Tang, G. Tan, and B. Pardo, "Reproducible Subjective Evaluation,
 
 ## Installation
 
-Install the Python module.
+Install the Python module. ReSEval was tested using Python 3.9.
 
 `pip install -e .`
 
