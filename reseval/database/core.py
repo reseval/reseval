@@ -307,7 +307,7 @@ def upload_test(test):
 def module(config, local=False):
     """Get the database module to use"""
     if local:
-        return reseval.database.local
+        return reseval.database.localhost
     database = config['database']
     if database == 'heroku':
         return reseval.database.heroku

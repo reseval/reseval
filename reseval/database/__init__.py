@@ -1,3 +1,3 @@
 from .core import *
 from . import heroku
-from . import local
+from . import localhost

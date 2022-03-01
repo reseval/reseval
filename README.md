@@ -6,7 +6,7 @@
 ReSEval is a framework for quickly building subjective evaluations that are
 deployed on crowdworker platforms like
 [Amazon Mechanical Turk](https://www.mturk.com/). ReSEval currently supports
-AB, ABX, MOS, and MUSHRA tests on audio and image data.
+A/B, ABX, MOS, and MUSHRA tests on audio and image data.
 
 <h3 align="center">
     While our code is free to use, performing crowdsourced subjective

@@ -60,7 +60,7 @@ def create(config, directory, local=False, production=False):
                  'finished. If you want to extend an evaluation, use '
                  'reseval.extend.')
 
-    except FileNotFoundError:
+    except (KeyError, FileNotFoundError):
         pass
 
     # Don't overwrite production data
@@ -110,17 +110,17 @@ def create(config, directory, local=False, production=False):
     # Maybe create database
     if not (credentials_directory / '.env').exists():
 
-        try:
+        # try:
 
-            # Create database
-            reseval.database.create(cfg, test, local)
+        # Create database
+        reseval.database.create(cfg, test, local)
 
-        except (Exception, KeyboardInterrupt) as exception:
+        # except (Exception, KeyboardInterrupt) as exception:
 
-            # Cleanup resources
-            reseval.destroy(name, True)
+        #     # Cleanup resources
+        #     reseval.destroy(name, True)
 
-            raise exception
+        #     raise exception
 
     # Maybe create server
     if local or not (credentials_directory / 'server.json').exists():
