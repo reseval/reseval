@@ -14,14 +14,14 @@ export default function RadioButtonGroup({ response, setResponse, active }) {
 
 		// Get radio button state
 		let state = active ? 'active' : '';
-		if (index === response) {
+		if (index + 1 === response) {
 			state = 'active selected';
 		}
 
 		// Render a button
 		return (
 			<RadioButtonText
-				onClick={() => active && setResponse(index)}
+				onClick={() => active && setResponse(index + 1)}
 				state={state}
 				text={index + 1}
 			/>

@@ -23,9 +23,8 @@ export const Query = (query: string, values?: any) => {
 }
 
 import conditions from './queries/conditions';
-import evaluators from './queries/evaluators';
 import files from './queries/files';
 import participants from './queries/participants';
 import responses from './queries/responses';
 
-export default { conditions, evaluators, files, participants, responses, }
+export default { conditions, files, participants, responses, }

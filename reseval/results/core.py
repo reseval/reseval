@@ -4,14 +4,16 @@ import reseval
 
 
 ###############################################################################
-# Analyze subjective evaluation results
+# Get subjective evaluation results
 ###############################################################################
 
 
-def analyze(name):
-    """Download and analyze the results of a subjective evaluation"""
+def results(name, directory):
+    """Get the results of a subjective evaluation"""
     # Download database tables
-    reseval.database.download(name)
+    reseval.database.download(
+        name,
+        reseval.EVALUATION_DIRECTORY / name / 'tables')
 
     # Load responses
     config = reseval.load.config_by_name(name)
@@ -26,13 +28,13 @@ def analyze(name):
     conditions = [condition['Condition'] for condition in conditions]
 
     # Group results by file stems
-    results = {}
+    responses_by_stem = {}
     for response in responses:
         stem = response['Stem']
-        if stem in results:
-            results[stem].append(response['Response'])
+        if stem in responses_by_stem:
+            responses_by_stem[stem].append(response['Response'])
         else:
-            results[stem] = [response['Response']]
+            responses_by_stem[stem] = [response['Response']]
 
     # Get test
     test = reseval.test.get(config)
@@ -40,11 +42,10 @@ def analyze(name):
     # Analyze results
     analysis, stem_scores = test.analyze(
         conditions,
-        results,
+        responses_by_stem,
         config['random_seed'])
 
     # Save results
-    directory = reseval.EVALUATION_DIRECTORY / name
     with open(directory / 'results.json', 'w') as file:
         json.dump(analysis, file, indent=4)
     with open(directory / 'stemresults.json', 'w') as file:

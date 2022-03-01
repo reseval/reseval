@@ -10,6 +10,8 @@ import reseval
 
 def create(config, local=False):
     """Create a server"""
+    print('Creating server...')
+
     # Create server
     credentials = module(config, local).create(config)
 
@@ -34,8 +36,15 @@ def destroy(name):
     # Load config
     config = reseval.load.config_by_name(name)
 
-    # Load credentials
-    credentials = reseval.load.credentials_by_name(name, 'server')
+    try:
+
+        # Load credentials
+        credentials = reseval.load.credentials_by_name(name, 'server')
+
+    except FileNotFoundError:
+
+        # We assume the server does not exist if we don't have credentials
+        return
 
     # Destroy server
     module(config, local).destroy(config, credentials)

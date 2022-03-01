@@ -39,10 +39,10 @@ crowdsource:
 
     # Only allow participants who have previously completed at least this
     # number of tasks
-    approved_tasks: 100
+    approved_tasks: 0
 
     # Only allow participants who have a sufficiently high acceptance rating
-    approval_rating: 97
+    approval_rating: 0
 
   # How much you pay participants (in US dollars)
   # E.g., 2.00 is two dollars; 0.50 is fifty cents

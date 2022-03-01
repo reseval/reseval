@@ -33,19 +33,19 @@ def destroy(name, force=False):
                 reseval.crowdsource.pay(name)
 
     # Destroy cloud storage
-    try:
-        reseval.storage.destroy(name)
-    except Exception:
-        pass
+    # try:
+    reseval.storage.destroy(name)
+    # except Exception:
+        # pass
 
     # Destroy database
-    try:
-        reseval.database.destroy(name)
-    except Exception:
-        pass
+    # try:
+    reseval.database.destroy(name)
+    # except Exception:
+        # pass
 
     # Destroy server
-    try:
-        reseval.server.destroy(name)
-    except Exception:
-        pass
+    # try:
+    reseval.server.destroy(name)
+    # except Exception:
+        # pass

@@ -93,35 +93,23 @@ export default function QualificationPage({
             }).then(_ => {
                 if (index + 1 >= questions.length) {
 
-                    // Create unique evaluator ID
-                    fetch(url + '/api/evaluators/insert', {
-                        method: 'post',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ Participant: values['ID'] })
-                    }).then(_ => {
+                    // Get evaluation files for this evaluator
+                    fetch(url + '/api/evaluators/')
+                        .then(response => response.json())
+                        .then(response => setFiles(assignments[response]))
 
-                        // Get evaluation files for this evaluator
-                        fetch(url + '/api/evaluators/' + values['ID'])
-                            .then(response => response.json())
-                            .then(response => setFiles(
-                                assignments[response[0].ID - 1]))
+                        // Get list of evaluation conditions
+                        .then(_ => {
+                            fetch(url + '/api/conditions')
+                                .then(response => response.json())
+                                .then(response => {
+                                    setConditions(
+                                        response.map(
+                                            cond => cond.Condition))
 
-                            // Get list of evaluation conditions
-                            .then(_ => {
-                                fetch(url + '/api/conditions')
-                                    .then(response => response.json())
-                                    .then(response => {
-                                        setConditions(
-                                            response.map(
-                                                cond => cond.Condition))
-
-                                    // Go to evaluation
-                                    }).then(_ => navigation.next())
-                            })
-                        }
-                    )
+                                // Go to evaluation
+                                }).then(_ => navigation.next())
+                        });
                 }
             });
         }

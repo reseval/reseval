@@ -1,12 +1,11 @@
 import http.client
 import json
 import os
+import subprocess
 import tarfile
 import tempfile
 import time
 from pathlib import Path
-
-import heroku3
 
 import reseval
 
@@ -21,6 +20,9 @@ def create(config):
     # Connect to Heroku
     connection = http.client.HTTPSConnection('api.heroku.com')
 
+    with reseval.chdir(reseval.CACHE / 'client'):
+        subprocess.call('npm run build', shell=True, stdout=subprocess.DEVNULL)
+
     # Create a tarball of all files needed by the Heroku server
     with tempfile.TemporaryDirectory() as directory:
         tarball = Path(directory) / 'reseval.tar.gz'
@@ -34,7 +36,7 @@ def create(config):
             'tsconfig.json']
         with tarfile.open(tarball, 'w:gz') as tar:
             for file in files:
-                tar.add(reseval.ASSETS_DIR / file)
+                tar.add(reseval.CACHE / file)
 
         # Upload tarball and get a URL
         tarball_url = reseval.storage.upload(config['name'], tarball)
@@ -50,23 +52,32 @@ def create(config):
             'Authorization': f'Bearer {os.environ["HerokuAccessKey"]}'}
 
         # Create server
+        name = reseval.load.credentials_by_name(config['name'], 'app')['name']
         connection.request(
             'POST',
-            f'/apps/{config["name"]}/builds',
+            f'/apps/{name}/builds',
             json.dumps(data),
             headers=headers)
 
         # Get response from server
-        response = connection.getresponse()
+        response = json.loads(connection.getresponse().read().decode())
 
-        # TODO - check response
+        # if app doesn't exist, raise error
+        if response['id'] == 'not_found':
+            raise ValueError(f'app name: {config["name"]} does not exist')
+
+    # Close the connection
+    connection.close()
 
     # Wait until server is setup
     while status(config['name']) == 'pending':
-        time.sleep(5)
+        time.sleep(3)
 
     if status(config['name']) == 'failure':
         raise ValueError('Heroku server failed to start')
+
+    # Return application URL
+    return {'URL': f'http://{name}.herokuapp.com/'}
 
 
 def status(name):
@@ -75,13 +86,18 @@ def status(name):
     connection = http.client.HTTPSConnection('api.heroku.com')
 
     # Send request
+    reseval.load.api_keys()
     headers = {
         'Accept': 'application/vnd.heroku+json; version=3',
         'Authorization': f'Bearer {os.environ["HerokuAccessKey"]}'}
-    connection.request('GET', f'/apps/{name}/builds', headers=headers)
+    unique_name = reseval.load.credentials_by_name(name, 'app')['name']
+    connection.request('GET', f'/apps/{unique_name}/builds', headers=headers)
 
     # Get response
     data = json.loads(connection.getresponse().read().decode())
+
+    # Close connection
+    connection.close()
 
     # Get most recent build status from response
     status = list(map(lambda x: x['status'], data))
@@ -90,34 +106,4 @@ def status(name):
 
 def destroy(config, credentials):
     """Destroy a Heroku server"""
-    # TODO - potentially handle double-deletion error via try/except
-    list_apps()[config['name']].delete()
-
-
-###############################################################################
-# Utilities
-###############################################################################
-
-# create a heroku application
-def create_app(app_name):
-    app = connect().create_app(name=app_name)
-    return app
-
-
-def connect():
-    """Connect to Heroku"""
-    return heroku3.from_key(os.environ['HerokuAccessKey'])
-
-
-def list_apps():
-    """List the applications currently active on Heroku"""
-    return connect().apps()
-
-
-def set_environment_variable(name, key, value):
-    """Set an environment variable on a Heroku server"""
-    # Get Heroku application
-    app = list_apps()[name]
-
-    # Set environment variable
-    app.config()[key] = value
+    reseval.app.heroku.destroy(config)

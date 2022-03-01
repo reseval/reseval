@@ -1,7 +1,6 @@
-import os
 import re
 
-import heroku3
+import reseval
 
 
 ###############################################################################
@@ -12,7 +11,7 @@ import heroku3
 def create(config):
     """Create a MySQL database on Heroku"""
     # Get the heroku application
-    app = list_apps()[config['name']]
+    app = reseval.app.heroku.get(config['name'])
 
     # Add the ClearDB MySQL database add-on
     app.install_addon(plan_id_or_name='cleardb:ignite', config={})
@@ -22,30 +21,19 @@ def create(config):
 
     # Parse URL to obtain credentials
     user, password, host, name = re.split('[/@?:]', url[8:])[:4]
-
-    # Return database credentials for new database
-    return {
+    credentials = {
         'MYSQL_DBNAME': name,
         'MYSQL_HOST': host,
         'MYSQL_USER': user,
         'MYSQL_PASS': password}
 
+    # Add credentials to Heroku application environment variables
+    for key, value in credentials.items():
+        reseval.app.heroku.configure(config['name'], key, value)
 
-def destroy(config, credentials):
+    return credentials
+
+
+def destroy(config):
     """Destroy a MySQL database on Heroku"""
-    list_apps()[config['name']].delete()
-
-
-###############################################################################
-# Utilities
-###############################################################################
-
-
-def connect():
-    """Connect to Heroku"""
-    return heroku3.from_key(os.environ['HerokuAccessKey'])
-
-
-def list_apps():
-    """List the applications currently active on Heroku"""
-    return connect().apps()
+    reseval.app.heroku.destroy(config)

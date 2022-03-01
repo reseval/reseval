@@ -6,7 +6,7 @@
 ReSEval is a framework for quickly building subjective evaluations that are
 deployed on crowdworker platforms like
 [Amazon Mechanical Turk](https://www.mturk.com/). ReSEval currently supports
-AB, ABX, MOS, and MUSHRA tests on audio and image data.
+A/B, ABX, MOS, and MUSHRA tests on audio and image data.
 
 <h3 align="center">
     While our code is free to use, performing crowdsourced subjective
@@ -55,7 +55,7 @@ M. Morrison, B. Tang, G. Tan, and B. Pardo, "Reproducible Subjective Evaluation,
 - [Usage](#usage)
     * [Create](#create)
     * [Monitor](#monitor)
-    * [Analyze](#analyze)
+    * [Results](#results)
     * [Pay](#pay)
     * [Destroy](#destroy)
     * [Resume](#resume)
@@ -308,12 +308,12 @@ python -m reseval.monitor --interval 30
 ```
 
 
-### Analyze
+### Results
 
 ```
-# Download and analyze the results of a subjective evaluation.
-# Results are stored in evaluations/<name>.
-python -m reseval.analyze <name>
+# Get the results of a subjective evaluation.
+# Results are stored in <directory>.
+python -m reseval.results <name> <directory>
 ```
 
 
@@ -328,7 +328,8 @@ python -m reseval.pay <name>
 ### Destroy
 
 ```
-# Destroy a subjective evaluation
+# Destroy the compute resources of a subjective evaluation (e.g., any cloud
+# storage, databases, or servers)
 python -m reseval.destroy <name>
 
 # Destroy a subjective evaluation even if it is still active.

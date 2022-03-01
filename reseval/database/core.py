@@ -1,6 +1,7 @@
 import contextlib
 import csv
 import os
+from threading import local
 
 import mysql.connector
 
@@ -56,18 +57,6 @@ SCHEMA = [
     '  PRIMARY KEY (`ID`)'
     ')',
 
-    # Evaluator information
-    # An evaluator is a participant who has passed prescreening and begins
-    # performing evaluation.
-    #
-    # ID - The evaluator ID
-    # Participant - The participant ID
-    'CREATE TABLE `evaluators` ('
-    '  `ID` int AUTO_INCREMENT,'
-    '  `Participant` char(32) UNIQUE,'
-    '  PRIMARY KEY (`ID`)'
-    ')',
-
     # Participant's responses
     # The format of the response depends on the test being taken. For example,
     # an ABX test has as responses a character A, B, or X, and an MOS test has
@@ -87,7 +76,7 @@ SCHEMA = [
     ')']
 
 # Names of tables in the database
-TABLES = ['conditions', 'files', 'participants', 'evaluators', 'responses']
+TABLES = ['conditions', 'files', 'participants', 'responses']
 
 
 ###############################################################################
@@ -97,6 +86,8 @@ TABLES = ['conditions', 'files', 'participants', 'evaluators', 'responses']
 
 def create(config, test, local=False):
     """Write database environment variable file and initialize the database"""
+    print('Creating database...')
+
     # Create new database and retrieve credentials
     credentials = module(config, local).create(config)
 
@@ -176,10 +167,15 @@ def destroy(name):
     module(config, local).destroy(config)
 
     # Cleanup credentials
-    (reseval.EVALUATION_DIRECTORY / name / 'credentials' / '.env').unlink()
+    (
+        reseval.EVALUATION_DIRECTORY /
+        name /
+        'credentials' /
+        '.env'
+    ).unlink(missing_ok=True)
 
 
-def download(name, tables=TABLES):
+def download(name, directory, tables=TABLES):
     """Download the contents of the MySQL database"""
     # Load database credentials
     reseval.load.environment_variables_by_name(name)
@@ -234,14 +230,16 @@ def connect():
     finally:
 
         # Close database connection
-        cursor.close()
-        connection.close()
+        if 'cursor' in locals():
+            cursor.close()
+        if 'connection' in locals():
+            connection.close()
 
 
 def upload_previous(name):
     """Upload previous results from this evaluation to database"""
     # Check if we have previous results to upload
-    tables = ['participants', 'evaluators', 'responses']
+    tables = ['participants', 'responses']
     directory = reseval.EVALUATION_DIRECTORY / name / 'tables'
     if not all((directory / f'{table}.csv').exists() for table in tables):
         return
@@ -261,7 +259,7 @@ def upload_previous(name):
                 return
 
             # Format MySQL command
-            keys = rows[0].keys()
+            keys = list(rows[0].keys())
             columns, values, update = '', '', ''
             for i, key in enumerate(keys):
                 columns += f'`{key}`'
@@ -275,10 +273,11 @@ def upload_previous(name):
                 f'INSERT INTO {table} ({columns}) VALUES ({values}) '
                 f'ON DUPLICATE KEY UPDATE {update}')
 
-            # Execute command
-            cursor.executemany(
-                command,
-                [tuple(row[key] for key in row) for row in rows])
+            # Specify data order
+            items = [tuple(row[key] for key in keys) for row in rows]
+
+            # Execute insertions
+            cursor.executemany(command, items)
 
         # Communicate with database
         connection.commit()
@@ -308,7 +307,7 @@ def upload_test(test):
 def module(config, local=False):
     """Get the database module to use"""
     if local:
-        return reseval.database.local
+        return reseval.database.localhost
     database = config['database']
     if database == 'heroku':
         return reseval.database.heroku

@@ -12,16 +12,24 @@ import reseval
 
 def create(config, directory, local=False, production=False):
     """Setup a subjective evaluation"""
+    # Copy client and server to cache
+    for path in reseval.ASSETS_DIR.rglob('*'):
+        if path.is_dir():
+            continue
+        destination = reseval.CACHE / path.relative_to(reseval.ASSETS_DIR)
+        destination.parent.mkdir(exist_ok=True, parents=True)
+        shutil.copy(path, destination)
+
     # Maybe install server
-    if local and not (reseval.ASSETS_DIR / 'node_modules').exists():
-        with reseval.chdir(reseval.ASSETS_DIR):
-            subprocess.Popen('npm install', shell=True)
+    if local and not (reseval.CACHE / 'node_modules').exists():
+        with reseval.chdir(reseval.CACHE):
+            subprocess.call('npm install', shell=True)
 
     # Maybe install client
-    client_directory = reseval.ASSETS_DIR / 'client'
+    client_directory = reseval.CACHE / 'client'
     if local and not (client_directory / 'node_modules').exists():
         with reseval.chdir(client_directory):
-            subprocess.Popen('npm install', shell=True)
+            subprocess.call('npm install', shell=True)
 
     if local and production:
         raise ValueError('Cannot deploy production build locally')
@@ -30,17 +38,29 @@ def create(config, directory, local=False, production=False):
     cfg = reseval.load.config_from_file(config)
     name = cfg['name']
 
-    # Don't create subjective evaluation that has already finished
-    # TODO - if a participant submits survey to MTurk without using our
-    #        app, they won't be counted here
     try:
-        participants = len(reseval.load.participants(name))
+        if local:
+
+            # Get number of participants from database
+            reseval.database.download(
+                name,
+                reseval.EVALUATION_DIRECTORY / name / 'tables',
+                ['participants'])
+            participants = len(reseval.load.participants(name))
+
+        else:
+
+            # Get number of participants from crowdsource platform
+            participants = reseval.crowdsource.progress(name)
+
+        # Don't create subjective evaluation that has already finished
         if participants >= cfg['participants']:
             raise ValueError(
                 f'Not creating subjective evaluation {name}, which has already '
                  'finished. If you want to extend an evaluation, use '
                  'reseval.extend.')
-    except FileNotFoundError:
+
+    except (KeyError, FileNotFoundError):
         pass
 
     # Don't overwrite production data
@@ -83,24 +103,24 @@ def create(config, directory, local=False, production=False):
         reseval.storage.create(cfg, directory, local)
 
     # If heroku is used for either the database or server, setup the app here
-    # TODO - This should throw an error if the app exists. Does it?
-    if not local and (cfg['server'] == 'heroku' or cfg['database'] == 'heroku'):
-        reseval.server.heroku.create_app(cfg['name'])
+    if (not local and
+        (cfg['server'] == 'heroku' or cfg['database'] == 'heroku')):
+        reseval.app.heroku.create(cfg)
 
     # Maybe create database
-    if not (credentials_directory / 'storage.json').exists():
+    if not (credentials_directory / '.env').exists():
 
-        try:
+        # try:
 
-            # Create database
-            reseval.database.create(cfg, test, local)
+        # Create database
+        reseval.database.create(cfg, test, local)
 
-        except (Exception, KeyboardInterrupt) as exception:
+        # except (Exception, KeyboardInterrupt) as exception:
 
-            # Cleanup resources
-            reseval.destroy(name, True)
+        #     # Cleanup resources
+        #     reseval.destroy(name, True)
 
-            raise exception
+        #     raise exception
 
     # Maybe create server
     if local or not (credentials_directory / 'server.json').exists():
@@ -128,7 +148,7 @@ def create(config, directory, local=False, production=False):
         if (credentials_directory / 'crowdsource.json').exists():
             reseval.crowdsource.resume(name)
         else:
-            reseval.crowdsource.create(cfg, production, url, local)
+            reseval.crowdsource.create(cfg, url, local, production)
 
     except (Exception, KeyboardInterrupt) as exception:
 

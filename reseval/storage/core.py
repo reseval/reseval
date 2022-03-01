@@ -8,6 +8,8 @@ import reseval
 
 def create(config, directory, local=False):
     """Create file storage and upload files"""
+    print('Creating storage...')
+
     # Make sure client public storage doesn't have old evaluation files
     reseval.storage.client.destroy(config)
 
@@ -26,7 +28,7 @@ def upload(name, file_or_directory):
     """Upload a file or directory to storage"""
     local = reseval.is_local(name)
     config = reseval.load.config_by_name(name)
-    module(config, local).upload(name, file_or_directory)
+    return module(config, local).upload(name, file_or_directory)
 
 
 ###############################################################################

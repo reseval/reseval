@@ -21,7 +21,7 @@ export default function Media(props) {
     } else {
         switch (config.storage) {
             case 'aws':
-                props.src = 's3://' + props.src;
+                props.src = `https://${config['bucket']}.s3.amazonaws.com/${props.src}`;
                 break;
             default:
                 throw new Error(
