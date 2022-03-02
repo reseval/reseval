@@ -18,6 +18,7 @@ def parse_args():
         help='The name of the subjective evaluation to retrieve results for')
     parser.add_argument(
         'directory',
+        type=Path,
         default=Path(),
         help='The directory to save results')
     return parser.parse_args()
