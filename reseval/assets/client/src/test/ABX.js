@@ -64,11 +64,14 @@ export default function ABX({
     // Render
     return (
         <>
-            <Media
-                src={'reference/' + file}
-                reference={refX}
-                onEnded={() => setXEnded(true)}
-            />
+            <div className='grid grid-20-80'>
+                <div style={{width: '100%'}}/>
+                <Media
+                    src={'reference/' + file}
+                    reference={refX}
+                    onEnded={() => setXEnded(true)}
+                />
+            </div>
             <MediaRadioButtonGroup
                 file={file}
                 conditions={permuted_conditions}
