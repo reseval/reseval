@@ -47,6 +47,10 @@ def create(config, url, local=False, production=False):
     if local:
         return
 
+    # Skip if evaluation exists
+    if exists(config['name']):
+        raise ValueError('Not overwriting existing evaluation')
+
     print('Creating crowdsource task...')
 
     # Create crowdsource task
@@ -76,7 +80,15 @@ def destroy(name):
     credentials = reseval.load.credentials_by_name(name, 'crowdsource')
 
     # Destroy crowdsource task
-    module(config).destroy(credentials)
+    module(config).destroy(config, credentials)
+
+    # Clean-up credentials
+    (
+        reseval.EVALUATION_DIRECTORY /
+        name /
+        'credentials' /
+        'crowdsource.json'
+    ).unlink(missing_ok=True)
 
 
 def extend(name, participants):
@@ -92,7 +104,28 @@ def extend(name, participants):
     credentials = reseval.load.credentials_by_name(name, 'crowdsource')
 
     # Extend task
-    module(config).extend(credentials, participants,name)
+    module(config).extend(credentials, participants, name)
+
+
+def exists(name):
+    """Returns true if the evaluation exists"""
+    if reseval.is_local(name):
+        return False
+
+    try:
+
+        # Get config
+        config = reseval.load.config_by_name(name)
+
+        # Get credentials
+        credentials = reseval.load.credentials_by_name(name, 'crowdsource')
+
+    except FileNotFoundError:
+
+        return False
+
+    # Check if evaluation exists
+    return module(config).exists(config, credentials)
 
 
 def paid(name):

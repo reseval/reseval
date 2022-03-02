@@ -1,4 +1,5 @@
 import csv
+import errno
 import json
 import os
 
@@ -51,6 +52,12 @@ def credentials_from_file(file):
 def environment_variables_by_name(name):
     """Load environment variables corresponding to an evaluation"""
     file = reseval.EVALUATION_DIRECTORY / name / 'credentials' / '.env'
+
+    # Raise if the file does not exist
+    if not file.exists():
+        raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), file)
+
+    # Load as environment variables
     dotenv.load_dotenv(file)
 
 

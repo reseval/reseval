@@ -76,18 +76,18 @@ Next, [download Node.js](https://nodejs.org/en/). You can check that your instal
 
 ReSEval uses Node.js version 17.4.0 and is not guaranteed to work on all versions. If needed, Linux and OS X users can use `n` to change their version of Node.js, and Windows users can use [NVM for Windows](https://github.com/coreybutler/nvm-windows).
 
-**Note** - You may need to run your terminal with administrator privileges to change your version of Node.js.
-
 ```
 # Linux or OS X
-npm install -g n
-n 17.4.0
+sudo npm install -g n
+sudo n 17.4.0
 
 # Windows
+# Must be run with administrator privileges
 nvm install 17.4.0
 nvm use 17.4.0
 ```
 
+**Note** - You must restart your terminal after changing versions of node for the change to take effect
 
 ### Deploying locally
 

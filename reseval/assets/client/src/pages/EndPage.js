@@ -1,4 +1,4 @@
-import Markdown from '../components/markdown';
+import Markdown from '../components/Markdown';
 
 import config from '../json/config.json';
 

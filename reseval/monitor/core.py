@@ -14,7 +14,9 @@ import reseval
 def monitor(name=None, interval=120):
     """Monitor subjective evaluations"""
     # List evaluations
-    names = reseval.EVALUATION_DIRECTORY.glob('*') if name is None else [name]
+    names = (
+        list(reseval.EVALUATION_DIRECTORY.glob('*'))
+        if name is None else [name])
 
     # Get total samples for each evaluation
     configs = [reseval.load.config_by_name(name) for name in names]

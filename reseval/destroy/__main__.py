@@ -18,6 +18,10 @@ def parse_args():
         action='store_true',
         help='Destroy evaluation resources even if it is still running. ' +
              'Pays all participants who have taken the evaluation.')
+    parser.add_argument(
+        '--all',
+        action='store_true',
+        help='Destroys the remote subjective evaluation task as well')
     return parser.parse_args()
 
 

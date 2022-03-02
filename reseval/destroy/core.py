@@ -6,7 +6,7 @@ import reseval
 ###############################################################################
 
 
-def destroy(name, force=False):
+def destroy(name, force=False, all=False):
     """Destroys compute resources corresponding to a subjective evaluation"""
     # Cleanup crowdsourcing
     active = reseval.crowdsource.active(name)
@@ -32,20 +32,15 @@ def destroy(name, force=False):
             if not paid:
                 reseval.crowdsource.pay(name)
 
-    # Destroy cloud storage
-    # try:
-    reseval.storage.destroy(name)
-    # except Exception:
-        # pass
-
-    # Destroy database
-    # try:
-    reseval.database.destroy(name)
-    # except Exception:
-        # pass
+    # Maybe destroy crowdsource task
+    if all:
+        reseval.crowdsource.destroy(name)
 
     # Destroy server
-    # try:
     reseval.server.destroy(name)
-    # except Exception:
-        # pass
+
+    # Destroy database
+    reseval.database.destroy(name)
+
+    # Destroy storage
+    reseval.storage.destroy(name)

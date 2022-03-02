@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import Button from '../components/Button';
-import Markdown from '../components/markdown';
+import Markdown from '../components/Markdown';
 import Question, { validate } from '../questions/Question';
 
 import config from '../json/config.json';

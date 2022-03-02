@@ -28,13 +28,16 @@ def run(config, directory, local=False, production=False, interval=120):
 
     except (Exception, KeyboardInterrupt) as exception:
 
-        # Make sure credentials get deleted for local development
+        # Make sure credentials get deleted for non-production deployment
         if not production:
-            reseval.destroy(name, True)
+            reseval.destroy(name, force=True, all=True)
         raise exception
 
     # Cleanup database, server, and storage
-    reseval.destroy(name)
+    if production:
+        reseval.destroy(name)
+    else:
+        reseval.destroy(name, force=True, all=True)
 
 
 ###############################################################################
