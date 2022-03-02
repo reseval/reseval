@@ -4,7 +4,7 @@ import AB from '../test/AB';
 import ABX from '../test/ABX';
 import MOS from '../test/MOS';
 import MUSHRA from '../test/MUSHRA';
-import Markdown from '../components/markdown';
+import Markdown from '../components/Markdown';
 
 import config from '../json/config.json';
 

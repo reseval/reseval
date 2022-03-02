@@ -60,7 +60,13 @@ def destroy(name):
     reseval.load.api_keys()
 
     # Get bucket to delete
-    bucket_name = reseval.load.credentials_by_name(name, 'storage')['bucket']
+    try:
+        bucket_name = \
+            reseval.load.credentials_by_name(name, 'storage')['bucket']
+    except FileNotFoundError:
+        return
+
+    # Connect to AWS
     bucket = boto3.Session(
         aws_access_key_id=os.environ['AWSAccessKeyId'],
         aws_secret_access_key=os.environ['AWSSecretKey']

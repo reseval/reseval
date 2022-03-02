@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Button from '../components/Button';
-import Markdown from '../components/markdown';
+import Markdown from '../components/Markdown';
 
 import '../css/components.css';
 

@@ -1,7 +1,6 @@
 import contextlib
 import csv
 import os
-from threading import local
 
 import mysql.connector
 
@@ -159,7 +158,10 @@ def create(config, test, local=False):
 def destroy(name):
     """Destroy a database"""
     # Load database credentials
-    reseval.load.environment_variables_by_name(name)
+    try:
+        reseval.load.environment_variables_by_name(name)
+    except FileNotFoundError:
+        return
 
     # Destroy database
     local = reseval.is_local(name)

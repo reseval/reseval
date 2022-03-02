@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Chance from 'chance';
 
 import Button from '../components/Button';
-import Markdown from '../components/markdown';
+import Markdown from '../components/Markdown';
 import Question, { validate } from '../questions/Question';
 
 import assignments from '../json/assignments.json';

@@ -69,18 +69,26 @@ def create(config, url, production=False):
     hit_id = hit['HIT']['HITId']
     url_key = 'production' if production else 'development'
     preview_url = PREVIEW_URL[url_key].format(hit['HIT']['HITGroupId'])
-    print(f'Created HIT {hit_id}. You can preview your HIT at {preview_url}.')
+    print(f'Created HIT {hit_id}. You can view your HIT at {preview_url}')
 
     # Return crowdsource credentials
     return {'HIT_ID': hit_id, 'PRODUCTION': production}
 
 
-def destroy(credentials):
+def destroy(config, credentials):
     """Delete a HIT"""
     if credentials['HIT_ID'] in list_hits(credentials):
 
         # Connect to MTurk
         mturk = connect(credentials['PRODUCTION'])
+
+        # Stop HIT
+        mturk.update_expiration_for_hit(
+            HITId=credentials['HIT_ID'],
+            ExpireAt=datetime.datetime.now())
+
+        # Pay participants
+        pay(config, credentials)
 
         # Delete HIT
         mturk.delete_hit(HITId=credentials['HIT_ID'])
@@ -125,6 +133,11 @@ def extend(credentials, participants, name):
 
         else:
             raise exception
+
+
+def exists(config, credentials):
+    """Returns true if the evaluation exists"""
+    return credentials['HIT_ID'] in list_hits(credentials)
 
 
 def paid(credentials):

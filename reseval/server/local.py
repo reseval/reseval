@@ -45,7 +45,10 @@ def create(config):
 
 def destroy(config, credentials):
     """Shutdown a local server"""
-    parent = psutil.Process(credentials['PID'])
-    for child in parent.children(recursive=True):
-        child.kill()
-    parent.kill()
+    try:
+        parent = psutil.Process(credentials['PID'])
+        for child in parent.children(recursive=True):
+            child.kill()
+        parent.kill()
+    except psutil.NoSuchProcess:
+        pass
