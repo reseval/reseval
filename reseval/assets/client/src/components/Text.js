@@ -11,8 +11,10 @@ export default function Text({ src }) {
         .then(response => response.text())
         .then(response => setText(response));
 
-    // Render
+    // Wait until we have text
     if (typeof text === 'undefined') { return null; }
+
+    // Render
     return (
         <div
             style={{
