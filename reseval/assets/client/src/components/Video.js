@@ -13,11 +13,18 @@ export default function Video({ src, reference, onEnded }) {
     }, [reference, src]);
 
     // Render
-    // TODO
-    return null;
+    return (
+        <video
+            controls
+            ref={reference}
+            style={{ minWidth: '150px', maxWidth: '800px' }}
+            onEnded={() => typeof (onEnded) !== 'undefined' && onEnded()}
+        >
+            <source src={src} type='video/mp4'/>
+        </video>
+    );
     // return (
     //     <audio
-    //         className='audio-single'
     //         controls
     //         controlsList='nodownload'
     //         ref={reference}

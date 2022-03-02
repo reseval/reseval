@@ -5,7 +5,7 @@ name: ab-video-example
 test: ab
 
 # The type of data to use. One of [audio, image, text, video].
-datatype: audio
+datatype: video
 
 # The location to store files used for evaluation. One of [aws].
 storage: aws
@@ -115,7 +115,7 @@ prescreen_questions:
 
 # Instructions presented to the participant during evaluation
 survey_instructions: "
-  ## **Instructions** \Watch both videos. After watching both
+  ## **Instructions** \nWatch both videos. After watching both
   videos, select the higher-quality video. The higher-quality video is
   the one that looks more natural, or has fewer artifacts (e.g.,
   static, blur, or noise)."

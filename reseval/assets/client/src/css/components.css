@@ -125,7 +125,7 @@ ul li:hover label{
 	height: 20px;
 	width: 20px;
 	z-index: 5;
-	justify-self: end;
+	justify-self: center;
 }
 
 .check.active:hover {
