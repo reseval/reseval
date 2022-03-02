@@ -1,20 +1,27 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 
 import '../css/components.css';
 
-export default function Text({ src, reference }) {
+export default function Text({ src }) {
     /* Create a textbox */
+    const [text, setText] = useState(undefined);
+
+    // Get text
+    fetch(src)
+        .then(response => response.text())
+        .then(response => setText(response));
+
     // Render
-    // TODO
-    return null;
-    // return (
-    //     <audio
-    //         className='audio-single'
-    //         controls
-    //         controlsList='nodownload'
-    //         ref={reference}
-    //         onEnded={() => typeof (onEnded) !== 'undefined' && onEnded()}>
-    //         <source src={src} type='audio/mpeg' />
-    //     </audio>
-    // );
+    if (typeof text === 'undefined') { return null; }
+    return (
+        <div
+            style={{
+                color: 'black',
+                justifyContent: 'center',
+                display: 'flex',
+                width: '90%'
+            }}
+        >
+            {text}
+        </div>);
 };

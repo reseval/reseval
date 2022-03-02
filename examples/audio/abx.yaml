@@ -4,7 +4,7 @@ name: abx-audio-example
 # The type of test to run. One of [ab, abx, mos, mushra].
 test: abx
 
-# The type of data to use. One of [audio, image].
+# The type of data to use. One of [audio, image, text, video].
 datatype: audio
 
 # The location to store files used for evaluation. One of [aws].
@@ -123,17 +123,13 @@ survey_instructions: "
 followup_questions:
 
   # Ask whether the listening environment has changed
-  - name: WasQuietEnvironment
+  - name: DummyFollowup
 
     # The type of question. One of [free-response, multiple-choice].
     type: free-response
 
     # Question text
-    text: "
-      Please describe any changes to your listening environment
-      during the survey that may have impeded your ability to clearly
-      hear the audio.\n\n **NOTE:** Your answer will not affect your
-      compensation."
+    text: "How was the evaluation?"
 
     # Placeholder text
-    placeholder: My neighbor started mowing their lawn.
+    placeholder: Good.

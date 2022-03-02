@@ -1,11 +1,11 @@
 # A name to give to this evaluation configuration
-name: mushra-image-example
+name: ab-text-example
 
 # The type of test to run. One of [ab, abx, mos, mushra].
-test: mushra
+test: ab
 
 # The type of data to use. One of [audio, image, text, video].
-datatype: image
+datatype: text
 
 # The location to store files used for evaluation. One of [aws].
 storage: aws
@@ -80,9 +80,9 @@ random_seed: 0
 welcome_text: "
   # **Welcome!**\n
   We are conducting a research study to evaluate the
-  quality of an image processing algorithm. If you agree to participate, you
+  quality of a text generation algorithm. If you agree to participate, you
   will be asked to fill out a brief questionnaire. You will then be asked to
-  evaluate a series of images.\n
+  evaluate a series of text samples.\n
   ### **Privacy**\nThis survey is completely anonymous. We will NOT collect
   any personally identifiable information. Your participation in this study
   does not involve any risk to you beyond that of your everyday life.\n
@@ -115,10 +115,9 @@ prescreen_questions:
 
 # Instructions presented to the participant during evaluation
 survey_instructions: "
-  ## **Instructions** \nListen to all audio files. Then, move the sliders
-  to rate the quality of each audio file from 0 (worst) to 100 (best). The
-  higher-quality audio files are the ones that are more natural sounding, or
-  have fewer audio artifacts (e.g., clicks, pops, or background noise)."
+  ## **Instructions** \nOf the two text passages below, one was written by a
+  human and the other by a computer. Select the text that you think was
+  written by a human."
 
 # Questions presented to the participant after evaluation
 followup_questions:

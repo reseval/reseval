@@ -4,7 +4,7 @@ name: ab-image-example
 # The type of test to run. One of [ab, abx, mos, mushra].
 test: ab
 
-# The type of data to use. One of [audio, image].
+# The type of data to use. One of [audio, image, text, video].
 datatype: image
 
 # The location to store files used for evaluation. One of [aws].
