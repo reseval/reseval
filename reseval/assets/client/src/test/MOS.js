@@ -47,6 +47,7 @@ export default function MOS({
     const condition = chance.pickone(conditions);
 
     // Render
+    // TODO - image is changing when a button is selected
     return (
         <>
             <Media
