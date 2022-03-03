@@ -45,14 +45,14 @@ def run(
 
         # Make sure credentials get deleted for non-production deployment
         if not production:
-            reseval.destroy(name, force=True, all=True)
+            reseval.destroy(name, force=True)
         raise exception
 
     # Cleanup database, server, and storage
     if production:
         reseval.destroy(name)
     else:
-        reseval.destroy(name, force=True, all=True)
+        reseval.destroy(name, force=True)
 
 
 ###############################################################################
