@@ -29,7 +29,7 @@ def create(
         detach: If running locally, detaches the server process
 
     Returns:
-        name: The name of the evaluation, as given in the configuration file
+        str: The name of the evaluation, as given in the configuration file
     """
     if local and production:
         raise ValueError('Cannot deploy production build locally')

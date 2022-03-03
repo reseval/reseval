@@ -15,7 +15,7 @@ def run(
     directory: typing.Union[str, bytes, os.PathLike],
     local: bool = False,
     production: bool = False,
-    interval: int = 120):
+    interval: int = 120) -> dict:
     """Perform subjective evaluation
 
     Args:
@@ -25,6 +25,9 @@ def run(
         production: Deploy the subjective evaluation to crowdsource
             participants
         interval: The time between monitoring updates in seconds
+
+    Returns:
+        dict: Evaluation results
     """
     # Setup evaluation
     name = reseval.create(config, directory, local, production, detach=True)
@@ -39,7 +42,7 @@ def run(
         reseval.pay(name)
 
         # Get results
-        reseval.results(name, reseval.EVALUATION_DIRECTORY / name)
+        results = reseval.results(name, reseval.EVALUATION_DIRECTORY / name)
 
     except (Exception, KeyboardInterrupt) as exception:
 
@@ -53,6 +56,8 @@ def run(
         reseval.destroy(name)
     else:
         reseval.destroy(name, force=True)
+
+    return results
 
 
 ###############################################################################

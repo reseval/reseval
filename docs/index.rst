@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 Reproducible Subjective Evaluation (ReSEval)
-===================================
+============================================
 
 .. toctree::
    :maxdepth: 2
