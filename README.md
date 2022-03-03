@@ -54,13 +54,15 @@ M. Morrison, B. Tang, G. Tan, and B. Pardo, "Reproducible Subjective Evaluation,
     * [Amazon Web Services](#amazon-web-services)
     * [Amazon Mechanical Turk](#amazon-mechanical-turk)
 - [Usage](#usage)
-    * [Create](#create)
-    * [Monitor](#monitor)
-    * [Results](#results)
-    * [Pay](#pay)
-    * [Destroy](#destroy)
-    * [Resume](#resume)
-    * [Extend](#extend)
+    * [Command-line interface](#command-line-interface)
+        * [Create](#create)
+        * [Monitor](#monitor)
+        * [Results](#results)
+        * [Pay](#pay)
+        * [Destroy](#destroy)
+        * [Resume](#resume)
+        * [Extend](#extend)
+    * [Application programming interface](#application-programming-interface)
 - [Advanced usage](#advanced-usage)
     * [CLI](#cli)
     * [API](#api)
@@ -264,6 +266,9 @@ python -m reseval.credentials \
 
  API keys are saved in `reseval.CACHE / '.keys'`. The `.keys` file is used to set local environment variables and is not pushed to GitHub or uploaded to any remote storage.
 
+
+### Command-line interface
+
  Arguments for the following command-line interfaces are as follows, unless otherwise specified.
 
 - `<config>` - The configuration file
@@ -271,7 +276,7 @@ python -m reseval.credentials \
 - `<name>` - The name of the evaluation given in the configuration file
 
 
-### Create
+#### Create
 
 Create a subjective evaluation either locally, in remote development mode (e.g., MTurk Sandbox), or in production mode.
 
@@ -287,7 +292,7 @@ python -m reseval.create <config> <directory> --production
 ```
 
 
-### Monitor
+#### Monitor
 
 ```
 # Monitor all subjective evaluations
@@ -306,7 +311,7 @@ python -m reseval.monitor --interval 30
 ```
 
 
-### Results
+#### Results
 
 ```
 # Get the results of a subjective evaluation.
@@ -315,7 +320,7 @@ python -m reseval.results <name> <directory>
 ```
 
 
-### Pay
+#### Pay
 
 ```
 # Pay participants
@@ -323,7 +328,7 @@ python -m reseval.pay <name>
 ```
 
 
-### Destroy
+#### Destroy
 
 ```
 # Destroy the compute resources of a subjective evaluation (e.g., any cloud
@@ -336,7 +341,7 @@ python -m reseval.destroy <name> --force
 ```
 
 
-### Resume
+#### Resume
 
 ```
 # Resume a subjective evaluation that was stopped before it finished
@@ -347,7 +352,7 @@ python -m reseval.resume <name> <directory> --monitor
 ```
 
 
-### Extend
+#### Extend
 
 ```
 # Add <participants> additional participants to a finished evaluation
@@ -356,6 +361,12 @@ python -m reseval.extend <name> <directory> <participants>
 # Add participants and monitor the evaluation until completion
 python -m reseval.extend <name> <directory> <participants> --monitor
 ```
+
+
+### Application programming interface
+
+**TODO** - link
+Documentation for our API can be found [here]().
 
 
 ## Advanced usage

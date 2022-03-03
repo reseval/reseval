@@ -10,7 +10,9 @@ import reseval
 ###############################################################################
 
 
-def results(name: str, directory: typing.Union[str, bytes, os.PathLike]):
+def results(
+    name: str,
+    directory: typing.Union[str, bytes, os.PathLike]) -> dict:
     """Get the results of a subjective evaluation
 
     Args:
@@ -18,12 +20,7 @@ def results(name: str, directory: typing.Union[str, bytes, os.PathLike]):
         directory: The directory to save results
 
     Returns:
-        results: dict
-            The evaluation results. Keys are ['samples', 'conditions'].
-                samples: int
-                    The number of evaluation samples received
-                conditions: dict
-                    The pairwise results between conditions
+        dict: Evaluation results
     """
     # Download database tables
     reseval.database.download(
