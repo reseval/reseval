@@ -10,7 +10,8 @@ def extend(
     local=False,
     production=False,
     monitor=False,
-    interval=120):
+    interval=120,
+    detach=False):
     """Extend a subjective evaluation"""
     # Extend crowdsourcing task
     reseval.crowdsource.extend(name, participants)
@@ -33,4 +34,11 @@ def extend(
             file.write(line)
 
     # Start evaluation
-    reseval.resume(name, directory, local, production, monitor, interval)
+    reseval.resume(
+        name,
+        directory,
+        local,
+        production,
+        monitor,
+        interval,
+        detach)

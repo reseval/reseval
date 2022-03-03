@@ -1,3 +1,4 @@
+import json
 import psutil
 import subprocess
 import webbrowser
@@ -13,7 +14,7 @@ import reseval
 ###############################################################################
 
 
-def create(config):
+def create(config, detach=False):
     """Deploy a local server"""
     # Launch server process
     with reseval.chdir(reseval.CACHE):
@@ -39,8 +40,22 @@ def create(config):
     # Open web browser to evaluation
     webbrowser.open(reseval.LOCALHOST_URL)
 
-    # Return localhost URL and process ID
-    return {'URL': reseval.LOCALHOST_URL, 'PID': process.pid}
+    # Save server credentials
+    credentials = {'URL': reseval.LOCALHOST_URL, 'PID': process.pid}
+    file = (
+        reseval.EVALUATION_DIRECTORY /
+        config['name'] /
+        'credentials' /
+        'server.json')
+    file.parent.mkdir(exist_ok=True, parents=True)
+    with open(file, 'w') as file:
+        json.dump(credentials, file, indent=4, sort_keys=True)
+
+    # Maybe wait for process to finish
+    if detach:
+        process.wait()
+
+    return credentials
 
 
 def destroy(config, credentials):

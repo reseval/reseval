@@ -8,12 +8,13 @@ import reseval
 ###############################################################################
 
 
-def create(config, local=False):
+def create(config, local=False, detach=False):
     """Create a server"""
     print('Creating server...')
 
     # Create server
-    credentials = module(config, local).create(config)
+    credentials = module(config, local).create(
+        config | {'detach': detach})
 
     # Save server credentials
     file = (
@@ -50,7 +51,12 @@ def destroy(name):
     module(config, local).destroy(config, credentials)
 
     # Cleanup credentials
-    (reseval.EVALUATION_DIRECTORY / name / 'credentials' / 'server.json').unlink()
+    (
+        reseval.EVALUATION_DIRECTORY /
+        name /
+        'credentials' /
+        'server.json'
+    ).unlink(missing_ok=True)
 
 
 def status(name):

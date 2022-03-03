@@ -12,7 +12,7 @@ import reseval
 def run(config, directory, local=False, production=False, interval=120):
     """Perform subjective evaluation"""
     # Setup evaluation
-    name = reseval.create(config, directory, local, production)
+    name = reseval.create(config, directory, local, production, detach=True)
 
     # Monitor evaluation until completion
     try:

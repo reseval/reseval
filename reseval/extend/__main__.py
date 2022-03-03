@@ -39,6 +39,10 @@ def parse_args():
         type=int,
         default=120,
         help='The time between monitoring updates in seconds')
+    parser.add_argument(
+        '--detach',
+        action='store_true',
+        help='If running locally, detaches the server process')
     return parser.parse_args()
 
 

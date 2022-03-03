@@ -10,8 +10,16 @@ import reseval
 ###############################################################################
 
 
-def create(config, directory, local=False, production=False):
+def create(
+    config,
+    directory,
+    local=False,
+    production=False,
+    detach=False):
     """Setup a subjective evaluation"""
+    if local and production:
+        raise ValueError('Cannot deploy production build locally')
+
     # Copy client and server to cache
     for path in reseval.ASSETS_DIR.rglob('*'):
         if path.is_dir():
@@ -30,9 +38,6 @@ def create(config, directory, local=False, production=False):
     if local and not (client_directory / 'node_modules').exists():
         with reseval.chdir(client_directory):
             subprocess.call('npm install', shell=True)
-
-    if local and production:
-        raise ValueError('Cannot deploy production build locally')
 
     # Load configuration file
     cfg = reseval.load.config_from_file(config)
@@ -128,7 +133,7 @@ def create(config, directory, local=False, production=False):
         try:
 
             # Create server
-            url = reseval.server.create(cfg, local)
+            url = reseval.server.create(cfg, local, detach=detach)
 
         except (Exception, KeyboardInterrupt) as exception:
 

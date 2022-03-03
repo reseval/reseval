@@ -7,7 +7,8 @@ def resume(
     local=False,
     production=False,
     monitor=False,
-    interval=120):
+    interval=120,
+    detach=False):
     """Restart an evaluation that didn't finish"""
     if not (reseval.EVALUATION_DIRECTORY / name).exists():
         raise ValueError(f'Cannot resume non-existant evaluation {name}')
@@ -38,4 +39,4 @@ def resume(
     else:
 
         # Start evaluation
-        reseval.create(config_file, directory, local, production)
+        reseval.create(config_file, directory, local, production, detach)

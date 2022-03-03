@@ -26,6 +26,10 @@ def parse_args():
         '--production',
         action='store_true',
         help='Deploy the subjective evaluation to crowdsource participants')
+    parser.add_argument(
+        '--detach',
+        action='store_true',
+        help='If running locally, detaches the server process')
     return parser.parse_args()
 
 
