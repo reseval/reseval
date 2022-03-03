@@ -17,19 +17,10 @@ export default function Video({ src, reference, onEnded }) {
         <video
             controls
             ref={reference}
-            style={{ minWidth: '150px', maxWidth: '800px' }}
+            style={{ minWidth: '150px', maxWidth: '750px' }}
             onEnded={() => typeof (onEnded) !== 'undefined' && onEnded()}
         >
             <source src={src} type='video/mp4'/>
         </video>
     );
-    // return (
-    //     <audio
-    //         controls
-    //         controlsList='nodownload'
-    //         ref={reference}
-    //         onEnded={() => typeof (onEnded) !== 'undefined' && onEnded()}>
-    //         <source src={src} type='audio/mpeg' />
-    //     </audio>
-    // );
 };
