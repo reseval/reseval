@@ -12,7 +12,6 @@ import uuid
 
 import reseval
 
-
 ###############################################################################
 # Constants
 ###############################################################################
@@ -78,14 +77,13 @@ def create(config, url, production=False):
 def destroy(config, credentials):
     """Delete a HIT"""
     if credentials['HIT_ID'] in list_hits(credentials):
-
         # Connect to MTurk
         mturk = connect(credentials['PRODUCTION'])
 
         # Stop HIT
         mturk.update_expiration_for_hit(
             HITId=credentials['HIT_ID'],
-            ExpireAt=datetime.datetime.now())
+            ExpireAt=datetime.datetime.now().timestamp())
 
         # Pay participants
         pay(config, credentials)
@@ -211,10 +209,11 @@ def resume(config, credentials):
     timedelta = datetime.timedelta(
         0,
         config['crowdsource']['duration']['total'])
+    expire_at = datetime.datetime.now() + timedelta
     # TODO - this is failing, saying the increment in seconds is negative
     mturk.update_expiration_for_hit(
         HITId=credentials['HIT_ID'],
-        ExpireAt=datetime.datetime.now() + timedelta)
+        ExpireAt=expire_at.timestamp())
 
 
 def stop(credentials):
@@ -225,7 +224,7 @@ def stop(credentials):
     # Stop HIT
     mturk.update_expiration_for_hit(
         HITId=credentials['HIT_ID'],
-        ExpireAt=datetime.datetime.now())
+        ExpireAt=datetime.datetime.now().timestamp())
 
 
 ###############################################################################
@@ -241,7 +240,6 @@ def approve(credentials, assignment_id):
     # Skip if already processed
     assignment = mturk.get_assignment(AssignmentId=assignment_id)
     if assignment['Assignment']['AssignmentStatus'] == 'Submitted':
-
         # Approve assignment
         mturk.approve_assignment(AssignmentId=assignment_id)
 
@@ -368,7 +366,6 @@ def reject(credentials, assignment_id, reason):
     # Skip if already processed
     assignment = mturk.get_assignment(AssignmentId=assignment_id)
     if assignment['Assignment']['AssignmentStatus'] == 'Submitted':
-
         # Reject assignment
         mturk.reject_assignment(
             AssignmentId=assignment_id,
@@ -379,7 +376,6 @@ def results(credentials):
     """Get a list of all assignment IDs and completion codes"""
     result = []
     for assignment in assignments(credentials):
-
         # Parse XML
         xml_doc = xmltodict.parse(assignment['Answer'])
 
