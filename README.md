@@ -264,7 +264,7 @@ python -m reseval.credentials \
 
  API keys are saved in `reseval.CACHE / '.keys'`. The `.keys` file is used to set local environment variables and is not pushed to GitHub or uploaded to any remote storage.
 
- Arguments for the following command-line interfaces are as follows.
+ Arguments for the following command-line interfaces are as follows, unless otherwise specified.
 
 - `<config>` - The configuration file
 - `<directory>` - The directory of evaluation files
