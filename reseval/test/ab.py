@@ -19,16 +19,11 @@ class AB(Base):
         results = {
             'binomial': reseval.stats.binomial(
                 [condition_counts[condition] for condition in conditions])}
-        inverse_results = results.copy()
-        inverse_results['binomial']['Sample mean'] = \
-            1 - results['binomial']['Sample mean']
 
         # Format results
         results = {
             'samples': sum(condition_counts.values()),
-            'conditions': {
-                conditions[0]: results,
-                conditions[1]: inverse_results}}
+            'conditions': {f'{conditions[0]}-{conditions[1]}': results}}
 
         return results, stem_counts
 

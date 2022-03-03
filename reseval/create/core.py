@@ -1,6 +1,8 @@
 import subprocess
 import json
+import os
 import shutil
+import typing
 
 import reseval
 
@@ -11,12 +13,24 @@ import reseval
 
 
 def create(
-    config,
-    directory,
-    local=False,
-    production=False,
-    detach=False):
-    """Setup a subjective evaluation"""
+    config: typing.Union[str, bytes, os.PathLike],
+    directory: typing.Union[str, bytes, os.PathLike],
+    local: bool = False,
+    production: bool = False,
+    detach: bool = False) -> str:
+    """Setup a subjective evaluation
+
+    Args:
+        config: The configuration file
+        directory: The directory containing the files to evaluate
+        local: Run subjective evaluation locally
+        production: Deploy the subjective evaluation to crowdsource
+            participants
+        detach: If running locally, detaches the server process
+
+    Returns:
+        name: The name of the evaluation, as given in the configuration file
+    """
     if local and production:
         raise ValueError('Cannot deploy production build locally')
 

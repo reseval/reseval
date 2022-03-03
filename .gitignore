@@ -1,8 +1,6 @@
 *.egg-info/
 *__pycache__/
 .vscode/
-
 .DS_Store
-
-evaluations/
-!evaluations/.gitkeep
+docs/_autosummary
+docs/_build

@@ -1,4 +1,5 @@
 import time
+import typing
 
 import rich
 import rich.progress
@@ -11,8 +12,14 @@ import reseval
 ###############################################################################
 
 
-def monitor(name=None, interval=120):
-    """Monitor subjective evaluations"""
+def monitor(name: typing.Optional[str], interval: int = 60):
+    """Monitor subjective evaluations
+
+    Args:
+        name: The name of the evaluation to monitor. If not provided,
+            monitors all evaluations.
+        interval: The time between monitoring updates in seconds
+    """
     # List evaluations
     names = (
         list(reseval.EVALUATION_DIRECTORY.glob('*'))

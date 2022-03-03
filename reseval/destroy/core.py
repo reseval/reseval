@@ -6,8 +6,14 @@ import reseval
 ###############################################################################
 
 
-def destroy(name, force=False, all=False):
-    """Destroys compute resources corresponding to a subjective evaluation"""
+def destroy(name: str, force: bool = False):
+    """Destroys an evaluation's storage, database, server, and crowdsource task
+
+    Args:
+        name: The name of the evaluation to destroy
+        force: Destroy evaluation resources even if it is still running. Pays
+            all participants who have taken the evaluation.
+    """
     # Cleanup crowdsourcing
     active = reseval.crowdsource.active(name)
     paid = reseval.crowdsource.paid(name)
@@ -33,8 +39,7 @@ def destroy(name, force=False, all=False):
                 reseval.crowdsource.pay(name)
 
     # Maybe destroy crowdsource task
-    if all:
-        reseval.crowdsource.destroy(name)
+    reseval.crowdsource.destroy(name)
 
     # Destroy server
     reseval.server.destroy(name)

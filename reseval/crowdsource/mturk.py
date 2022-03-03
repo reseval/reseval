@@ -12,6 +12,7 @@ import uuid
 
 import reseval
 
+
 ###############################################################################
 # Constants
 ###############################################################################
@@ -170,7 +171,7 @@ def pay(config, credentials):
         # Find matching completion code
         match = None
         for pid in participant_responses:
-            if (participant_responses[pid]['completion_code'] ==
+            if (participant_responses[pid]['CompletionCode'] ==
                     result['completion_code']):
                 match = pid
 
@@ -210,7 +211,6 @@ def resume(config, credentials):
         0,
         config['crowdsource']['duration']['total'])
     expire_at = datetime.datetime.now() + timedelta
-    # TODO - this is failing, saying the increment in seconds is negative
     mturk.update_expiration_for_hit(
         HITId=credentials['HIT_ID'],
         ExpireAt=expire_at.timestamp())

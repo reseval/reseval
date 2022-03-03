@@ -19,7 +19,7 @@ def parse_args():
     parser.add_argument(
         '--interval',
         type=int,
-        default=120,
+        default=60,
         help='The time between monitoring updates in seconds')
     return parser.parse_args()
 

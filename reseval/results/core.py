@@ -1,4 +1,6 @@
 import json
+import os
+import typing
 
 import reseval
 
@@ -8,8 +10,21 @@ import reseval
 ###############################################################################
 
 
-def results(name, directory):
-    """Get the results of a subjective evaluation"""
+def results(name: str, directory: typing.Union[str, bytes, os.PathLike]):
+    """Get the results of a subjective evaluation
+
+    Args:
+        name: The name of the subjective evaluation to retrieve results for
+        directory: The directory to save results
+
+    Returns:
+        results: dict
+            The evaluation results. Keys are ['samples', 'conditions'].
+                samples: int
+                    The number of evaluation samples received
+                conditions: dict
+                    The pairwise results between conditions
+    """
     # Download database tables
     reseval.database.download(
         name,

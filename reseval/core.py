@@ -1,5 +1,6 @@
 import contextlib
 import os
+import typing
 
 import reseval
 
@@ -9,8 +10,22 @@ import reseval
 ###############################################################################
 
 
-def run(config, directory, local=False, production=False, interval=120):
-    """Perform subjective evaluation"""
+def run(
+    config: str,
+    directory: typing.Union[str, bytes, os.PathLike],
+    local: bool = False,
+    production: bool = False,
+    interval: int = 120):
+    """Perform subjective evaluation
+
+    Args:
+        config: The configuration file
+        directory: The directory containing the files to evaluate
+        local: Run subjective evaluation locally
+        production: Deploy the subjective evaluation to crowdsource
+            participants
+        interval: The time between monitoring updates in seconds
+    """
     # Setup evaluation
     name = reseval.create(config, directory, local, production, detach=True)
 
