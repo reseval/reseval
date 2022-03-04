@@ -75,8 +75,8 @@ def create(
         # Don't create subjective evaluation that has already finished
         if participants >= cfg['participants']:
             raise ValueError(
-                f'Not creating subjective evaluation {name}, which has already '
-                 'finished. If you want to extend an evaluation, use '
+                f'Not creating subjective evaluation {name}, which has '
+                 'already finished. If you want to extend an evaluation, use '
                  'reseval.extend.')
 
     except (KeyError, FileNotFoundError, TypeError):

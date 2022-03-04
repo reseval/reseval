@@ -33,29 +33,16 @@ def run(
     name = reseval.create(config, directory, local, production, detach=True)
 
     # Monitor evaluation until completion
-    try:
+    reseval.monitor(name, interval)
 
-        # Monitor progress
-        reseval.monitor(name, interval)
+    # Pay participants
+    reseval.pay(name)
 
-        # Pay participants
-        reseval.pay(name)
+    # Get results
+    results = reseval.results(name, reseval.EVALUATION_DIRECTORY / name)
 
-        # Get results
-        results = reseval.results(name, reseval.EVALUATION_DIRECTORY / name)
-
-    except (Exception, KeyboardInterrupt) as exception:
-
-        # Make sure credentials get deleted for non-production deployment
-        if not production:
-            reseval.destroy(name, force=True)
-        raise exception
-
-    # Cleanup database, server, and storage
-    if production:
-        reseval.destroy(name)
-    else:
-        reseval.destroy(name, force=True)
+    # Cleanup database, server, storage, and crowdsource task
+    reseval.destroy(name)
 
     return results
 
