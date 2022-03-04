@@ -18,6 +18,11 @@ def parse_args():
         type=Path,
         help='The directory containing the files to evaluate')
     parser.add_argument(
+        '--results_directory',
+        type=Path,
+        default=Path(),
+        help='The directory to save results to')
+    parser.add_argument(
         '--local',
         action='store_true',
         help='Run subjective evaluation locally')
