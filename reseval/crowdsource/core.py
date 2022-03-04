@@ -69,18 +69,24 @@ def create(config, url, local=False, production=False):
 
 def destroy(name):
     """Delete a subjective evaluation"""
-    # Skip if performing local development
-    if reseval.is_local(name):
-        return
+    try:
 
-    # Get config
-    config = reseval.load.config_by_name(name)
+        # Skip if performing local development
+        if reseval.is_local(name):
+            return
 
-    # Get credentials
-    credentials = reseval.load.credentials_by_name(name, 'crowdsource')
+        # Get config
+        config = reseval.load.config_by_name(name)
 
-    # Destroy crowdsource task
-    module(config).destroy(config, credentials)
+        # Get credentials
+        credentials = reseval.load.credentials_by_name(name, 'crowdsource')
+
+        # Destroy crowdsource task
+        module(config).destroy(config, credentials)
+
+    except FileNotFoundError:
+
+        pass
 
     # Clean-up credentials
     (
@@ -182,34 +188,6 @@ def progress(name):
 
     # Check current progress
     return module(config).progress(credentials)
-
-
-def resume(name):
-    """Resume a production evaluation"""
-    # Get config
-    config = reseval.load.config_by_name(name)
-
-    # Get credentials
-    credentials = reseval.load.credentials_by_name(name, 'crowdsource')
-
-    # Stop evaluation
-    module(config).resume(config, credentials)
-
-
-def stop(name):
-    """Stop an active evaluation"""
-    # Skip if performing local development
-    if reseval.is_local(name):
-        return
-
-    # Get config
-    config = reseval.load.config_by_name(name)
-
-    # Get credentials
-    credentials = reseval.load.credentials_by_name(name, 'crowdsource')
-
-    # Stop evaluation
-    module(config).stop(credentials)
 
 
 ###############################################################################

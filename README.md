@@ -60,7 +60,6 @@ M. Morrison, B. Tang, G. Tan, and B. Pardo, "Reproducible Subjective Evaluation,
         * [Results](#results)
         * [Pay](#pay)
         * [Destroy](#destroy)
-        * [Resume](#resume)
         * [Extend](#extend)
     * [Application programming interface](#application-programming-interface)
 - [Advanced usage](#advanced-usage)
@@ -338,17 +337,6 @@ python -m reseval.destroy <name>
 # Destroy a subjective evaluation even if it is still active.
 # Participants who have taken the test so far will be paid.
 python -m reseval.destroy <name> --force
-```
-
-
-#### Resume
-
-```
-# Resume a subjective evaluation that was stopped before it finished
-python -m reseval.resume <name> <directory>
-
-# Resume a subjective evaluation and monitor the evaluation until completion
-python -m reseval.resume <name> <directory> --monitor
 ```
 
 

@@ -68,6 +68,11 @@ label .audio-single {
     margin: auto;
 }
 
+.col-1 {
+    grid-column: auto / span 1;
+    padding: 10px;
+}
+
 .container {
 	display: block;
 	position: relative;

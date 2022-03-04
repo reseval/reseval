@@ -18,8 +18,6 @@ Reproducible Subjective Evaluation (ReSEval)
 
 .. autofunction:: reseval.pay
 
-.. autofunction:: reseval.resume
-
 .. autofunction:: reseval.results
 
 .. autofunction:: reseval.run

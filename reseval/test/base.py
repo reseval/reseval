@@ -49,9 +49,9 @@ class Base(ABC):
         samples = self.samples_per_participant
         assignments, residual = [], []
 
-        # We use twice the expected number of participants in case some
-        # participants leave during evaluation
-        while len(assignments) < 2 * self.participants:
+        # We generate more assignments than the expected number of participants
+        # in case participants leave during the test or we extend the test
+        while len(assignments) < 10 * self.participants:
 
             # Shuffle and reset index whenever we reach the end
             while index + samples - len(residual) >= len(files):

@@ -1,3 +1,4 @@
+import shutil
 import reseval
 
 
@@ -14,25 +15,22 @@ def destroy(name: str, force: bool = False):
         force: Destroy evaluation resources even if it is still running. Pays
             all participants who have taken the evaluation.
     """
+    if not (reseval.EVALUATION_DIRECTORY / name).exists():
+        return
+
     # Cleanup crowdsourcing
     active = reseval.crowdsource.active(name)
     paid = reseval.crowdsource.paid(name)
-    analyzed = (reseval.EVALUATION_DIRECTORY / name / 'results.json').exists()
-    if active or not paid or not analyzed:
+    if active or not paid:
 
         if not force:
             tag = (
                 ('active ' if active else '') +
-                ('unpaid ' if not paid else '') +
-                ('unanalyzed ' if not analyzed else ''))
+                ('unpaid ' if not paid else ''))
             raise ValueError(
                 f'Not destroying {tag}subjective evaluation {name}')
 
         else:
-
-            # Stop the evaluation
-            if active:
-                reseval.crowdsource.stop(name)
 
             # Pay participants
             if not paid:
@@ -49,3 +47,6 @@ def destroy(name: str, force: bool = False):
 
     # Destroy storage
     reseval.storage.destroy(name)
+
+    # Clean-up cache
+    shutil.rmtree(reseval.EVALUATION_DIRECTORY / name)

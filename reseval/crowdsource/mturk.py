@@ -84,10 +84,7 @@ def destroy(config, credentials):
         # Stop HIT
         mturk.update_expiration_for_hit(
             HITId=credentials['HIT_ID'],
-            ExpireAt=datetime.datetime.now().timestamp())
-
-        # Pay participants
-        pay(config, credentials)
+            ExpireAt=datetime.datetime(2000, 1, 1).timestamp())
 
         # Delete HIT
         mturk.delete_hit(HITId=credentials['HIT_ID'])
@@ -163,7 +160,9 @@ def pay(config, credentials):
         pid = participant['ID']
         participant_responses[pid] = (
                 participant |
-                {'responses': list(filter(lambda x: x['Participant'] == pid, responses))})
+                {'responses': list(filter(
+                    lambda x: x['Participant'] == pid,
+                    responses))})
 
     # Iterate over participants
     for result in mturk_results:
@@ -199,32 +198,6 @@ def pay(config, credentials):
 def progress(credentials):
     """Retrieve the number of participants that have taken the evaluation"""
     return len(assignments(credentials))
-
-
-def resume(config, credentials):
-    """Resume a subjective evaluation"""
-    # Connect to MTurk
-    mturk = connect(credentials['PRODUCTION'])
-
-    # Resume HIT
-    timedelta = datetime.timedelta(
-        0,
-        config['crowdsource']['duration']['total'])
-    expire_at = datetime.datetime.now() + timedelta
-    mturk.update_expiration_for_hit(
-        HITId=credentials['HIT_ID'],
-        ExpireAt=expire_at.timestamp())
-
-
-def stop(credentials):
-    """Stop an active HIT"""
-    # Connect to MTurk
-    mturk = connect(credentials['PRODUCTION'])
-
-    # Stop HIT
-    mturk.update_expiration_for_hit(
-        HITId=credentials['HIT_ID'],
-        ExpireAt=datetime.datetime.now().timestamp())
 
 
 ###############################################################################
@@ -265,7 +238,7 @@ def assignments(credentials, statuses=None):
         page['Assignments'] for page in iterator))
 
 
-def bonus(config, credentials, assignment_id, worker_id):
+def bonus(config, credentials, assignment_id):
     """Give a participant a bonus"""
     # We only send one bonus per assignment, so we use the assignment ID to
     # generate the unique token
@@ -274,12 +247,17 @@ def bonus(config, credentials, assignment_id, worker_id):
     # Connect to MTurk
     mturk = connect(credentials['PRODUCTION'])
 
+    # Get worker ID
+    assignment = mturk.get_assignment(AssignmentId=assignment_id)
+    worker_id = assignment['Assignment']['WorkerId']
+
     try:
 
         # Approve assignment
+        # TODO - the bonus sent here does not seem to get posted to the MTurk sandbox
         mturk.send_bonus(
             WorkerId=worker_id,
-            BonusAmount=config['crowdsource']['payment']['completion'],
+            BonusAmount=str(config['crowdsource']['payment']['completion']),
             AssignmentId=assignment_id,
             UniqueRequestToken=unique_token,
             Reason='Passed prescreening and completed evaluation. Thank you!')

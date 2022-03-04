@@ -34,8 +34,16 @@ def run(
     # Setup evaluation
     name = reseval.create(config, directory, local, production, detach=True)
 
-    # Monitor evaluation until completion
-    reseval.monitor(name, interval)
+    try:
+
+        # Monitor evaluation until completion
+        reseval.monitor(name, interval)
+
+    except (Exception, KeyboardInterrupt) as exception:
+
+        # Perform clean-up only if evaluation is local
+        if not local:
+            raise exception
 
     # Pay participants
     reseval.pay(name)
@@ -44,7 +52,7 @@ def run(
     results = reseval.results(name, results_directory)
 
     # Cleanup database, server, storage, and crowdsource task
-    reseval.destroy(name)
+    reseval.destroy(name, force=True)
 
     return results
 

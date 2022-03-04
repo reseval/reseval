@@ -1,6 +1,5 @@
 import argparse
 import glob
-import multiprocessing as mp
 import os
 import shutil
 import subprocess

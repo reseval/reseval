@@ -1,7 +1,6 @@
 import http.client
 import json
 import os
-import subprocess
 import tarfile
 import tempfile
 import time
@@ -24,11 +23,11 @@ def create(config):
     client_directory = reseval.CACHE / 'client'
     if not (client_directory / 'node_modules').exists():
         with reseval.chdir(client_directory):
-            subprocess.call('npm install', shell=True)
+            reseval.npm.install().wait()
 
     # Build client
     with reseval.chdir(reseval.CACHE / 'client'):
-        subprocess.call('npm run build', shell=True, stdout=subprocess.DEVNULL)
+        reseval.npm.build().wait()
 
     # Create a tarball of all files needed by the Heroku server
     with tempfile.TemporaryDirectory() as directory:
@@ -87,6 +86,16 @@ def create(config):
     return {'URL': f'http://{name}.herokuapp.com/'}
 
 
+def destroy(config, credentials):
+    """Destroy a Heroku server"""
+    reseval.app.heroku.destroy(config)
+
+
+###############################################################################
+# Utilities
+###############################################################################
+
+
 def status(name):
     """Get current build status. One of ['succeeded', 'failed', 'pending']"""
     # Connect to Heroku
@@ -109,8 +118,3 @@ def status(name):
     # Get most recent build status from response
     status = list(map(lambda x: x['status'], data))
     return status[-1]
-
-
-def destroy(config, credentials):
-    """Destroy a Heroku server"""
-    reseval.app.heroku.destroy(config)

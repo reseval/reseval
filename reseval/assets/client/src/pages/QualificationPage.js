@@ -96,7 +96,8 @@ export default function QualificationPage({
                     // Get evaluation files for this evaluator
                     fetch(url + '/api/evaluators/')
                         .then(response => response.json())
-                        .then(response => setFiles(assignments[response]))
+                        .then(response => setFiles(
+                            assignments[response % assignments.length]))
 
                         // Get list of evaluation conditions
                         .then(_ => {

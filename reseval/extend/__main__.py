@@ -15,10 +15,6 @@ def parse_args():
         description='Extend a subjective evaluation')
     parser.add_argument('name', help='The name of the evaluation to extend')
     parser.add_argument(
-        'directory',
-        type=Path,
-        help='The directory containing the files to evaluate')
-    parser.add_argument(
         'participants',
         type=int,
         help='The number of new participants to add to the evaluation')
@@ -30,19 +26,6 @@ def parse_args():
         '--production',
         action='store_true',
         help='Deploy the subjective evaluation to crowdsource participants')
-    parser.add_argument(
-        '--monitor',
-        action='store_true',
-        help='Whether to monitor the evaluation')
-    parser.add_argument(
-        '--interval',
-        type=int,
-        default=120,
-        help='The time between monitoring updates in seconds')
-    parser.add_argument(
-        '--detach',
-        action='store_true',
-        help='If running locally, detaches the server process')
     return parser.parse_args()
 
 

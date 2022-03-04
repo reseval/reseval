@@ -1,6 +1,5 @@
 import json
 import psutil
-import subprocess
 import webbrowser
 
 import requests
@@ -14,20 +13,11 @@ import reseval
 ###############################################################################
 
 
-def create(config, detach=False):
+def create(config):
     """Deploy a local server"""
     # Launch server process
     with reseval.chdir(reseval.CACHE):
-        # shell=True is not considered best practice for two reasons:
-        #   1) It assumes the binary is the program you expect it to be. In
-        #      this case, npm.
-        #   2) If parameterized, it can run malicious code. For example,
-        #      f'npm run {user_input}' where
-        #      user_input = 'nonexistant_arg; rm -rf /'.
-        # In our use case, we've asked users to install npm and we do not
-        # parameterize the command. The alternative is to set shell=False and
-        # require the user to provide the path to the npm executable.
-        process = subprocess.Popen('npm run dev', shell=True)
+        process = reseval.npm.start()
 
     # Ping server until we get a response
     session = requests.Session()
@@ -52,7 +42,7 @@ def create(config, detach=False):
         json.dump(credentials, file, indent=4, sort_keys=True)
 
     # Maybe wait for process to finish
-    if detach:
+    if not config['detach']:
         process.wait()
 
     return credentials

@@ -22,19 +22,20 @@ def monitor(name: typing.Optional[str], interval: int = 60):
     """
     # List evaluations
     names = (
-        list(reseval.EVALUATION_DIRECTORY.glob('*'))
+        [eval.name for eval in reseval.EVALUATION_DIRECTORY.glob('*')
+            if eval.is_dir()]
         if name is None else [name])
 
     # Get total samples for each evaluation
-    configs = [reseval.load.config_by_name(name) for name in names]
+    configs = [reseval.load.config_by_name(evaluation) for evaluation in names]
     totals = [
         cfg['participants'] * cfg['samples_per_participant']
         for cfg in configs]
 
     # Setup monitoring display
     analyses = [
-        reseval.results(name, reseval.EVALUATION_DIRECTORY / name)
-        for name in names]
+        reseval.results(evaluation, reseval.EVALUATION_DIRECTORY / evaluation)
+        for evaluation in names]
 
     # Render display and monitor
     content = displays(names, totals, analyses)
@@ -44,30 +45,30 @@ def monitor(name: typing.Optional[str], interval: int = 60):
         while True:
 
             # Iterate over evaluations
-            for index, (name, total) in enumerate(zip(names, totals)):
+            for index, (evaluation, total) in enumerate(zip(names, totals)):
 
                 # Get current progress
                 reseval.database.download(
-                    name,
+                    evaluation,
                     reseval.EVALUATION_DIRECTORY / 'tables')
-                count = len(reseval.load.responses(name))
+                count = len(reseval.load.responses(evaluation))
 
                 # Update display if we have new results
                 if count != analyses[index]['samples']:
 
                     # Get current statistics
                     analysis = reseval.results(
-                        name,
-                        reseval.EVALUATION_DIRECTORY / name)
+                        evaluation,
+                        reseval.EVALUATION_DIRECTORY / evaluation)
                     analyses[index] = analysis
 
                     # Update display
                     live.update(displays(names, totals, analyses))
 
             # If we're monitoring a single evaluation and it is done, exit
-            if (len(names) == 1 and
+            if (name is not None and
                 analyses[0]['samples'] == total and
-                not reseval.crowdsource.active(names[0])):
+                not reseval.crowdsource.active(name)):
                 break
 
             # Wait a while

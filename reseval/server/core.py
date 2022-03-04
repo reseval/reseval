@@ -59,14 +59,6 @@ def destroy(name):
     ).unlink(missing_ok=True)
 
 
-def status(name):
-    """Get the status of the server"""
-    local = reseval.is_local(name)
-    config = reseval.load.config_by_name(name)
-    credentials = reseval.load.credentials_by_name(name, 'server')
-    module(config, local).status(config, credentials)
-
-
 ###############################################################################
 # Utilities
 ###############################################################################

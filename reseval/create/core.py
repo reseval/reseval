@@ -1,4 +1,3 @@
-import subprocess
 import json
 import os
 import shutil
@@ -34,6 +33,13 @@ def create(
     if local and production:
         raise ValueError('Cannot deploy production build locally')
 
+    # Load configuration file
+    cfg = reseval.load.config_from_file(config)
+    name = cfg['name']
+
+    if (reseval.EVALUATION_DIRECTORY / name).exists():
+        raise ValueError(f'Evaluation {name} already exists')
+
     # Copy client and server to cache
     for path in reseval.ASSETS_DIR.rglob('*'):
         if path.is_dir():
@@ -45,42 +51,13 @@ def create(
     # Maybe install server
     if local and not (reseval.CACHE / 'node_modules').exists():
         with reseval.chdir(reseval.CACHE):
-            subprocess.call('npm install', shell=True)
+            reseval.npm.install().wait()
 
     # Maybe install client
     client_directory = reseval.CACHE / 'client'
     if local and not (client_directory / 'node_modules').exists():
         with reseval.chdir(client_directory):
-            subprocess.call('npm install', shell=True)
-
-    # Load configuration file
-    cfg = reseval.load.config_from_file(config)
-    name = cfg['name']
-
-    try:
-        if local:
-
-            # Get number of participants from database
-            reseval.database.download(
-                name,
-                reseval.EVALUATION_DIRECTORY / name / 'tables',
-                ['participants'])
-            participants = len(reseval.load.participants(name))
-
-        else:
-
-            # Get number of participants from crowdsource platform
-            participants = reseval.crowdsource.progress(name)
-
-        # Don't create subjective evaluation that has already finished
-        if participants >= cfg['participants']:
-            raise ValueError(
-                f'Not creating subjective evaluation {name}, which has '
-                 'already finished. If you want to extend an evaluation, use '
-                 'reseval.extend.')
-
-    except (KeyError, FileNotFoundError, TypeError):
-        pass
+            reseval.npm.install().wait()
 
     # Don't overwrite production data
     if not production:
@@ -116,58 +93,24 @@ def create(
     elif local_file.exists():
         local_file.unlink()
 
-    # Create file storage and upload
-    credentials_directory = reseval.EVALUATION_DIRECTORY / name / 'credentials'
-    if not (credentials_directory / 'storage.json').exists():
-        reseval.storage.create(cfg, directory, local)
-
-    # If heroku is used for either the database or server, setup the app here
-    if (not local and
-        (cfg['server'] == 'heroku' or cfg['database'] == 'heroku')):
-        reseval.app.heroku.create(cfg)
-
-    # Maybe create database
-    if not (credentials_directory / '.env').exists():
-
-        try:
-
-            # Create database
-            reseval.database.create(cfg, test, local)
-
-        except (Exception, KeyboardInterrupt) as exception:
-
-            # Cleanup resources
-            reseval.destroy(name, True)
-
-            raise exception
-
-    # Maybe create server
-    if local or not (credentials_directory / 'server.json').exists():
-
-        try:
-
-            # Create server
-            url = reseval.server.create(cfg, local, detach=detach)
-
-        except (Exception, KeyboardInterrupt) as exception:
-
-            # Cleanup resources
-            reseval.destroy(name, True)
-
-            raise exception
-    else:
-
-        # Retrieve URL of existing server
-        credentials = reseval.load.credentials_by_name(name, 'server')
-        url = credentials['URL']
-
     try:
 
+        # Create file storage and upload
+        reseval.storage.create(cfg, directory, local)
+
+        # If heroku is used for either the database or server, setup the app here
+        if (not local and
+            (cfg['server'] == 'heroku' or cfg['database'] == 'heroku')):
+            reseval.app.heroku.create(cfg)
+
+        # Create database
+        reseval.database.create(cfg, test, local)
+
+        # Create server
+        url = reseval.server.create(cfg, local, detach=detach)
+
         # Launch crowdsourced evaluation
-        if (credentials_directory / 'crowdsource.json').exists():
-            reseval.crowdsource.resume(name)
-        else:
-            reseval.crowdsource.create(cfg, url, local, production)
+        reseval.crowdsource.create(cfg, url, local, production)
 
     except (Exception, KeyboardInterrupt) as exception:
 

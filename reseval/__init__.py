@@ -7,13 +7,13 @@ from .extend import extend
 from .destroy import destroy
 from .monitor import monitor
 from .results import results
-from .resume import resume
 from .pay import pay
 from . import app
 from . import convert
 from . import crowdsource
 from . import database
 from . import load
+from . import npm
 from . import random
 from . import server
 from . import stats
