@@ -1,6 +1,7 @@
 import contextlib
 import os
 import typing
+from pathlib import Path
 
 import reseval
 
@@ -13,6 +14,7 @@ import reseval
 def run(
     config: str,
     directory: typing.Union[str, bytes, os.PathLike],
+    results_directory: typing.Union[str, bytes, os.PathLike] = Path(),
     local: bool = False,
     production: bool = False,
     interval: int = 120) -> dict:
@@ -39,7 +41,7 @@ def run(
     reseval.pay(name)
 
     # Get results
-    results = reseval.results(name, reseval.EVALUATION_DIRECTORY / name)
+    results = reseval.results(name, results_directory)
 
     # Cleanup database, server, storage, and crowdsource task
     reseval.destroy(name)

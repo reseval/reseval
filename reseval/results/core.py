@@ -23,9 +23,7 @@ def results(
         dict: Evaluation results
     """
     # Download database tables
-    reseval.database.download(
-        name,
-        reseval.EVALUATION_DIRECTORY / name / 'tables')
+    reseval.database.download(name, directory / 'tables')
 
     # Load responses
     config = reseval.load.config_by_name(name)
