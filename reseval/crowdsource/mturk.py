@@ -254,7 +254,6 @@ def bonus(config, credentials, assignment_id):
     try:
 
         # Approve assignment
-        # TODO - the bonus sent here does not seem to get posted to the MTurk sandbox
         mturk.send_bonus(
             WorkerId=worker_id,
             BonusAmount=str(config['crowdsource']['payment']['completion']),
