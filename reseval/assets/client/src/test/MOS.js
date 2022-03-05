@@ -32,22 +32,25 @@ export default function MOS({
     /* Render a MOS evaluation task */
     const reference = useRef();
 
-    // Whether the audio has ended
+    // Whether the media has ended
     const [ended, setEnded] = useState(false);
+
+    // Select random condition
+    // TODO - balanced selection over both files and conditions
+    const [condition, setCondition] = useState(chance.pickone(conditions));
 
     function clickHandler() {
         // Send response to database and go to next question
         onClick();
 
-        // Reset audio files
+        // Reset media files
         setEnded(false);
+
+        // Draw a new random condition
+        setCondition(chance.pickone(conditions));
     }
 
-    // Select condition
-    const condition = chance.pickone(conditions);
-
     // Render
-    // TODO - image is changing when a button is selected
     return (
         <>
             <Media
@@ -65,8 +68,8 @@ export default function MOS({
             <Button
                 onClick={() => {
                     typeof response !== 'undefined' &&
-                        ended &&
-                        clickHandler()
+                    ended &&
+                    clickHandler()
                 }}
             >
                 Next

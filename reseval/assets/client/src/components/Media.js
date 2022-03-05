@@ -52,5 +52,13 @@ export default function Media(props) {
     }
 
     return (
-        <div style={{display: 'flex', justifyContent: 'center', padding: '10px'}}>{media}</div>);
+        <div
+            style={{
+                display: 'flex',
+                justifyContent: 'center',
+                padding: '10px'
+            }}
+        >
+            {media}
+        </div>);
 }
