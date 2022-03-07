@@ -184,29 +184,3 @@ Radio button
 .check.active.selected::before {
 	background: #000000;
 }
-
-
-/******************************************************************************
-Slider
-******************************************************************************/
-
-
-.mediaSliderGrid {
-	display: grid;
-	height: 400px;
-	grid-template-columns: repeat(5, 20%);
-	grid-template-rows: 400px;
-}
-
-.mediaSliderBox {
-	height: 400px;
-	justify-content: center;
-	align-items: center;
-}
-
-.slider {
-	height: 300px;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}

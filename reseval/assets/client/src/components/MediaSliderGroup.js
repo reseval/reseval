@@ -29,6 +29,7 @@ function MediaSlider({
     function onChange(value) {
         /* Update scores */
         setScores(scores.map((score, i) => i === index ? value : score));
+
         // Pad with leading zeros
         const padded = scores.map(score => String(score).padStart(3, '0'));
 
@@ -54,8 +55,22 @@ function MediaSlider({
 
     // Render slider and media
     return (
-        <div className='mediaSliderBox' style={{'grid-column': index + 1}}>
-            <div className='slider'>
+        <div
+            style={{
+                gridColumn: index + 1,
+                height: '400px',
+                justifyContent: 'center',
+                alignItems: 'center'
+            }}
+        >
+            <div
+                style={{
+                    display: 'flex',
+                    height: '300px',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}
+            >
                 <Slider
                     value={scores[index]}
                     defaultValue={50}
@@ -83,7 +98,7 @@ function MediaSlider({
                     }}
                 />
             </div>
-            <div className='break'/>
+            {/* <div className='break'/> */}
             <Media
                 src={condition + '/' + file}
                 reference={reference}
@@ -120,5 +135,17 @@ export default function MediaSliderGroup({
             setEndeds={setEndeds}
         />
     );
-    return <div className='mediaSliderGrid'>{sliderGroup}</div>;
+    return (
+        <div
+            style={{
+                display: 'grid',
+                gridTemplateColumns: `repeat(${conditions.length}, 1fr)`,
+                height: '400px',
+                gridTemplateRows: '400px'
+            }}
+            className='mediaSliderGrid'
+        >
+            {sliderGroup}
+        </div>
+    );
 };
