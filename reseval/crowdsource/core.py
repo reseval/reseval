@@ -38,7 +38,23 @@ def active(name):
         return False
 
     # Check if the evaluation is active
-    module(config).active(config, credentials)
+    return module(config).active(config, credentials)
+
+
+def assignments(name):
+    """Get the assignment results"""
+    # Skip if performing local development
+    if reseval.is_local(name):
+        return []
+
+    # Get config
+    config = reseval.load.config_by_name(name)
+
+    # Get credentials
+    credentials = reseval.load.credentials_by_name(name, 'crowdsource')
+
+    # Extend task
+    return module(config).assignments(credentials)
 
 
 def create(config, url, local=False, production=False):

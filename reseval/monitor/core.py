@@ -34,7 +34,7 @@ def monitor(name: typing.Optional[str], interval: int = 60):
 
     # Setup monitoring display
     analyses = [
-        reseval.results(evaluation, reseval.EVALUATION_DIRECTORY / evaluation)
+        reseval.results(evaluation)
         for evaluation in names]
 
     # Render display and monitor
@@ -50,7 +50,7 @@ def monitor(name: typing.Optional[str], interval: int = 60):
                 # Get current progress
                 reseval.database.download(
                     evaluation,
-                    reseval.EVALUATION_DIRECTORY / 'tables')
+                    reseval.EVALUATION_DIRECTORY / name / 'tables')
                 count = len(reseval.load.responses(evaluation))
 
                 # Update display if we have new results
@@ -59,7 +59,7 @@ def monitor(name: typing.Optional[str], interval: int = 60):
                     # Get current statistics
                     analysis = reseval.results(
                         evaluation,
-                        reseval.EVALUATION_DIRECTORY / evaluation)
+                        reseval.EVALUATION_DIRECTORY)
                     analyses[index] = analysis
 
                     # Update display
@@ -67,8 +67,9 @@ def monitor(name: typing.Optional[str], interval: int = 60):
 
             # If we're monitoring a single evaluation and it is done, exit
             if (name is not None and
-                analyses[0]['samples'] == total and
-                not reseval.crowdsource.active(name)):
+                ((reseval.is_local(name) and
+                    analyses[0]['samples'] == total) or
+                not reseval.crowdsource.active(name))):
                 break
 
             # Wait a while

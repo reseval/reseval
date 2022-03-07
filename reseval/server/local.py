@@ -15,6 +15,17 @@ import reseval
 
 def create(config):
     """Deploy a local server"""
+    # Maybe install server
+    if not (reseval.CACHE / 'node_modules').exists():
+        with reseval.chdir(reseval.CACHE):
+            reseval.npm.install().wait()
+
+    # Maybe install client
+    client_directory = reseval.CACHE / 'client'
+    if not (client_directory / 'node_modules').exists():
+        with reseval.chdir(client_directory):
+            reseval.npm.install().wait()
+
     # Launch server process
     with reseval.chdir(reseval.CACHE):
         process = reseval.npm.start()

@@ -45,7 +45,7 @@ export default function QualificationPage({
     const questions = config.prescreen_questions;
 
     function onClick() {
-        // Do not proceed if the respons is invalid
+        // Do not proceed if the response is invalid
         if (questions.length > 0 && !validate(response)) return;
 
         // Values to send to database
@@ -123,7 +123,10 @@ export default function QualificationPage({
     };
 
     // Skip prescreening if there are no questions
-    if (questions.length === 0) { onClick(); }
+    if (questions.length === 0) {
+        onClick();
+        return null;
+    }
 
     // Render
     return (

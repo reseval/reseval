@@ -183,7 +183,6 @@ def download(name, directory, tables=TABLES):
     reseval.load.environment_variables_by_name(name)
 
     # Create directory to store results
-    directory = reseval.EVALUATION_DIRECTORY / name / 'tables'
     directory.mkdir(exist_ok=True, parents=True)
 
     with connect() as (_, cursor):

@@ -25,6 +25,9 @@ function update(participant: any) {
         (index == keys.length - 1 ? '"' : '", ')
     );
 
+    // Don't update if there are no contents
+    if (set.length === 0) return null;
+
     // Create MySQL query
     const query = `UPDATE participants SET ${set} WHERE ID="${ID}"`
     return Query(query);

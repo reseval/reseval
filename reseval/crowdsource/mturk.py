@@ -5,6 +5,7 @@ import os
 import re
 from hashlib import md5
 from pathlib import Path
+from time import time
 
 import boto3
 import xmltodict as xmltodict
@@ -85,6 +86,19 @@ def destroy(config, credentials):
         mturk.update_expiration_for_hit(
             HITId=credentials['HIT_ID'],
             ExpireAt=datetime.datetime(2000, 1, 1).timestamp())
+
+        # The HIT can only be deleted once the status is one of 'Reviewing' or
+        # 'Reviewable'. Otherwise, an error will be thrown. Sometimes, it takes
+        # a couple of seconds after the update call above for the status to
+        # change to 'Reviewable'. This loop is a time buffer that gives MTurk
+        # 90 seconds to update the status. If the status doesn't change, the
+        # most likely explanation is that someone is still taking the
+        # evaluation.
+        start = datetime.datetime.now()
+        while (datetime.datetime.now() - start).total_seconds() < 90:
+            if status(config, credentials) in ['Reviewing', 'Reviewable']:
+                break
+            time.sleep(5)
 
         # Delete HIT
         mturk.delete_hit(HITId=credentials['HIT_ID'])
@@ -367,3 +381,12 @@ def results(credentials):
             'worker_id': assignment['WorkerId']})
 
     return result
+
+
+def status(config, credentials):
+    """Get the status of the current HIT"""
+    # Connect to MTurk
+    mturk = connect(credentials['PRODUCTION'])
+
+    # Get HIT status
+    return mturk.get_hit(HITId=credentials['HIT_ID'])['HIT']['HITStatus']

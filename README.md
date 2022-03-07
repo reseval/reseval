@@ -302,11 +302,11 @@ python -m reseval.monitor
 python -m reseval.monitor --name <name>
 ```
 
-**Note** - By default, the monitor updates once every two minutes. You can update the monitor more or less often by providing an update interval in seconds.
+**Note** - By default, the monitor updates once every minute. You can update the monitor more or less often by providing an update interval in seconds.
 
 ```
-# Update the monitor once every thirty seconds
-python -m reseval.monitor --interval 30
+# Update the monitor once every ten seconds
+python -m reseval.monitor --interval 10
 ```
 
 
@@ -314,7 +314,8 @@ python -m reseval.monitor --interval 30
 
 ```
 # Get the results of a subjective evaluation.
-# Results are stored in <directory>.
+# Results are stored in <directory>/<name>.
+# <directory> defaults to the current directory.
 python -m reseval.results <name> <directory>
 ```
 
@@ -344,10 +345,10 @@ python -m reseval.destroy <name> --force
 
 ```
 # Add <participants> additional participants to a finished evaluation
-python -m reseval.extend <name> <directory> <participants>
+python -m reseval.extend <name> <participants>
 
 # Add participants and monitor the evaluation until completion
-python -m reseval.extend <name> <directory> <participants> --monitor
+python -m reseval.extend <name> <participants>
 ```
 
 

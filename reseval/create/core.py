@@ -48,17 +48,6 @@ def create(
         destination.parent.mkdir(exist_ok=True, parents=True)
         shutil.copy(path, destination)
 
-    # Maybe install server
-    if local and not (reseval.CACHE / 'node_modules').exists():
-        with reseval.chdir(reseval.CACHE):
-            reseval.npm.install().wait()
-
-    # Maybe install client
-    client_directory = reseval.CACHE / 'client'
-    if local and not (client_directory / 'node_modules').exists():
-        with reseval.chdir(client_directory):
-            reseval.npm.install().wait()
-
     # Don't overwrite production data
     if not production:
         prod_file = reseval.EVALUATION_DIRECTORY / name / '.prod'

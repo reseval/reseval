@@ -1,6 +1,4 @@
-import os
 import re
-import typing
 
 import reseval
 
@@ -27,12 +25,12 @@ def extend(
 
     # We can only restart evaluations that have been run in the same mode
     prod_file = reseval.EVALUATION_DIRECTORY / name / '.prod'
-    if production and not prod_file.exists():
+    if not production and prod_file.exists():
         raise ValueError(
             f'Cannot extend production evaluation {name} '
             'in non-production mode')
     local_file = reseval.EVALUATION_DIRECTORY / name / '.local'
-    if local and not local_file.exists():
+    if not local and local_file.exists():
         raise ValueError(
             f'Cannot extend local evaluation {name} '
             'in non-local mode')

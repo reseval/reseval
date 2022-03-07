@@ -23,10 +23,10 @@ crowdsource:
   platform: mturk
 
   # The survey title shown to potential participants
-  title: Title
+  title: Image quality test
 
   # The survey description shown to potential participants
-  description: Description
+  description: Select the higher quality image
 
   # Keywords that participants can use to find your survey
   keywords: Keywords
@@ -49,10 +49,10 @@ crowdsource:
   payment:
 
     # The amount that you pay even if they don't pass prescreening
-    base: 0.05
+    base: 0.20
 
     # The additional amount that you pay participants who complete evaluation
-    completion: 0.45
+    completion: 0.05
 
   # How long to wait for things (in seconds)
   duration:
@@ -96,22 +96,7 @@ welcome_text: "
 # perform evaluation. If a multiple choice question has correct_answer
 # defined, the participant must select that answer to be able to continue
 # to the evaluation.
-prescreen_questions:
-
-  # Test question
-  - name: DummyQuestion
-
-    # The type of question. One of [free-response, multiple-choice].
-    type: multiple-choice
-
-    # Question text
-    text: Would you like to take a subjective evaluation?
-
-    # Possible answers
-    answers: ['Yes', 'No']
-
-    # Indicate a correct answer
-    correct_answer: 'Yes'
+prescreen_questions: []
 
 # Instructions presented to the participant during evaluation
 survey_instructions: "
@@ -129,7 +114,7 @@ followup_questions:
     type: free-response
 
     # Question text
-    text: "How was the evaluation?"
+    text: "Were there any issues that you encountered during the evaluation?"
 
     # Placeholder text
-    placeholder: Good.
+    placeholder: 'No'
