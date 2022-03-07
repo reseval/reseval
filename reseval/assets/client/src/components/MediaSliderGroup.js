@@ -9,22 +9,25 @@ import '../css/components.css';
 
 
 /******************************************************************************
-Radio buttons with corresponding media (audio, image, etc.)
-******************************************************************************/
+ Radio buttons with corresponding media (audio, image, etc.)
+ ******************************************************************************/
 
 
 function MediaSlider({
-    file,
-    condition,
-    permutation,
-    index,
-    scores,
-    setScores,
-    setResponse,
-    reference,
-    active,
-    endeds,
-    setEndeds }) {
+                         file,
+                         condition,
+                         permutation,
+                         index,
+                         scores,
+                         setScores,
+                         setResponse,
+                         reference,
+                         active,
+                         endeds,
+                         setEndeds,
+                         toucheds,
+                         setToucheds
+                     }) {
     /* Create a media element with a corresponding slider */
     function onChange(value) {
         /* Update scores */
@@ -46,6 +49,9 @@ function MediaSlider({
         // Response is concatenation of zero-padded scores
         setResponse(
             reverse_permutation.map((index) => padded[index]).join(''));
+        // Set slider touchedness to be true
+        setToucheds(toucheds.map((touched, i) => i === index ? true : touched));
+
     }
 
     function onEnded() {
@@ -77,10 +83,10 @@ function MediaSlider({
                     startPoint={50}
                     marks={{0: 0, 25: 25, 50: 50, 75: 75, 100: 100}}
                     vertical={true}
-                    disabled={!active}
+                    disabled={!endeds[index]}
                     onChange={onChange}
-                    railStyle={{ backgroundColor: 'black' }}
-                    trackStyle={{ backgroundColor: 'black' }}
+                    railStyle={{backgroundColor: 'black'}}
+                    trackStyle={{backgroundColor: 'black'}}
                     dotStyle={{
                         backgroundColor: 'black',
                         borderColor: 'black'
@@ -102,22 +108,25 @@ function MediaSlider({
             <Media
                 src={condition + '/' + file}
                 reference={reference}
-                onEnded={onEnded} />
+                onEnded={onEnded}/>
         </div>
     );
 };
 
 export default function MediaSliderGroup({
-    file,
-    conditions,
-    permutation,
-    scores,
-    setScores,
-    setResponse,
-    refs,
-    active,
-    endeds,
-    setEndeds }) {
+                                             file,
+                                             conditions,
+                                             permutation,
+                                             scores,
+                                             setScores,
+                                             setResponse,
+                                             refs,
+                                             active,
+                                             endeds,
+                                             setEndeds,
+                                             toucheds,
+                                             setToucheds
+                                         }) {
     /* Create a group of media elements with corresponding sliders */
     const sliderGroup = conditions.map((condition, key) =>
         <MediaSlider
@@ -133,6 +142,8 @@ export default function MediaSliderGroup({
             active={active}
             endeds={endeds}
             setEndeds={setEndeds}
+            toucheds={toucheds}
+            setToucheds={setToucheds}
         />
     );
     return (
