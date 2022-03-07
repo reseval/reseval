@@ -32,8 +32,8 @@ export default function MUSHRA({file, conditions, setResponse, onClick}) {
     const [endeds, setEndeds] = useState(Array(conditions.length).fill(false));
 
     // Whether sliders have been touched
-    const [toucheds, setToucheds] = useState(Array(conditions.length).fill(false));
-
+    const [toucheds, setToucheds] = useState(
+        Array(conditions.length).fill(false));
 
     // Non-deterministic ordering of media elements
     const [permutation, setPermutation] = useState(
@@ -72,7 +72,6 @@ export default function MUSHRA({file, conditions, setResponse, onClick}) {
                 setScores={setScores}
                 setResponse={setResponse}
                 refs={refs}
-                active={endeds.every(item => item === true)}
                 endeds={endeds}
                 setEndeds={setEndeds}
                 toucheds={toucheds}
@@ -80,7 +79,8 @@ export default function MUSHRA({file, conditions, setResponse, onClick}) {
             />
             <Button
                 onClick={() => {
-                    endeds.every(item => item === true) && toucheds.some(item => item === true) &&
+                    endeds.every(item => item === true) &&
+                    toucheds.some(item => item === true) &&
                     clickHandler()
                 }}
             >

@@ -35,13 +35,9 @@ export default function Media(props) {
             media = <Audio {...props} />;
             break;
         case 'image':
-            props.onEnded();
-            delete props.onEnded;
             media = <Image {...props} />;
             break;
         case 'text':
-            props.onEnded();
-            delete props.onEnded;
             media = <Text {...props} />;
             break;
         case 'video':

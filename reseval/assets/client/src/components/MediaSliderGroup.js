@@ -7,6 +7,8 @@ import 'rc-slider/assets/index.css';
 
 import '../css/components.css';
 
+import config from '../json/config.json'
+
 
 /******************************************************************************
  Radio buttons with corresponding media (audio, image, etc.)
@@ -14,20 +16,19 @@ import '../css/components.css';
 
 
 function MediaSlider({
-                         file,
-                         condition,
-                         permutation,
-                         index,
-                         scores,
-                         setScores,
-                         setResponse,
-                         reference,
-                         active,
-                         endeds,
-                         setEndeds,
-                         toucheds,
-                         setToucheds
-                     }) {
+    file,
+    condition,
+    permutation,
+    index,
+    scores,
+    setScores,
+    setResponse,
+    reference,
+    endeds,
+    setEndeds,
+    toucheds,
+    setToucheds
+}) {
     /* Create a media element with a corresponding slider */
     function onChange(value) {
         /* Update scores */
@@ -49,14 +50,18 @@ function MediaSlider({
         // Response is concatenation of zero-padded scores
         setResponse(
             reverse_permutation.map((index) => padded[index]).join(''));
-        // Set slider touchedness to be true
-        setToucheds(toucheds.map((touched, i) => i === index ? true : touched));
 
+        // Set slider touchedness to be true
+        setToucheds(
+            toucheds.map((touched, i) => i === index ? true : touched));
     }
 
     function onEnded() {
         /* Update what media has ended */
-        setEndeds(endeds.map((ended, i) => i === index ? true : ended));
+        // If this is an image or text, they end immediately
+        const makeAllTrue = ['image', 'text'].includes(config.datatype);
+        setEndeds(endeds.map(
+            (ended, i) => i === index || makeAllTrue ? true : ended));
     }
 
     // Render slider and media
@@ -64,7 +69,7 @@ function MediaSlider({
         <div
             style={{
                 gridColumn: index + 1,
-                height: '400px',
+                height: '500px',
                 justifyContent: 'center',
                 alignItems: 'center'
             }}
@@ -104,29 +109,28 @@ function MediaSlider({
                     }}
                 />
             </div>
-            {/* <div className='break'/> */}
             <Media
                 src={condition + '/' + file}
                 reference={reference}
-                onEnded={onEnded}/>
+                onEnded={onEnded}
+            />
         </div>
     );
 };
 
 export default function MediaSliderGroup({
-                                             file,
-                                             conditions,
-                                             permutation,
-                                             scores,
-                                             setScores,
-                                             setResponse,
-                                             refs,
-                                             active,
-                                             endeds,
-                                             setEndeds,
-                                             toucheds,
-                                             setToucheds
-                                         }) {
+    file,
+    conditions,
+    permutation,
+    scores,
+    setScores,
+    setResponse,
+    refs,
+    endeds,
+    setEndeds,
+    toucheds,
+    setToucheds
+}) {
     /* Create a group of media elements with corresponding sliders */
     const sliderGroup = conditions.map((condition, key) =>
         <MediaSlider
@@ -139,7 +143,6 @@ export default function MediaSliderGroup({
             setScores={setScores}
             setResponse={setResponse}
             reference={refs[key]}
-            active={active}
             endeds={endeds}
             setEndeds={setEndeds}
             toucheds={toucheds}
@@ -151,8 +154,8 @@ export default function MediaSliderGroup({
             style={{
                 display: 'grid',
                 gridTemplateColumns: `repeat(${conditions.length}, 1fr)`,
-                height: '400px',
-                gridTemplateRows: '400px'
+                height: '500px',
+                gridTemplateRows: '500px'
             }}
             className='mediaSliderGrid'
         >
