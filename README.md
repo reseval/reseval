@@ -71,7 +71,7 @@ M. Morrison, B. Tang, G. Tan, and B. Pardo, "Reproducible Subjective Evaluation,
 
 First, install the Python module. ReSEval requires Python 3.9 or higher.
 
-`pip install -e .`
+`pip install reseval`
 
 Next, [download Node.js](https://nodejs.org/en/). You can check that your installation is correct by running `node --version` and `npm --version`.
 
@@ -354,8 +354,7 @@ python -m reseval.extend <name> <participants>
 
 ### Application programming interface
 
-**TODO** - link
-Documentation for our API can be found [here]().
+Documentation for our API can be found [here](https://reseval.github.io/reseval/html/index.html).
 
 
 ## Advanced usage
