@@ -18,8 +18,8 @@ A/B, ABX, MOS, and MUSHRA tests on audio, image, text, and video data.
 
 ### Citation
 
-If you use ReSEval in an academic publication, please use the following
-citation.
+If you use ReSEval in an academic publication, please cite
+[our paper](https://www.maxrmorrison.com/pdfs/morrison2022reproducible.pdf).
 
 
 ### IEEE
