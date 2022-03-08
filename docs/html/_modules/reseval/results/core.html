@@ -1,0 +1,233 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>reseval.results.core &#8212; reseval 0.0.1 documentation</title>
+    
+  <link href="../../../_static/css/theme.css" rel="stylesheet">
+  <link href="../../../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-book-theme.css?digest=84ace793992934648b4de8eed757e5a2" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+    
+  <link rel="preload" as="script" href="../../../_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx-book-theme.9d8b4a8b9bb19db25eeaddc40d639ba2.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<div class="col-12 col-md-3 bd-sidebar site-navigation " id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">reseval 0.0.1 documentation</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<!-- This is an invisible pixel that we watch to see if we've scrolled. -->
+<div class="sbt-scroll-pixel-helper"></div>
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            <div class="topbar-left">
+                
+                <label class="nav-toggle-button" for="__navigation">
+                    <div class="visually-hidden">Toggle navigation</div>
+                    <i class="fas fa-bars"></i>
+                </label>
+                
+            </div>
+            
+            <!-- Source interaction buttons -->
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+            
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1></h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                    </div>
+                </div>
+            </div>
+            
+              <div>
+                
+  <h1>Source code for reseval.results.core</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+
+<span class="kn">import</span> <span class="nn">reseval</span>
+
+
+<span class="c1">###############################################################################</span>
+<span class="c1"># Get subjective evaluation results</span>
+<span class="c1">###############################################################################</span>
+
+
+<div class="viewcode-block" id="results"><a class="viewcode-back" href="../../../index.html#reseval.results">[docs]</a><span class="k">def</span> <span class="nf">results</span><span class="p">(</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">directory</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Get the results of a subjective evaluation</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name: The name of the subjective evaluation to retrieve results for</span>
+<span class="sd">        directory: The directory to save results</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: Evaluation results</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Download database tables</span>
+    <span class="n">reseval</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">directory</span> <span class="o">/</span> <span class="s1">&#39;tables&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Load responses</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">reseval</span><span class="o">.</span><span class="n">load</span><span class="o">.</span><span class="n">config_by_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">conditions</span> <span class="o">=</span> <span class="n">reseval</span><span class="o">.</span><span class="n">load</span><span class="o">.</span><span class="n">conditions</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">responses</span> <span class="o">=</span> <span class="n">reseval</span><span class="o">.</span><span class="n">load</span><span class="o">.</span><span class="n">responses</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="c1"># No responses yet</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">responses</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span> <span class="s1">&#39;samples&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;conditions&#39;</span><span class="p">:</span> <span class="p">{}</span> <span class="p">}</span>
+
+    <span class="c1"># Get condition names</span>
+    <span class="n">conditions</span> <span class="o">=</span> <span class="p">[</span><span class="n">condition</span><span class="p">[</span><span class="s1">&#39;Condition&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">condition</span> <span class="ow">in</span> <span class="n">conditions</span><span class="p">]</span>
+
+    <span class="c1"># Group results by file stems</span>
+    <span class="n">responses_by_stem</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">response</span> <span class="ow">in</span> <span class="n">responses</span><span class="p">:</span>
+        <span class="n">stem</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;Stem&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">stem</span> <span class="ow">in</span> <span class="n">responses_by_stem</span><span class="p">:</span>
+            <span class="n">responses_by_stem</span><span class="p">[</span><span class="n">stem</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;Response&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">responses_by_stem</span><span class="p">[</span><span class="n">stem</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;Response&#39;</span><span class="p">]]</span>
+
+    <span class="c1"># Get test</span>
+    <span class="n">test</span> <span class="o">=</span> <span class="n">reseval</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+    <span class="c1"># Analyze results</span>
+    <span class="n">analysis</span><span class="p">,</span> <span class="n">stem_scores</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">analyze</span><span class="p">(</span>
+        <span class="n">conditions</span><span class="p">,</span>
+        <span class="n">responses_by_stem</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">[</span><span class="s1">&#39;random_seed&#39;</span><span class="p">])</span>
+
+    <span class="c1"># Save results</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">directory</span> <span class="o">/</span> <span class="s1">&#39;results.json&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">analysis</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">directory</span> <span class="o">/</span> <span class="s1">&#39;stemresults.json&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">stem_scores</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">analysis</span></div>
+</pre></div>
+
+              </div>
+              
+            
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+            
+        </div>
+    </div>
+    <footer class="footer">
+  <p>
+    
+      By Max Morrison, Brian Tang, Gefei Tan, and Bryan Pardo<br/>
+    
+        &copy; Copyright 2022, Interactive Audio Lab.<br/>
+  </p>
+</footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../../../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+
+  </body>
+</html>

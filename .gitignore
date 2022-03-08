@@ -2,5 +2,3 @@
 *__pycache__/
 .vscode/
 .DS_Store
-docs/_autosummary
-docs/_build
