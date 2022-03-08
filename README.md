@@ -1,8 +1,8 @@
 # Reproducible Subjective Evaluation (ReSEval)
-<!-- [![PyPI](https://img.shields.io/pypi/v/reseval.svg)](https://pypi.python.org/pypi/reseval) -->
+[![PyPI](https://img.shields.io/pypi/v/reseval.svg)](https://pypi.python.org/pypi/reseval)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.9+](https://img.shields.io/badge/python-3.9-blue.svg)](https://www.python.org/downloads/release/python-390/)
-<!-- [![Downloads](https://pepy.tech/badge/reseval)](https://pepy.tech/project/reseval) -->
+[![](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![Downloads](https://pepy.tech/badge/reseval)](https://pepy.tech/project/reseval)
 
 ReSEval is a framework for quickly building subjective evaluations that are
 deployed on crowdworker platforms like
@@ -316,7 +316,7 @@ python -m reseval.monitor --interval 10
 # Get the results of a subjective evaluation.
 # Results are stored in <directory>/<name>.
 # <directory> defaults to the current directory.
-python -m reseval.results <name> <directory>
+python -m reseval.results <name> --directory <directory>
 ```
 
 
