@@ -277,6 +277,8 @@ python -m reseval.credentials \
 
 Create a subjective evaluation either locally, in remote development mode (e.g., MTurk Sandbox), or in production mode.
 
+**Note** - `reseval.create` is not currently thread-safe. Wait until the first call has finished before calling it again. See [this GitHub issue](https://github.com/reseval/reseval/issues/5).
+
 ```
 # Local development
 python -m reseval.create <config> <directory> --local
