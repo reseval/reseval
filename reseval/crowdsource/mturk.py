@@ -40,7 +40,7 @@ XML_FILE = reseval.ASSETS_DIR / 'survey.xml'
 
 def active(config, credentials):
     """Returns True if the evaluation is still running"""
-    return progress(credentials) < config['participants']
+    return status(config, credentials) not in ['Reviewing', 'Reviewable']
 
 
 def create(config, url, production=False):
@@ -96,7 +96,7 @@ def destroy(config, credentials):
         # evaluation.
         start = datetime.datetime.now()
         while (datetime.datetime.now() - start).total_seconds() < 90:
-            if status(config, credentials) in ['Reviewing', 'Reviewable']:
+            if not active(config, credentials):
                 break
             time.sleep(5)
 

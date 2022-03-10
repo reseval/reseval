@@ -32,13 +32,16 @@ def monitor(name: typing.Optional[str], interval: int = 60):
         cfg['participants'] * cfg['samples_per_participant']
         for cfg in configs]
 
+    # Get total participants for each evaluation
+    participants = [cfg['participants'] for cfg in configs]
+
     # Setup monitoring display
     analyses = [
         reseval.results(evaluation)
         for evaluation in names]
 
     # Render display and monitor
-    content = displays(names, totals, analyses)
+    content = displays(names, totals, participants, analyses)
     with rich.progress.Live(content, refresh_per_second=.2) as live:
 
         # Monitor evaluations
@@ -50,7 +53,7 @@ def monitor(name: typing.Optional[str], interval: int = 60):
                 # Get current progress
                 reseval.database.download(
                     evaluation,
-                    reseval.EVALUATION_DIRECTORY / name / 'tables')
+                    reseval.EVALUATION_DIRECTORY / evaluation / 'tables')
                 count = len(reseval.load.responses(evaluation))
 
                 # Update display if we have new results
@@ -63,7 +66,11 @@ def monitor(name: typing.Optional[str], interval: int = 60):
                     analyses[index] = analysis
 
                     # Update display
-                    live.update(displays(names, totals, analyses))
+                    live.update(displays(
+                        names,
+                        totals,
+                        participants,
+                        analyses))
 
             # If we're monitoring a single evaluation and it is done, exit
             if (name is not None and
@@ -76,10 +83,16 @@ def monitor(name: typing.Optional[str], interval: int = 60):
             time.sleep(interval)
 
 
-def display(name, total, analysis):
+def display(name, total, participants, analysis):
     """Format one evaluation for display"""
     grid = rich.progress.Table.grid()
     grid.add_column()
+
+    # Get current number of participants
+    if reseval.is_local(name):
+        current = len(reseval.load.participants(name))
+    else:
+        current = reseval.crowdsource.progress(name)
 
     # Format a table of statistics
     table = rich.progress.Table.grid(padding=(0, 2))
@@ -87,8 +100,8 @@ def display(name, total, analysis):
     table.add_column(justify='center')
     table.add_column(justify='center')
     table.add_column(justify='right')
-    table.add_row('total', str(total))
-    table.add_row(str('samples'), str(analysis['samples']))
+    table.add_row('participants', f'{current}/{participants}')
+    table.add_row('samples', f'{analysis["samples"]}/{total}')
     for condition, items in analysis['conditions'].items():
         for i, (test, values) in enumerate(items.items()):
             for j, (key, val) in enumerate(values.items()):
@@ -114,12 +127,12 @@ def display(name, total, analysis):
     # return table, bar
     return rich.panel.Panel(grid, title=name)
 
-
-def displays(names, totals, analyses):
+def displays(names, totals, participants, analyses):
     """Format multiple evaluations for display"""
     displays = rich.progress.Table.grid()
-    for name, total, analysis in zip(names, totals, analyses):
-        displays.add_row(display(name, total, analysis))
+    iterator = zip(names, totals, participants, analyses)
+    for name, total, participant, analysis in iterator:
+        displays.add_row(display(name, total, participant, analysis))
     return displays
 
 

@@ -18,8 +18,8 @@ A/B, ABX, MOS, and MUSHRA tests on audio, image, text, and video data.
 
 ### Citation
 
-If you use ReSEval in an academic publication, please use the following
-citation.
+If you use ReSEval in an academic publication, please cite
+[our paper](https://www.maxrmorrison.com/pdfs/morrison2022reproducible.pdf).
 
 
 ### IEEE
@@ -71,11 +71,9 @@ M. Morrison, B. Tang, G. Tan, and B. Pardo, "Reproducible Subjective Evaluation,
 
 First, install the Python module. ReSEval requires Python 3.9 or higher.
 
-`pip install -e .`
+`pip install reseval`
 
-Next, [download Node.js](https://nodejs.org/en/). You can check that your installation is correct by running `node --version` and `npm --version`.
-
-ReSEval uses Node.js version 17.4.0 and is not guaranteed to work on all versions. If needed, Linux and OS X users can use `n` to change their version of Node.js, and Windows users can use [NVM for Windows](https://github.com/coreybutler/nvm-windows).
+Next, [download Node.js](https://nodejs.org/en/). You can check that your installation is correct by running `node --version`. ReSEval uses Node.js version 17.4.0 and is not guaranteed to work on all versions. If needed, Linux and OS X users can use `n` to change their version of Node.js, and Windows users can use [NVM for Windows](https://github.com/coreybutler/nvm-windows).
 
 ```
 # Linux or OS X
@@ -279,6 +277,8 @@ python -m reseval.credentials \
 
 Create a subjective evaluation either locally, in remote development mode (e.g., MTurk Sandbox), or in production mode.
 
+**Note** - `reseval.create` is not currently thread-safe. Wait until the first call has finished before calling it again. See [this GitHub issue](https://github.com/reseval/reseval/issues/5).
+
 ```
 # Local development
 python -m reseval.create <config> <directory> --local
@@ -354,8 +354,7 @@ python -m reseval.extend <name> <participants>
 
 ### Application programming interface
 
-**TODO** - link
-Documentation for our API can be found [here]().
+Documentation for our API can be found [here](https://reseval.github.io/reseval/html/index.html).
 
 
 ## Advanced usage
