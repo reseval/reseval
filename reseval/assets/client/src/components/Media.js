@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 
 import Audio from './Audio';
 import Image from './Image';
@@ -6,14 +6,33 @@ import Text from './Text';
 import Video from './Video';
 
 import config from '../json/config.json';
+import {MediaContext} from "../pages/TaskPage";
 
 
 /******************************************************************************
-Render media objects (audio, image, etc.)
-******************************************************************************/
+ Render media objects (audio, image, etc.)
+ ******************************************************************************/
+
+
 
 
 export default function Media(props) {
+    let {mediaRef, setMediaRef} = useContext(MediaContext);
+
+    function onPlayed() {
+
+        if (mediaRef !== undefined) {
+            /* Pause the old media. This is to prevent multiple media from playing simultaneously */
+            mediaRef.current.pause()
+            /* Set the play head to the beginning */
+            mediaRef.current.currentTime = 0
+        }
+        /* Replace the media in the context*/
+        setMediaRef(props.reference)
+    }
+
+    props.onPlayed = onPlayed
+
     /* Render a media object (audio, image, etc.) */
     // Get file URL
     if (config['local']) {
