@@ -20,15 +20,18 @@ export default function Media(props) {
     let {mediaRef, setMediaRef} = useContext(MediaContext);
 
     function onPlayed() {
-
-        if (mediaRef !== undefined) {
-            /* Pause the old media. This is to prevent multiple media from playing simultaneously */
-            mediaRef.current.pause()
-            /* Set the play head to the beginning */
-            mediaRef.current.currentTime = 0
+        /* Do nothing if it is the same media that is being played */
+        if (mediaRef !== props.reference) {
+            if (mediaRef !== undefined) {
+                /* Pause the old media. This is to prevent multiple media from playing simultaneously */
+                mediaRef.current.pause()
+                /* Set the play head to the beginning */
+                mediaRef.current.currentTime = 0
+            }
+            /* Replace the media in the context*/
+            setMediaRef(props.reference)
         }
-        /* Replace the media in the context*/
-        setMediaRef(props.reference)
+
     }
 
     props.onPlayed = onPlayed
