@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {createContext, useMemo, useState} from 'react';
 
 import AB from '../test/AB';
 import ABX from '../test/ABX';
@@ -12,27 +12,44 @@ import '../css/components.css';
 
 
 /******************************************************************************
-Constants
-******************************************************************************/
+ Constants
+ ******************************************************************************/
 
 
 // Application URL
 const url = window.location.protocol + '//' + window.location.host;
 
-
+export const MediaContext = createContext({
+    mediaRef: '',
+    setMediaRef: () => {
+    }
+});
 /******************************************************************************
-Prescreening survey
-******************************************************************************/
+ Prescreening survey
+ ******************************************************************************/
 
 
 export default function TaskPage({
-    participant,
-    navigation,
-    files,
-    conditions }) {
+                                     participant,
+                                     navigation,
+                                     files,
+                                     conditions
+                                 }) {
+
+
     /* Render the evaluation task */
     // Current progress
     const [index, setIndex] = useState(0);
+
+    const [mediaRef, setMediaRef] = useState(undefined);
+
+    /*update context value whenever mediaRef changed*/
+    const value = useMemo(
+        () => {
+            return {mediaRef, setMediaRef}
+        },
+        [mediaRef]
+    );
 
     // Response from the participant
     const [response, setResponse] = useState(undefined);
@@ -68,7 +85,9 @@ export default function TaskPage({
         }
 
         // Proceed to follow-up survey
-        else { navigation.next(); }
+        else {
+            navigation.next();
+        }
     }
 
     // Bundle props
@@ -106,9 +125,11 @@ export default function TaskPage({
         <div className='container'>
             <Markdown>
                 {`**Question ${index + 1} of ${files.length}**\n` +
-                 config.survey_instructions}
+                config.survey_instructions}
             </Markdown>
-            {test}
+            <MediaContext.Provider value={value}>
+                {test}
+            </MediaContext.Provider>
         </div>
     );
 };
