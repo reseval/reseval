@@ -14,29 +14,31 @@ import {MediaContext} from "../pages/TaskPage";
  ******************************************************************************/
 
 
-
-
 export default function Media(props) {
+    /* Render a media object (audio, image, etc.) */
+    // Retrieve the global state, which contains any currently playing media
     let {mediaRef, setMediaRef} = useContext(MediaContext);
 
     function onPlayed() {
-        /* Do nothing if it is the same media that is being played */
         if (mediaRef !== props.reference) {
+
+            // Do nothing if it is the same media that is being played
             if (mediaRef !== undefined) {
-                /* Pause the old media. This is to prevent multiple media from playing simultaneously */
+
+                // Pause old media to prevent both playing simultaneously
                 mediaRef.current.pause()
-                /* Set the play head to the beginning */
+
+                // Set the play head to the beginning
                 mediaRef.current.currentTime = 0
             }
-            /* Replace the media in the context*/
+
+            // Replace the media in the context
             setMediaRef(props.reference)
         }
-
     }
 
     props.onPlayed = onPlayed
 
-    /* Render a media object (audio, image, etc.) */
     // Get file URL
     if (config['local']) {
         props.src = '/evaluation-files/' + props.src;

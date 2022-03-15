@@ -19,31 +19,31 @@ import '../css/components.css';
 // Application URL
 const url = window.location.protocol + '//' + window.location.host;
 
+// Global state of any currently playing media
 export const MediaContext = createContext({
     mediaRef: '',
     setMediaRef: () => {
     }
 });
+
+
 /******************************************************************************
  Prescreening survey
  ******************************************************************************/
 
 
 export default function TaskPage({
-                                     participant,
-                                     navigation,
-                                     files,
-                                     conditions
-                                 }) {
-
-
+    participant,
+    navigation,
+    files,
+    conditions
+}) {
     /* Render the evaluation task */
     // Current progress
     const [index, setIndex] = useState(0);
 
+    // Update context value whenever media changes
     const [mediaRef, setMediaRef] = useState(undefined);
-
-    /*update context value whenever mediaRef changed*/
     const value = useMemo(
         () => {
             return {mediaRef, setMediaRef}
