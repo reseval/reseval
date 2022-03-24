@@ -35,7 +35,7 @@ crowdsource:
   filter:
 
     # Only allow participants from a certain countries
-    countries: ['US']
+    countries: [ 'US' ]
 
     # Only allow participants who have previously completed at least this
     # number of tasks
@@ -96,7 +96,10 @@ welcome_text: "
 # perform evaluation. If a multiple choice question has correct_answer
 # defined, the participant must select that answer to be able to continue
 # to the evaluation.
-prescreen_questions: []
+prescreen_questions: [ ]
+
+# Whether to include a listening test after prescreen questions
+if_listening_test: true
 
 # Instructions presented to the participant during evaluation
 survey_instructions: "

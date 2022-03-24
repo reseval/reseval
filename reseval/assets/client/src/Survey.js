@@ -9,6 +9,7 @@ import FeedbackPage from './pages/FeedbackPage';
 import QualificationPage from './pages/QualificationPage';
 import TaskPage from './pages/TaskPage';
 import WelcomePage from './pages/WelcomePage';
+import ListeningTestPage from "./pages/ListeningTestPage";
 
 
 /******************************************************************************
@@ -26,6 +27,7 @@ const completionCode = chance.string({ length: 10 });
 const steps = [
     { id: 'welcome' },
     { id: 'prescreen' },
+    { id: 'listening_test' },
     { id: 'task' },
     { id: 'feedback' },
     { id: 'end' }];
@@ -61,6 +63,13 @@ export default function Survey() {
                 completionCode={completionCode}
                 setFiles={setFiles}
                 setConditions={setConditions}
+                navigation={navigation}
+            />;
+        case 'listening_test':
+            return <ListeningTestPage
+                files={files}
+                conditions={conditions}
+                participant={participant}
                 navigation={navigation}
             />;
         case 'task':

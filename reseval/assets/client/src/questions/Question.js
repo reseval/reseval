@@ -1,5 +1,6 @@
 import FreeResponse from './FreeResponse';
 import MultipleChoice from './MultipleChoice';
+import ListeningTest from "./ListeningTest";
 
 export default function Question({ question, response, setResponse}) {
     /* Render a question */

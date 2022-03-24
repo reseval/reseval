@@ -38,6 +38,7 @@ export default function TaskPage({
     files,
     conditions
 }) {
+    console.log(files)
     /* Render the evaluation task */
     // Current progress
     const [index, setIndex] = useState(0);

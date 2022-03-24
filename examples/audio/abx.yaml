@@ -113,6 +113,12 @@ prescreen_questions:
     # Indicate a correct answer
     correct_answer: 'Yes'
 
+# Whether to include a listening test after prescreen questions
+if_listening_test: true
+
+listening_test_instructions: "
+    ## **Instructions** \nListen to the listening test audio. Then, select how many times in total you heard the beeps."
+
 # Instructions presented to the participant during evaluation
 survey_instructions: "
   ## **Instructions** \nListen to the reference audio (top) and the two choices
