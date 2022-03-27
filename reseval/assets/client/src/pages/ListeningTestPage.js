@@ -17,8 +17,6 @@ import Chance from 'chance';
  ******************************************************************************/
 
 
-// Application URL
-const url = window.location.protocol + '//' + window.location.host;
 // Random number generator
 const chance = new Chance();
 
@@ -28,14 +26,7 @@ const chance = new Chance();
  ******************************************************************************/
 
 
-export default function ListeningTestPage({
-                                              navigation,
-                                              participant,
-                                              setParticipant,
-                                              completionCode,
-                                              setFiles,
-                                              setConditions
-                                          }) {
+export default function ListeningTestPage({navigation}) {
     /* Render the prescreening questions asked to the participant */
     const refTest = useRef();
     const [index, setIndex] = useState(0);
@@ -63,9 +54,7 @@ export default function ListeningTestPage({
         // Do not proceed if the response is invalid
         if (config.if_listening_test === false || !validate(response)) return;
 
-
         if (response !== correct_response) {
-
             // End survey
             navigation.go('end');
         } else {
@@ -99,7 +88,6 @@ export default function ListeningTestPage({
             <Media
                 reference={refTest}
                 onEnded={() => {
-
                 }}
                 src={'listening_test_file/' + file[index]}
             />
