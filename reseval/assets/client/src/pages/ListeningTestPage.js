@@ -50,7 +50,7 @@ export default function ListeningTestPage({
             let idx = chance.integer({min: 0, max: 3})
             let tone = chance.integer({min: 4, max: 8})
             file.push(`tones${tone}_${idx}.wav`)
-            i+=1
+            i += 1
         }
         return file
     }
@@ -89,21 +89,20 @@ export default function ListeningTestPage({
     // Render
     return (
         <div className='container'>
-            <p> listening test</p>
             <div className='grid grid-20-80'>
                 <div style={{width: '100%'}}/>
-                <Media
-                    reference={refTest}
-                    onEnded={() => {
-
-                    }}
-                    src={'listening_test_file/' + file[index]}
-                />
             </div>
             <Markdown>
                 {`**Question ${index + 1} of ${test_length}**\n` +
                 config.listening_test_instructions}
             </Markdown>
+            <Media
+                reference={refTest}
+                onEnded={() => {
+
+                }}
+                src={'listening_test_file/' + file[index]}
+            />
             <ListeningTest response={response} setResponse={setResponse}/>
             <Button onClick={onClick}>Next</Button>
         </div>
