@@ -1,6 +1,6 @@
 export default function ListeningTest({response,setResponse}) {
     /* Render a multiple choice question */
-    let answers = ['1','2','3','4','5','6']
+    let answers = ['1','2','3','4','5','6','7','8','9','10']
     return (
         <ul className='MultipleChoice'>
             {answers.map((item, key) =>
@@ -12,10 +12,6 @@ export default function ListeningTest({response,setResponse}) {
             )}
         </ul>
     )
-}
-
-function ParseAnswer({file}) {
-
 }
 
 function Choice({response, setResponse, label}) {

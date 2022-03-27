@@ -98,8 +98,15 @@ welcome_text: "
 # to the evaluation.
 prescreen_questions: [ ]
 
-# Whether to include a listening test after prescreen questions
+# Whether to include a listening test
 if_listening_test: true
+
+# total number of listening test questions
+listening_test_question_count: 2
+
+# Instructions text displayed on the listening test page
+listening_test_instructions: "
+    ## **Instructions** \nListen to the listening test audio. Then, select how many times in total you heard the beeps."
 
 # Instructions presented to the participant during evaluation
 survey_instructions: "
