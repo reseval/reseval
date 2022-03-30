@@ -69,9 +69,9 @@ export default function ListeningTestPage({navigation}) {
         }
     }
 
-    // Skip listening test if there are no questions
-    if (config.if_listening_test === false) {
-        onClick();
+    // Skip listening test if there are no questions or if_listening_test flag is not present
+    if (!('if_listening_test' in config) || config.if_listening_test === false) {
+        navigation.next()
         return null;
     }
 

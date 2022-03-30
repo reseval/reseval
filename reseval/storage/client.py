@@ -16,7 +16,7 @@ def create(config, directory):
         upload(config['name'], path)
 
     # Add listening test files to client storage
-    if config['if_listening_test']:
+    if 'if_listening_test' in config and config['if_listening_test']:
         upload(config['name'], Path('reseval/assets/listening_test_file'))
 
 

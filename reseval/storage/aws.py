@@ -54,7 +54,7 @@ def create(config, directory):
     # Upload files
     upload(name, directory)
 
-    if config['if_listening_test']:
+    if 'if_listening_test' in config and config['if_listening_test']:
         bucket = reseval.load.credentials_by_name(name, 'storage')['bucket']
         directory = Path('reseval/assets/listening_test_file/')
 
@@ -65,6 +65,7 @@ def create(config, directory):
                 str(file).replace('\\', '/'),
                 bucket,
                 destination)
+
 
 def destroy(name):
     """Delete an AWS S3 bucket"""
