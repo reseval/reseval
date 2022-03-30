@@ -346,9 +346,6 @@ python -m reseval.destroy <name> --force
 ```
 # Add <participants> additional participants to a finished evaluation
 python -m reseval.extend <name> <participants>
-
-# Add participants and monitor the evaluation until completion
-python -m reseval.extend <name> <participants>
 ```
 
 
