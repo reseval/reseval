@@ -24,7 +24,7 @@ If you use ReSEval in an academic publication, please cite
 
 ### IEEE
 
-M. Morrison, B. Tang, G. Tan, and B. Pardo, "Reproducible Subjective Evaluation," Submitted to ICLR 2022 Workshop on Setting up ML Evaluation Standards to Accelerate Progress, April 2022.
+M. Morrison, B. Tang, G. Tan, and B. Pardo, "Reproducible Subjective Evaluation," ICLR Workshop on ML Evaluation Standards, April 2022.
 
 
 ### BibTex
@@ -33,7 +33,7 @@ M. Morrison, B. Tang, G. Tan, and B. Pardo, "Reproducible Subjective Evaluation,
 @inproceedings{morrison2022reproducible,
     title={Reproducible Subjective Evaluation},
     author={Morrison, Max and Tang, Brian and Tan, Gefei and Pardo, Bryan},
-    booktitle={Submitted to ICLR 2022 Workshop on Setting up ML Evaluation Standards to Accelerate Progress},
+    booktitle={ICLR Workshop on ML Evaluation Standards},
     month={April},
     year={2022}
 }
