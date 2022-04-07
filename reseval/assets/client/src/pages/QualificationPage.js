@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState} from 'react';
+import React, {useMemo, useRef, useState} from 'react';
 import Chance from 'chance';
 
 import Button from '../components/Button';
@@ -42,11 +42,32 @@ export default function QualificationPage({
     /* Render the prescreening questions asked to the participant */
     const [index, setIndex] = useState(0);
     const [response, setResponse] = useState(undefined);
+
     // question type can be "prescreen" or "test"
     const [questionType, setQuestionType] = useState('prescreen')
+
+    // if the listening test has finished
     let if_finish = false
+
     // Get the current question
     const questions = config.prescreen_questions;
+
+    // listening test index
+    const [testIndex, setTestIndex] = useState(0);
+    const [audioEnded, setAudioEnded] = useState(false);
+
+    // ref for the listening test audio
+    const refTest = useRef();
+
+    // get the listening test length
+    let test_length = config.listening_test_question_count;
+    if (test_length === undefined) {
+        test_length = 0
+    }
+
+    // initialize random audio
+    const file = useMemo(getRandomSample, [test_length])
+
 
     // randomly get listening test examples
     function getRandomSample() {
@@ -61,27 +82,15 @@ export default function QualificationPage({
         return file
     }
 
-    // question index for listening test
-    const [testIndex, setTestIndex] = useState(0);
-
-    // ref for the listening test audio
-    const refTest = useRef();
-    // get the listening test length
-    let test_length = config.listening_test_question_count;
-    if (test_length === undefined) {
-        test_length = 0
-    }
-
-    const file = useMemo(getRandomSample, [test_length])
-
+    // Handle listening test
     function listeningTest() {
-        console.log(correct_response, response)
         // Do not proceed if the response is invalid
-        if (!('if_listening_test' in config) || config.if_listening_test === false || !validate(response)) {
+        if (!('if_listening_test' in config) || config.if_listening_test === false) {
             if_finish = true;
             return;
         }
 
+        // first time entering the listening test
         if (questionType !== 'test') {
             setQuestionType('test');
             return;
@@ -90,22 +99,22 @@ export default function QualificationPage({
         let correct_response = file[testIndex].split('.')[0].split('_')[0].slice(-1)
 
         if (response !== correct_response) {
-            console.log('end survey')
-            // End survey
+            // End survey if the answer is wrong
             navigation.go('end');
         } else {
+            // Succeeded listening test
             if (testIndex + 1 >= test_length) {
                 if_finish = true
-                // navigation.next()
+                return
             }
         }
         // Go to next question
         if (testIndex + 1 < test_length) {
+            setAudioEnded(false)
             setTestIndex(testIndex + 1);
             setResponse(undefined);
         }
     }
-
 
     function onClick() {
         // Do not proceed if the response is invalid
@@ -157,10 +166,9 @@ export default function QualificationPage({
                 body: JSON.stringify(values)
             }).then(_ => {
                 if (index + 1 >= questions.length) {
-                    console.log('finished prescreening')
-
+                    // enter listening test
                     listeningTest()
-                    // do not proceed until listening test finished
+                    // do not proceed until listening test is finished
                     if (!if_finish) {
                         return
                     }
@@ -204,7 +212,6 @@ export default function QualificationPage({
     }
 
     if (questionType === 'test') {
-        console.log('test_rendered!')
         // Render Listening test
         return (
             <div className='container'>
@@ -218,17 +225,20 @@ export default function QualificationPage({
                 <Media
                     reference={refTest}
                     onEnded={() => {
+                        setAudioEnded(true)
                     }}
                     src={'listening_test_file/' + file[testIndex]}
                 />
-                <ListeningTest response={response} setResponse={setResponse}/>
-                <Button onClick={onClick}>Next</Button>
+                <ListeningTest response={response} setResponse={setResponse} active={audioEnded}/>
+                <Button onClick={() => {
+                    typeof response !== 'undefined' &&
+                    audioEnded &&
+                    onClick()
+                }}>Next</Button>
             </div>
         );
     } else if (questions.length !== 0) {
-        console.log(questions.length)
-        console.log('question_rendered!')
-        // Render Question
+        // Render prescreening question
         return (
             <div className='container'>
                 <Markdown>
@@ -243,7 +253,7 @@ export default function QualificationPage({
             </div>
         );
     } else {
-        console.log('nothing rendered!')
+        // render dummy tag. wait for re-rendering
         return <></>
     }
 }
