@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, { useMemo, useRef, useState} from 'react';
 import Chance from 'chance';
 
 import Button from '../components/Button';
@@ -45,6 +45,8 @@ export default function QualificationPage({
     // question type can be "prescreen" or "test"
     const [questionType, setQuestionType] = useState('prescreen')
     let if_finish = false
+    // Get the current question
+    const questions = config.prescreen_questions;
 
     // randomly get listening test examples
     function getRandomSample() {
@@ -66,9 +68,11 @@ export default function QualificationPage({
     const refTest = useRef();
     // get the listening test length
     let test_length = config.listening_test_question_count;
+    if (test_length === undefined) {
+        test_length = 0
+    }
 
     const file = useMemo(getRandomSample, [test_length])
-
 
     function listeningTest() {
         console.log(correct_response, response)
@@ -102,9 +106,6 @@ export default function QualificationPage({
         }
     }
 
-
-    // Get the current question
-    const questions = config.prescreen_questions;
 
     function onClick() {
         // Do not proceed if the response is invalid
@@ -190,14 +191,14 @@ export default function QualificationPage({
             setIndex(index + 1);
             setResponse(undefined);
         }
-    };
+    }
 
     // Skip prescreening if there are no questions
     if (questions.length === 0) {
         if (!('if_listening_test' in config) || config.if_listening_test === false) {
             onClick();
             return null
-        } else {
+        } else if (questionType === 'prescreen') {
             setQuestionType('test');
         }
     }
@@ -224,7 +225,8 @@ export default function QualificationPage({
                 <Button onClick={onClick}>Next</Button>
             </div>
         );
-    } else {
+    } else if (questions.length !== 0) {
+        console.log(questions.length)
         console.log('question_rendered!')
         // Render Question
         return (
@@ -240,5 +242,8 @@ export default function QualificationPage({
                 <Button onClick={onClick}>Next</Button>
             </div>
         );
+    } else {
+        console.log('nothing rendered!')
+        return <></>
     }
 }
