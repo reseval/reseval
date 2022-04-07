@@ -1,5 +1,6 @@
 export default function ListeningTest({response, setResponse, active}) {
-    /* Render a multiple choice question */
+    /* Render a multiple choice question for listening test */
+    // enumerated answers
     let answers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
     return (
         <ul className='MultipleChoice'>
