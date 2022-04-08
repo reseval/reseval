@@ -35,7 +35,7 @@ crowdsource:
   filter:
 
     # Only allow participants from a certain countries
-    countries: [ 'US' ]
+    countries: ['US']
 
     # Only allow participants who have previously completed at least this
     # number of tasks
@@ -96,17 +96,19 @@ welcome_text: "
 # perform evaluation. If a multiple choice question has correct_answer
 # defined, the participant must select that answer to be able to continue
 # to the evaluation.
-prescreen_questions: [ ]
+prescreen_questions: []
 
-# Whether to include a listening test
-if_listening_test: true
+# Include an audio listening test
+listening_test:
 
-# total number of listening test questions
-listening_test_question_count: 2
+  # Listening test instructions
+  instructions: "
+    ## **Instructions** \nMake sure your headphones are on and your volume
+    is turned up to a comfortable level. Listen to the audio. Then, select
+    how many tones you heard."
 
-# Instructions text displayed on the listening test page
-listening_test_instructions: "
-    ## **Instructions** \nListen to the listening test audio. Then, select how many times in total you heard the beeps."
+  # Number of questions to include on the listening test
+  num_questions: 2
 
 # Instructions presented to the participant during evaluation
 survey_instructions: "

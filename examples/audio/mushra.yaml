@@ -35,7 +35,7 @@ crowdsource:
   filter:
 
     # Only allow participants from a certain countries
-    countries: [ 'US' ]
+    countries: ['US']
 
     # Only allow participants who have previously completed at least this
     # number of tasks
@@ -108,20 +108,22 @@ prescreen_questions:
     text: Would you like to take a subjective evaluation?
 
     # Possible answers
-    answers: [ 'Yes', 'No' ]
+    answers: ['Yes', 'No']
 
     # Indicate a correct answer
     correct_answer: 'Yes'
 
-# Whether to include a listening test
-if_listening_test: true
+# Include an audio listening test
+listening_test:
 
-# total number of listening test questions
-listening_test_question_count: 2
+  # Listening test instructions
+  instructions: "
+    ## **Instructions** \nMake sure your headphones are on and your volume
+    is turned up to a comfortable level. Listen to the audio. Then, select
+    how many tones you heard."
 
-# Instructions text displayed on the listening test page
-listening_test_instructions: "
-    ## **Instructions** \nListen to the listening test audio. Then, select how many times in total you heard the beeps."
+  # Number of questions to include on the listening test
+  num_questions: 2
 
 # Instructions presented to the participant during evaluation
 survey_instructions: "

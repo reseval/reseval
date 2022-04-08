@@ -32,45 +32,44 @@ const url = window.location.protocol + '//' + window.location.host;
  ******************************************************************************/
 
 export default function QualificationPage({
-                                              navigation,
-                                              participant,
-                                              setParticipant,
-                                              completionCode,
-                                              setFiles,
-                                              setConditions
-                                          }) {
+    navigation,
+    participant,
+    setParticipant,
+    completionCode,
+    setFiles,
+    setConditions
+}) {
     /* Render the prescreening questions asked to the participant */
     const [index, setIndex] = useState(0);
     const [response, setResponse] = useState(undefined);
 
-    // question type can be "prescreen" or "test"
+    // Question type can be "prescreen" or "listening-test"
     const [questionType, setQuestionType] = useState('prescreen')
 
-    // if the listening test has finished
+    // Whether the listening test has finished
     let if_finish = false
 
     // Get the current question
     const questions = config.prescreen_questions;
 
-    // listening test index
+    // Listening test index
     const [testIndex, setTestIndex] = useState(0);
     const [audioEnded, setAudioEnded] = useState(false);
 
-    // ref for the listening test audio
+    // Listening test audio reference
     const refTest = useRef();
 
-    // get the listening test length
-    let test_length = config.listening_test_question_count;
-    if (test_length === undefined) {
-        test_length = 0
+    // Number of listening test examples
+    let test_length = 0;
+    if ('listening_test' in config) {
+        test_length = config.listening_test.num_questions;
     }
 
-    // initialize random audio
+    // The listening test audio
     const file = useMemo(getRandomSample, [test_length])
 
-
-    // randomly get listening test examples
     function getRandomSample() {
+        /* Retrieve a random audio files for listening test */
         let file = []
         let i = 0;
         while (i < test_length) {
@@ -82,32 +81,35 @@ export default function QualificationPage({
         return file
     }
 
-    // Handle listening test
     function listeningTest() {
-        // Do not proceed if the response is invalid
-        if (!('if_listening_test' in config) || config.if_listening_test === false) {
+        /* Interaction logic for listening test */
+        // Skip if we are not performing a listening test
+        if (!('listening_test' in config)) {
             if_finish = true;
             return;
         }
 
-        // first time entering the listening test
-        if (questionType !== 'test') {
-            setQuestionType('test');
+        // Change question type for listening test
+        if (questionType !== 'listening-test') {
+            setQuestionType('listening-test');
             return;
         }
-        // parse the correct response from file name
-        let correct_response = file[testIndex].split('.')[0].split('_')[0].slice(-1)
 
+        // Parse the true number of tones from the filename
+        let correct_response =
+            file[testIndex].split('.')[0].split('_')[0].slice(-1);
+
+        // Fail prescreening if the wrong answer is given
         if (response !== correct_response) {
-            // End survey if the answer is wrong
             navigation.go('end');
         } else {
-            // Succeeded listening test
+            // End listening test if we've answered enough questions
             if (testIndex + 1 >= test_length) {
                 if_finish = true
                 return
             }
         }
+
         // Go to next question
         if (testIndex + 1 < test_length) {
             setAudioEnded(false)
@@ -203,38 +205,41 @@ export default function QualificationPage({
 
     // Skip prescreening if there are no questions
     if (questions.length === 0) {
-        if (!('if_listening_test' in config) || config.if_listening_test === false) {
+        if (!('listening_test' in config)) {
             onClick();
             return null
         } else if (questionType === 'prescreen') {
-            setQuestionType('test');
+            setQuestionType('listening-test');
         }
     }
 
-    if (questionType === 'test') {
-        // Render Listening test
+    if (questionType === 'listening-test') {
+        // Render listening test
         return (
             <div className='container'>
-                <div className='grid grid-20-80'>
-                    <div style={{width: '100%'}}/>
-                </div>
                 <Markdown>
                     {`**Question ${testIndex + 1} of ${test_length}**\n` +
-                    config.listening_test_instructions}
+                    config.listening_test.instructions}
                 </Markdown>
                 <Media
                     reference={refTest}
                     onEnded={() => {
                         setAudioEnded(true)
                     }}
-                    src={'listening_test_file/' + file[testIndex]}
+                    src={'listening_test/' + file[testIndex]}
                 />
-                <ListeningTest response={response} setResponse={setResponse} active={audioEnded}/>
+                <ListeningTest
+                    response={response}
+                    setResponse={setResponse}
+                    active={audioEnded}
+                />
                 <Button onClick={() => {
                     typeof response !== 'undefined' &&
                     audioEnded &&
                     onClick()
-                }}>Next</Button>
+                }}>
+                    Next
+                </Button>
             </div>
         );
     } else if (questions.length !== 0) {
@@ -252,8 +257,5 @@ export default function QualificationPage({
                 <Button onClick={onClick}>Next</Button>
             </div>
         );
-    } else {
-        // render dummy tag. wait for re-rendering
-        return <></>
-    }
+    } else { return <></>; }
 }

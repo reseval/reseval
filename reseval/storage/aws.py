@@ -1,6 +1,5 @@
 import json
 import os
-from pathlib import Path
 
 import boto3
 
@@ -37,10 +36,10 @@ def create(config, directory):
 
     # Save bucket name as storage credential
     credentials_file = (
-            reseval.EVALUATION_DIRECTORY /
-            name /
-            'credentials' /
-            'storage.json')
+        reseval.EVALUATION_DIRECTORY /
+        name /
+        'credentials' /
+        'storage.json')
     credentials_file.parent.mkdir(exist_ok=True, parents=True)
     with open(credentials_file, 'w') as file:
         json.dump({'bucket': bucket}, file)
@@ -51,16 +50,16 @@ def create(config, directory):
     with open(reseval.CLIENT_CONFIGURATION_FILE, 'w') as file:
         json.dump(config | {'bucket': bucket}, file, indent=4)
 
-    # Upload files
+    # Upload evaluation files
     upload(name, directory)
 
-    if 'if_listening_test' in config and config['if_listening_test']:
+    # Maybe upload listening test files
+    if 'listening_test' in config:
         bucket = reseval.load.credentials_by_name(name, 'storage')['bucket']
-        directory = Path('reseval/assets/listening_test_file/')
-
-        for file in [item for item in directory.rglob('*') if not item.is_dir()]:
-            # to make it consistent with client.upload
-            destination = str('listening_test_file/' + file.name).replace('\\', '/')
+        directory = reseval.LISTENING_TEST_DIRECTORY
+        files = [item for item in directory.rglob('*') if not item.is_dir()]
+        for file in files:
+            destination = str('listening_test/' + file.name).replace('\\', '/')
             client.upload_file(
                 str(file).replace('\\', '/'),
                 bucket,
@@ -99,10 +98,10 @@ def destroy(name):
         pass
 
     (
-            reseval.EVALUATION_DIRECTORY /
-            name /
-            'credentials' /
-            'storage.json'
+        reseval.EVALUATION_DIRECTORY /
+        name /
+        'credentials' /
+        'storage.json'
     ).unlink(missing_ok=True)
 
 
@@ -117,7 +116,8 @@ def upload(name, file_or_directory):
     # Upload directory
     if file_or_directory.is_dir():
         directory = file_or_directory
-        for file in [item for item in directory.rglob('*') if not item.is_dir()]:
+        files = [item for item in directory.rglob('*') if not item.is_dir()]
+        for file in files:
             destination = str(file.relative_to(directory)).replace('\\', '/')
             client.upload_file(
                 str(file).replace('\\', '/'),

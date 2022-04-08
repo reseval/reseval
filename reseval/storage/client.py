@@ -1,5 +1,4 @@
-from genericpath import exists
-import shutil, random, os
+import shutil
 from pathlib import Path
 
 import reseval
@@ -16,8 +15,8 @@ def create(config, directory):
         upload(config['name'], path)
 
     # Add listening test files to client storage
-    if 'if_listening_test' in config and config['if_listening_test']:
-        upload(config['name'], Path('reseval/assets/listening_test_file'))
+    if 'listening_test' in config:
+        upload(config['name'], reseval.LISTENING_TEST_DIRECTORY)
 
 
 def destroy(config):
