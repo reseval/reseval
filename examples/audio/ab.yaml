@@ -98,6 +98,18 @@ welcome_text: "
 # to the evaluation.
 prescreen_questions: []
 
+# Include an audio listening test
+listening_test:
+
+  # Listening test instructions
+  instructions: "
+    ## **Instructions** \nMake sure your headphones are on and your volume
+    is turned up to a comfortable level. Listen to the audio. Then, select
+    how many tones you heard."
+
+  # Number of questions to include on the listening test
+  num_questions: 2
+
 # Instructions presented to the participant during evaluation
 survey_instructions: "
   ## **Instructions** \nListen to both audio files. After listening to both

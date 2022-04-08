@@ -1,5 +1,5 @@
-from genericpath import exists
 import shutil
+from pathlib import Path
 
 import reseval
 
@@ -13,6 +13,10 @@ def create(config, directory):
     """Add evaluation files to client storage"""
     for path in directory.iterdir():
         upload(config['name'], path)
+
+    # Add listening test files to client storage
+    if 'listening_test' in config:
+        upload(config['name'], reseval.LISTENING_TEST_DIRECTORY)
 
 
 def destroy(config):

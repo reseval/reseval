@@ -23,7 +23,7 @@ export default function Media(props) {
         if (mediaRef !== props.reference) {
 
             // Do nothing if it is the same media that is being played
-            if (mediaRef !== undefined) {
+            if (mediaRef !== undefined && mediaRef.current !== undefined) {
 
                 // Pause old media to prevent both playing simultaneously
                 mediaRef.current.pause()

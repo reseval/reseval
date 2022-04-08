@@ -50,8 +50,20 @@ def create(config, directory):
     with open(reseval.CLIENT_CONFIGURATION_FILE, 'w') as file:
         json.dump(config | {'bucket': bucket}, file, indent=4)
 
-    # Upload files
+    # Upload evaluation files
     upload(name, directory)
+
+    # Maybe upload listening test files
+    if 'listening_test' in config:
+        bucket = reseval.load.credentials_by_name(name, 'storage')['bucket']
+        directory = reseval.LISTENING_TEST_DIRECTORY
+        files = [item for item in directory.rglob('*') if not item.is_dir()]
+        for file in files:
+            destination = str('listening_test/' + file.name).replace('\\', '/')
+            client.upload_file(
+                str(file).replace('\\', '/'),
+                bucket,
+                destination)
 
 
 def destroy(name):
@@ -104,7 +116,8 @@ def upload(name, file_or_directory):
     # Upload directory
     if file_or_directory.is_dir():
         directory = file_or_directory
-        for file in [item for item in directory.rglob('*') if not item.is_dir()]:
+        files = [item for item in directory.rglob('*') if not item.is_dir()]
+        for file in files:
             destination = str(file.relative_to(directory)).replace('\\', '/')
             client.upload_file(
                 str(file).replace('\\', '/'),
@@ -117,7 +130,6 @@ def upload(name, file_or_directory):
         file = file_or_directory
         destination = file.name
         client.upload_file(str(file), bucket, file.name)
-
 
     # Return URL
     return f'https://{bucket}.s3.amazonaws.com/{destination}'

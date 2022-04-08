@@ -66,6 +66,9 @@ CLIENT_PUBLIC_DIRECTORY = (
 # Location to save results
 EVALUATION_DIRECTORY = CACHE / 'evaluations'
 
+# Location of listening test audio files
+LISTENING_TEST_DIRECTORY = ASSETS_DIR / 'listening_test'
+
 
 ###############################################################################
 # Server
