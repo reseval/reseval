@@ -107,10 +107,10 @@ export default function QualificationPage({
 
         // Fail prescreening if the wrong answer is given
         if (response !== correct_response) {
-            if (retries > 1) {
-                const plural = retries > 2 ? 's' : '';
+            if (retries > 0) {
+                const plural = retries > 1 ? 's' : '';
                 const message = `Incorrect. Please put on headphones, move ` +
-                `to a quiet location, and try again. You have ${retries - 1} ` +
+                `to a quiet location, and try again. You have ${retries} ` +
                 `attempt${plural} remaining.`
                 alert(message);
                 setRetries(retries - 1);
