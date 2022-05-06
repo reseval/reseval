@@ -125,6 +125,9 @@ listening_test:
   # Number of questions to include on the listening test
   num_questions: 2
 
+  # Number of allowed retries before the participant fails the test
+  retries: 2
+
 # Instructions presented to the participant during evaluation
 survey_instructions: "
   ## **Instructions** \nListen to all audio files. Then, move the sliders
