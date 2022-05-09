@@ -78,7 +78,12 @@ export default function FeedbackPage({ navigation, participant }) {
                 response={response}
                 setResponse={setResponse}
             />
-            <Button onClick={onClick}>Submit</Button>
+            <Button
+                active={typeof response !== 'undefined' && response.trim()}
+                onClick={onClick}
+            >
+                Submit
+            </Button>
         </div>
     );
 }

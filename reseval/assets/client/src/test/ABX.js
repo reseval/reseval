@@ -61,6 +61,10 @@ export default function ABX({
             chance.shuffle([...Array(conditions_no_reference.length).keys()]));
     }
 
+    // Can we advance?
+    const advance =
+        typeof response !== 'undefined' && XEnded && AEnded && BEnded;
+
     // Render
     return (
         <>
@@ -82,13 +86,8 @@ export default function ABX({
                 onEndeds={[() => setAEnded(true), () => setBEnded(true)]}
             />
             <Button
-                onClick={() => {
-                    typeof response !== 'undefined' &&
-                        XEnded &&
-                        AEnded &&
-                        BEnded &&
-                        clickHandler()
-                }}
+                active={advance}
+                onClick={() => {advance && clickHandler()}}
             >
                 Next
             </Button>

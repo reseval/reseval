@@ -250,11 +250,14 @@ export default function QualificationPage({
                     setResponse={setResponse}
                     active={audioEnded}
                 />
-                <Button onClick={() => {
-                    typeof response !== 'undefined' &&
-                    audioEnded &&
-                    onClick()
-                }}>
+                <Button
+                    active={audioEnded && typeof response !== 'undefined'}
+                    onClick={() => {
+                        typeof response !== 'undefined' &&
+                        audioEnded &&
+                        onClick()
+                    }}
+                >
                     Next
                 </Button>
             </div>
@@ -271,7 +274,12 @@ export default function QualificationPage({
                     response={response}
                     setResponse={setResponse}
                 />
-                <Button onClick={onClick}>Next</Button>
+                <Button
+                    active={typeof response !== 'undefined' && response.trim()}
+                    onClick={onClick}
+                >
+                    Next
+                </Button>
             </div>
         );
     } else { return <></>; }
