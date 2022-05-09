@@ -28,7 +28,6 @@ export default function MOS({
     conditions,
     response,
     setResponse,
-    mosCondition,
     onClick }) {
     /* Render a MOS evaluation task */
     const reference = useRef();
@@ -48,8 +47,7 @@ export default function MOS({
         setEnded(false);
 
         // Draw a new random condition
-        // setCondition(chance.pickone(conditions));
-        setCondition(mosCondition)
+        setCondition(chance.pickone(conditions));
     }
 
     // Can we advance?

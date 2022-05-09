@@ -66,12 +66,6 @@ def create(
     # Create and save assignments
     with open(reseval.CLIENT_ASSIGNMENT_FILE, 'w') as file:
         json.dump(test.assign(cfg['random_seed']), file, indent=4)
-        # MOS test requires deterministic conditions
-    if test.__class__.__name__ == "MOS":
-        with open(reseval.CLIENT_CONDITION_FILE, 'w') as file:
-            json.dump(test.assign_conditions(cfg['random_seed']), file, indent=4)
-
-
 
     # Copy configuration file
     file = reseval.EVALUATION_DIRECTORY / name / 'config.yaml'

@@ -33,12 +33,11 @@ export const MediaContext = createContext({
 
 
 export default function TaskPage({
-                                     participant,
-                                     navigation,
-                                     files,
-                                     conditions,
-                                     mosCondition: mosCondition
-                                 }) {
+    participant,
+    navigation,
+    files,
+    conditions
+}) {
     /* Render the evaluation task */
     // Current progress
     const [index, setIndex] = useState(0);
@@ -99,7 +98,6 @@ export default function TaskPage({
         navigation: navigation,
         response: response,
         setResponse: setResponse,
-        mosCondition: mosCondition,
         onClick: onClick
     };
 

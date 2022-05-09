@@ -6,8 +6,6 @@ import Markdown from '../components/Markdown';
 import Question, {validate} from '../questions/Question';
 
 import assignments from '../json/assignments.json';
-import conditions from '../json/conditions.json';
-
 import config from '../json/config.json';
 import Media from "../components/Media";
 import ListeningTest from "../questions/ListeningTest";
@@ -34,14 +32,13 @@ const url = window.location.protocol + '//' + window.location.host;
  ******************************************************************************/
 
 export default function QualificationPage({
-                                              navigation,
-                                              participant,
-                                              setParticipant,
-                                              completionCode,
-                                              setFiles,
-                                              setConditions,
-                                              setMosCondition
-                                          }) {
+    navigation,
+    participant,
+    setParticipant,
+    completionCode,
+    setFiles,
+    setConditions
+}) {
     /* Render the prescreening questions asked to the participant */
     const [index, setIndex] = useState(0);
     const [response, setResponse] = useState(undefined);
@@ -197,12 +194,8 @@ export default function QualificationPage({
                     // Get evaluation files for this evaluator
                     fetch(url + '/api/evaluators/')
                         .then(response => response.json())
-                        .then(response => {
-                            setFiles(assignments[response % assignments.length]);
-                            if (conditions) {
-                                setMosCondition(conditions[response % conditions.length]);
-                            }
-                        })
+                        .then(response => setFiles(
+                            assignments[response % assignments.length]))
 
                         // Get list of evaluation conditions
                         .then(_ => {
@@ -289,7 +282,5 @@ export default function QualificationPage({
                 </Button>
             </div>
         );
-    } else {
-        return <></>;
-    }
+    } else { return <></>; }
 }
