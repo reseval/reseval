@@ -61,6 +61,11 @@ export default function MUSHRA({file, conditions, setResponse, onClick}) {
         setPermutation(chance.shuffle([...Array(conditions.length).keys()]));
     }
 
+    // Can we advance?
+    const advance =
+        endeds.every(item => item === true) &&
+        toucheds.some(item => item === true);
+
     // Render
     return (
         <>
@@ -78,11 +83,8 @@ export default function MUSHRA({file, conditions, setResponse, onClick}) {
                 setToucheds={setToucheds}
             />
             <Button
-                onClick={() => {
-                    endeds.every(item => item === true) &&
-                    toucheds.some(item => item === true) &&
-                    clickHandler()
-                }}
+                active={advance}
+                onClick={() => {advance && clickHandler()}}
             >
                 Next
             </Button>

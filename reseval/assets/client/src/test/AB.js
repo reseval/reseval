@@ -53,6 +53,9 @@ export default function AB({
         setPermutation(chance.shuffle([...Array(conditions.length).keys()]));
     }
 
+    // Can we advance?
+    const advance = typeof response !== 'undefined' && AEnded && BEnded;
+
     // Render
     return (
         <>
@@ -66,12 +69,8 @@ export default function AB({
                 onEndeds={[() => setAEnded(true), () => setBEnded(true)]}
             />
             <Button
-                onClick={() => {
-                    typeof response !== 'undefined' &&
-                        AEnded &&
-                        BEnded &&
-                        clickHandler()
-                }}
+                active={advance}
+                onClick={() => {advance && clickHandler()}}
             >
                 Next
             </Button>

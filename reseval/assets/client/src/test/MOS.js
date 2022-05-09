@@ -52,6 +52,9 @@ export default function MOS({
         setCondition(mosCondition)
     }
 
+    // Can we advance?
+    const advance = typeof response !== 'undefined' && ended;
+
     // Render
     return (
         <>
@@ -68,11 +71,8 @@ export default function MOS({
                 active={ended}
             />
             <Button
-                onClick={() => {
-                    typeof response !== 'undefined' &&
-                    ended &&
-                    clickHandler()
-                }}
+                active={advance}
+                onClick={() => {advance && clickHandler()}}
             >
                 Next
             </Button>

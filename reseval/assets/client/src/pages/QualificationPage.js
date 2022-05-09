@@ -59,6 +59,9 @@ export default function QualificationPage({
     const [testIndex, setTestIndex] = useState(0);
     const [audioEnded, setAudioEnded] = useState(false);
 
+    // Listening test retries
+    const [retries, setRetries] = useState(undefined);
+
     // Listening test audio reference
     const refTest = useRef();
 
@@ -66,6 +69,9 @@ export default function QualificationPage({
     let test_length = 0;
     if ('listening_test' in config) {
         test_length = config.listening_test.num_questions;
+        if (retries === undefined) {
+            setRetries(config.listening_test.retries);
+        }
     }
 
     // The listening test audio
@@ -104,7 +110,17 @@ export default function QualificationPage({
 
         // Fail prescreening if the wrong answer is given
         if (response !== correct_response) {
-            navigation.go('end');
+            if (retries > 0) {
+                const plural = retries > 1 ? 's' : '';
+                const message = `Incorrect. Please put on headphones, move ` +
+                `to a quiet location, and try again. You have ${retries} ` +
+                `attempt${plural} remaining.`
+                alert(message);
+                setRetries(retries - 1);
+                return;
+            } else {
+                navigation.go('end');
+            }
         } else {
             // End listening test if we've answered enough questions
             if (testIndex + 1 >= test_length) {
@@ -117,6 +133,7 @@ export default function QualificationPage({
         if (testIndex + 1 < test_length) {
             setAudioEnded(false)
             setTestIndex(testIndex + 1);
+            setRetries(config.listening_test.retries);
             setResponse(undefined);
         }
     }
@@ -240,11 +257,14 @@ export default function QualificationPage({
                     setResponse={setResponse}
                     active={audioEnded}
                 />
-                <Button onClick={() => {
-                    typeof response !== 'undefined' &&
-                    audioEnded &&
-                    onClick()
-                }}>
+                <Button
+                    active={audioEnded && typeof response !== 'undefined'}
+                    onClick={() => {
+                        typeof response !== 'undefined' &&
+                        audioEnded &&
+                        onClick()
+                    }}
+                >
                     Next
                 </Button>
             </div>
@@ -261,7 +281,12 @@ export default function QualificationPage({
                     response={response}
                     setResponse={setResponse}
                 />
-                <Button onClick={onClick}>Next</Button>
+                <Button
+                    active={typeof response !== 'undefined' && response.trim()}
+                    onClick={onClick}
+                >
+                    Next
+                </Button>
             </div>
         );
     } else {

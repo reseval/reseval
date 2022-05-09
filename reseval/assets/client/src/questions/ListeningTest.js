@@ -22,7 +22,8 @@ function Choice({response, setResponse, label, active}) {
         <li className='grid grid-20-80'>
             <div style={{display: 'flex', justifyContent: 'center', width: '100%'}}>
                 <div
-                    className={`check active col-1 ${label === response ? 'selected' : ''}`}
+                    className={`check col-1 ${active ? ' active' : ''}` +
+                               `${label === response ? ' selected' : ''}`}
                     onClick={() => active && setResponse(label)}>
                     <div className='inside'/>
                 </div>

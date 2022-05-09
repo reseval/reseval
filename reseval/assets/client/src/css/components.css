@@ -130,11 +130,20 @@ Navigation button
 	margin-top: 10px;
 	padding: 10px 15px;
 	background-color: #eeeeee;
-	color: #000000;
+	color: #222222;
 	min-width: 70px;
 }
 
 .button:hover.button {
+	cursor: default;
+}
+
+.button.active {
+	background-color: #dddddd;
+	color: #000000;
+}
+
+.button.active:hover.button {
     color: #ffffff;
     cursor: pointer;
     background-color: #000000;
@@ -154,6 +163,11 @@ Radio button
 	width: 20px;
 	z-index: 5;
 	justify-self: center;
+}
+
+.check:hover {
+	background: #ffffff;
+	cursor: default;
 }
 
 .check.active:hover {
