@@ -1,6 +1,6 @@
 import Chance from 'chance';
-import React, { useState } from 'react';
-import { useStep } from 'react-hooks-helper';
+import React, {useState} from 'react';
+import {useStep} from 'react-hooks-helper';
 
 import './css/components.css';
 
@@ -20,26 +20,26 @@ import WelcomePage from './pages/WelcomePage';
 const chance = new Chance();
 
 // Completion code for participant
-const completionCode = chance.string({ length: 10 });
+const completionCode = chance.string({length: 10});
 
 // Chronological ordering of pages visited by participants during evaluation
 const steps = [
-    { id: 'welcome' },
-    { id: 'prescreen' },
-    { id: 'task' },
-    { id: 'feedback' },
-    { id: 'end' }];
+    {id: 'welcome'},
+    {id: 'prescreen'},
+    {id: 'task'},
+    {id: 'feedback'},
+    {id: 'end'}];
 
 
 /******************************************************************************
-Subjective evaluation survey
-******************************************************************************/
+ Subjective evaluation survey
+ ******************************************************************************/
 
 
 export default function Survey() {
     /* Page navigation management for surveys */
     // Start at the welcome page
-    const { step, navigation } = useStep({ initialStep: 0, steps });
+    const {step, navigation} = useStep({initialStep: 0, steps});
 
     // Participant id
     const [participant, setParticipant] = useState(undefined);
@@ -50,6 +50,7 @@ export default function Survey() {
     // Evaluation files
     const [files, setFiles] = useState(undefined);
 
+    const [mosCondition, setMosCondition] = useState(undefined);
     // Render current page
     switch (step.id) {
         case 'welcome':
@@ -61,6 +62,7 @@ export default function Survey() {
                 completionCode={completionCode}
                 setFiles={setFiles}
                 setConditions={setConditions}
+                setMosCondition={setMosCondition}
                 navigation={navigation}
             />;
         case 'task':
@@ -69,6 +71,7 @@ export default function Survey() {
                 conditions={conditions}
                 participant={participant}
                 navigation={navigation}
+                mosCondition={mosCondition}
             />;
         case 'feedback':
             return <FeedbackPage
@@ -76,7 +79,7 @@ export default function Survey() {
                 participant={participant}
             />;
         case 'end':
-            return <EndPage completionCode={completionCode} />;
+            return <EndPage completionCode={completionCode}/>;
         default:
             return
     }

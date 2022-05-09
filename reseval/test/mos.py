@@ -1,4 +1,5 @@
 import itertools
+import random
 
 import reseval
 from .base import Base
@@ -65,3 +66,37 @@ class MOS(Base):
                 condition_scores[condition].append(score)
                 stem_scores[stem][condition].append(score)
         return condition_scores, stem_scores
+
+    def assign_conditions(self, random_seed=0):
+        """Randomly assign conditions to each participant"""
+        # Seed random number generation
+        random.seed(random_seed)
+
+        # Get shuffled conditions
+        all_conditions = self.conditions
+        random.shuffle(all_conditions)
+
+        # Assign conditions to participants
+        index = 0
+        samples = 1
+        assigned_conditions, residual = [], []
+
+        # We generate more conditions than the expected number of participants
+        # in case participants leave during the test or we extend the test
+        while len(assigned_conditions) < 10 * self.participants:
+
+            # Shuffle and reset index whenever we reach the end
+            while index + samples - len(residual) >= len(all_conditions):
+                residual.extend(all_conditions[index:])
+                random.shuffle(all_conditions)
+                index = 0
+
+            # Add conditions
+            end = index + samples - len(residual)
+            assigned_conditions.append(residual + all_conditions[index:end])
+            index = end
+
+            # Reset residual
+            residual = []
+
+        return assigned_conditions
