@@ -1,7 +1,7 @@
 import FreeResponse from './FreeResponse';
 import MultipleChoice from './MultipleChoice';
 
-export default function Question({ question, response, setResponse}) {
+export default function Question({question, response, setResponse}) {
     /* Render a question */
     // Maybe render multiple choice
     if (question.type === 'multiple-choice') {
@@ -29,9 +29,7 @@ export function validate(response) {
     /* Error check question response */
     // Require input to be non-empty
     if (typeof response === 'undefined' || !response.trim()) {
-        alert(
-            'Please leave a response. "N/A" ' +
-            'and similar responses are acceptable.');
+        alert('Please leave a response.');
         return false;
     }
     return true;

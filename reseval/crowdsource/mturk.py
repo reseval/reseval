@@ -5,7 +5,7 @@ import os
 import re
 from hashlib import md5
 from pathlib import Path
-from time import time
+import time
 
 import boto3
 import xmltodict as xmltodict
