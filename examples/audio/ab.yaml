@@ -68,10 +68,10 @@ crowdsource:
     autoapprove: 172800
 
 # The number of participants
-participants: 2
+participants: 1
 
 # The number of evaluations each participant performs
-samples_per_participant: 2
+samples_per_participant: 1
 
 # A seed to use for deterministic random sampling
 random_seed: 0
@@ -96,7 +96,22 @@ welcome_text: "
 # perform evaluation. If a multiple choice question has correct_answer
 # defined, the participant must select that answer to be able to continue
 # to the evaluation.
-prescreen_questions: []
+prescreen_questions:
+
+  # Test question
+  - name: DummyQuestion
+
+    # The type of question. One of [free-response, multiple-choice].
+    type: multiple-choice
+
+    # Question text
+    text: Would you like to take a subjective evaluation?
+
+    # Possible answers
+    answers: ['Yes', 'No']
+
+    # Indicate a correct answer
+    correct_answer: 'Yes'
 
 # Instructions presented to the participant during evaluation
 survey_instructions: "
