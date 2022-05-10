@@ -37,7 +37,7 @@ export default function TaskPage({
                                      navigation,
                                      files,
                                      conditions,
-                                     mosCondition: mosCondition
+                                     evaluatorId: evaluatorId
                                  }) {
     /* Render the evaluation task */
     // Current progress
@@ -99,7 +99,7 @@ export default function TaskPage({
         navigation: navigation,
         response: response,
         setResponse: setResponse,
-        mosCondition: mosCondition,
+        evaluatorId: evaluatorId,
         onClick: onClick
     };
 

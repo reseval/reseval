@@ -49,8 +49,8 @@ export default function Survey() {
 
     // Evaluation files
     const [files, setFiles] = useState(undefined);
-
-    const [mosCondition, setMosCondition] = useState(undefined);
+    // Evaluator Id; this is an incremental integer id starts from 0
+    const [evaluatorId, setEvaluatorId] = useState(undefined);
     // Render current page
     switch (step.id) {
         case 'welcome':
@@ -62,7 +62,7 @@ export default function Survey() {
                 completionCode={completionCode}
                 setFiles={setFiles}
                 setConditions={setConditions}
-                setMosCondition={setMosCondition}
+                setEvaluatorId={setEvaluatorId}
                 navigation={navigation}
             />;
         case 'task':
@@ -71,7 +71,7 @@ export default function Survey() {
                 conditions={conditions}
                 participant={participant}
                 navigation={navigation}
-                mosCondition={mosCondition}
+                evaluatorId={evaluatorId}
             />;
         case 'feedback':
             return <FeedbackPage

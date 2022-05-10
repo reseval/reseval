@@ -6,7 +6,6 @@ import Markdown from '../components/Markdown';
 import Question, {validate} from '../questions/Question';
 
 import assignments from '../json/assignments.json';
-import conditions from '../json/conditions.json';
 
 import config from '../json/config.json';
 import Media from "../components/Media";
@@ -40,7 +39,7 @@ export default function QualificationPage({
                                               completionCode,
                                               setFiles,
                                               setConditions,
-                                              setMosCondition
+                                              setEvaluatorId
                                           }) {
     /* Render the prescreening questions asked to the participant */
     const [index, setIndex] = useState(0);
@@ -113,8 +112,8 @@ export default function QualificationPage({
             if (retries > 0) {
                 const plural = retries > 1 ? 's' : '';
                 const message = `Incorrect. Please put on headphones, move ` +
-                `to a quiet location, and try again. You have ${retries} ` +
-                `attempt${plural} remaining.`
+                    `to a quiet location, and try again. You have ${retries} ` +
+                    `attempt${plural} remaining.`
                 alert(message);
                 setRetries(retries - 1);
                 return;
@@ -199,9 +198,9 @@ export default function QualificationPage({
                         .then(response => response.json())
                         .then(response => {
                             setFiles(assignments[response % assignments.length]);
-                            if (conditions) {
-                                setMosCondition(conditions[response % conditions.length]);
-                            }
+
+                            setEvaluatorId(response)
+
                         })
 
                         // Get list of evaluation conditions
