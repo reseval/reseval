@@ -78,7 +78,7 @@ class MOS(Base):
 
         # Assign conditions to participants
         index = 0
-        samples = 1
+        samples = self.samples_per_participant
         assigned_conditions, residual = [], []
 
         # We generate more conditions than the expected number of participants

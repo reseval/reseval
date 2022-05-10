@@ -1,4 +1,3 @@
-import Chance from 'chance';
 import React, { useRef, useState } from 'react';
 
 import Media from '../components/Media';
@@ -14,9 +13,6 @@ Constants
 ******************************************************************************/
 
 
-// Random number generator
-const chance = new Chance();
-
 
 /******************************************************************************
 Mean opinion score evaluation
@@ -25,7 +21,7 @@ Mean opinion score evaluation
 
 export default function MOS({
     file,
-    conditions,
+    index,
     response,
     setResponse,
     mosCondition,
@@ -35,10 +31,8 @@ export default function MOS({
 
     // Whether the media has ended
     const [ended, setEnded] = useState(false);
-
-    // Select random condition
-    // TODO - balanced selection over both files and conditions
-    const [condition, setCondition] = useState(chance.pickone(conditions));
+    // get conditions
+    const [condition, setCondition] = useState(mosCondition[index]);
 
     function clickHandler() {
         // Send response to database and go to next question
@@ -47,9 +41,8 @@ export default function MOS({
         // Reset media files
         setEnded(false);
 
-        // Draw a new random condition
-        // setCondition(chance.pickone(conditions));
-        setCondition(mosCondition)
+        // go to the next condition
+        setCondition(mosCondition[index+1])
     }
 
     // Can we advance?
