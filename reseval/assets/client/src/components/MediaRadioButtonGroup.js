@@ -27,7 +27,7 @@ function MediaRadioButton({
 
 	// Render radio button and media
 	return (
-		<li className='grid grid-20-80'>
+		<li className='listitem grid grid-20-80'>
             <div
 				className={`check col-1 ${state}`}
 				onClick={() => active && setResponse(condition)}>

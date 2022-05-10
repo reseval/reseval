@@ -35,7 +35,7 @@ export default function RadioButtonGroup({ response, setResponse, active }) {
 	return (
 		<ul>
 			<li
-				className='grid'
+				className=' listitem grid'
 				style={{gridTemplateColumns: `repeat(${choices}, 1fr)`}}
 			>
 				{buttons}
