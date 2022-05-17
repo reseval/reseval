@@ -40,7 +40,7 @@ def extend(
 
     # Get saved configuration
     config_file = reseval.EVALUATION_DIRECTORY / name / 'config.yaml'
-    with open(config_file) as file:
+    with open(config_file, encoding='utf-8') as file:
         lines = file.readlines()
 
     # Replace number of participants
@@ -51,6 +51,6 @@ def extend(
             lines[i] = re.sub(r'\d+', str(current), lines[i])
 
     # Save new configuration
-    with open(config_file, 'w') as file:
+    with open(config_file, 'w', encoding='utf-8') as file:
         for line in lines:
             file.write(line)

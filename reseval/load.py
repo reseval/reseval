@@ -58,7 +58,7 @@ def environment_variables_by_name(name):
         raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), file)
 
     # Load as environment variables
-    dotenv.load_dotenv(file)
+    dotenv.load_dotenv(file, override=True)
 
 
 ###############################################################################
