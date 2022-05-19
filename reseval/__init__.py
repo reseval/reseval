@@ -14,6 +14,7 @@ from . import crowdsource
 from . import database
 from . import load
 from . import npm
+from . import plot
 from . import random
 from . import server
 from . import stats

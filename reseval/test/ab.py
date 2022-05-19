@@ -38,3 +38,8 @@ class AB(Base):
                 condition_counts[result] += 1
                 stem_counts[stem][result] += 1
         return condition_counts, stem_counts
+
+    @classmethod
+    def plot(self, results, file):
+        """Create a plot of the results and save to disk"""
+        reseval.plot.barh(results, file)

@@ -44,6 +44,11 @@ class MUSHRA(Base):
 
         return all_results, stem_scores
 
+    @classmethod
+    def plot(self, results, file):
+        """Create a plot of the results and save to disk"""
+        reseval.plot.violin(results, file)
+
     def response_type(self):
         """Retrieve the MySQL datatype of a participant response"""
         # For the MUSHRA test, the response is a string of concatenated

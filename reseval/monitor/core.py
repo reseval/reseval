@@ -15,7 +15,7 @@ import reseval
 def monitor(
     names: typing.Optional[typing.List[str]],
     interval: int = 60,
-    exit_on_finish: bool = True):
+    exit_on_finish: bool = False):
     """Monitor subjective evaluations
 
     Args:

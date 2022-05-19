@@ -77,4 +77,7 @@ def results(
     with open(directory / name / 'results.json', 'w') as file:
         json.dump(analysis | {'stems': stem_scores}, file, indent=4)
 
+    # Create and save figure
+    test.plot(stem_scores, directory / name / 'results.jpg')
+
     return analysis

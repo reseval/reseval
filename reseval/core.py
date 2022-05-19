@@ -37,7 +37,7 @@ def run(
     try:
 
         # Monitor evaluation until completion
-        reseval.monitor(name, interval)
+        reseval.monitor([name], interval, exit_on_finish=True)
 
     except (Exception, KeyboardInterrupt) as exception:
 
