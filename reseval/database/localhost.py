@@ -16,12 +16,7 @@ def create(config):
     with connect() as (_, cursor):
 
         # Create database
-        # TEMPORARY - drop database
-        try:
-            cursor.execute(f'CREATE DATABASE `{config["name"]}`')
-        except Exception:
-            cursor.execute(f'DROP DATABASE `{config["name"]}`')
-            cursor.execute(f'CREATE DATABASE `{config["name"]}`')
+        cursor.execute(f'CREATE DATABASE `{config["name"]}`')
 
         # Return credentials
         return {

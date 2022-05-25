@@ -35,10 +35,6 @@ def violin(results, file):
     indices = np.argsort(means)
     means, keys, values = means[indices], list(keys[indices]), values[indices]
 
-    for i in range(len(keys)):
-        if keys[i] == 'kenansville':
-            keys[i] = 'spectral gating'
-
     # Create violin plot
     figure, ax = plt.subplots(1, 1, squeeze=True, figsize=(16, 6))
     ax.violinplot(

@@ -12,6 +12,7 @@ from . import app
 from . import convert
 from . import crowdsource
 from . import database
+from . import filter
 from . import load
 from . import npm
 from . import plot

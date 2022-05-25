@@ -97,10 +97,6 @@ def create(config, test, local=False):
     # Connect to MySQL database
     with connect() as (_, cursor):
 
-        # TEMPORARY - drop tables for debugging
-        for table in reversed(TABLES):
-            cursor.execute(f'DROP TABLE IF EXISTS {table}')
-
         # Create database tables
         for table, command in zip(TABLES, SCHEMA):
 
