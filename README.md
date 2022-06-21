@@ -65,6 +65,7 @@ M. Morrison, B. Tang, G. Tan, and B. Pardo, "Reproducible Subjective Evaluation,
 - [Advanced usage](#advanced-usage)
     * [CLI](#cli)
     * [API](#api)
+- [Additional monitoring](#additional-monitoring)
 
 
 ## Installation
@@ -390,3 +391,27 @@ reseval.run(config, directory)
 # Production
 reseval.run(config, directory, production=True)
 ```
+
+
+## Additional monitoring
+
+### Heroku
+
+To monitor, edit, or delete Heroku databases and servers, use the
+[Heroku application dashboard](https://dashboard.heroku.com/apps). You can see
+any costs on the
+[billing dashboard](https://dashboard.heroku.com/account/billing).
+
+
+### AWS S3
+
+To monitor, edit, or delete AWS S3 storage buckets, or see any costs, use the
+[AWS S3 console](https://aws.amazon.com/s3/).
+
+
+### MTurk
+
+HITs not created on the MTurk dashboard are not visible on the MTurk dashboard.
+You can use the MTurk CLI to monitor, edit, or delete HITs. MTurk costs appear
+on the [AWS billing dashboard](https://console.aws.amazon.com/billing/home)
+at the end of the billing period.
