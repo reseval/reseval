@@ -47,7 +47,7 @@ class MUSHRA(Base):
     @classmethod
     def plot(self, results, file):
         """Create a plot of the results and save to disk"""
-        reseval.plot.violin(results, file)
+        reseval.plot.violin(results, file, range(0, 101, 20))
 
     def response_type(self):
         """Retrieve the MySQL datatype of a participant response"""

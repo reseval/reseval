@@ -14,7 +14,7 @@ def barh(results, file):
     pass
 
 
-def violin(results, file):
+def violin(results, file, yticks):
     """Create a violin plot"""
     # Set font size
     matplotlib.rcParams.update({'font.size': 18})
@@ -31,7 +31,7 @@ def violin(results, file):
     values = np.array([sorted(value) for value in data.values()])
 
     # Order data by average value
-    means = np.mean(values, axis=1)
+    means = np.mean(values, axis=values.ndim - 1)
     indices = np.argsort(means)
     means, keys, values = means[indices], list(keys[indices]), values[indices]
 
@@ -61,7 +61,7 @@ def violin(results, file):
     ax.spines['left'].set_visible(False)
     ax.xaxis.set_ticks_position('none')
     ax.yaxis.set_ticks_position('none')
-    for y in [0, 20, 40, 60, 80, 100]:
+    for y in yticks:
         ax.hlines(
             y=y,
             xmin=0,
