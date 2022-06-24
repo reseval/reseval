@@ -32,7 +32,12 @@ def destroy(config):
     with connect() as (_, cursor):
 
         # Destroy database
-        cursor.execute(f'DROP DATABASE `{config["name"]}`')
+        try:
+            cursor.execute(f'DROP DATABASE `{config["name"]}`')
+        except mysql.connector.errors.DatabaseError:
+
+            # Database doesn't exist
+            pass
 
 
 ###############################################################################

@@ -10,31 +10,29 @@ import Button from '../components/Button';
 
 
 /******************************************************************************
- Constants
- ******************************************************************************/
-
-
-/******************************************************************************
  Mean opinion score evaluation
  ******************************************************************************/
 
 
 export default function MOS({
-                                file,
-                                index,
-                                response,
-                                setResponse,
-                                evaluatorId,
-                                onClick
-                            }) {
+    file,
+    index,
+    response,
+    setResponse,
+    evaluatorId,
+    onClick
+}) {
     /* Render a MOS evaluation task */
     const reference = useRef();
-    // get condition list from json file
+
+    // Conditions to use for this evaluator
     const conditionList = conditions[evaluatorId % conditions.length]
+
+    // Condition of the current file
+    const [condition, setCondition] = useState(conditionList[index]);
+
     // Whether the media has ended
     const [ended, setEnded] = useState(false);
-    // get condition for current evaluation file
-    const [condition, setCondition] = useState(conditionList[index]);
 
     function clickHandler() {
         // Send response to database and go to next question
@@ -43,7 +41,7 @@ export default function MOS({
         // Reset media files
         setEnded(false);
 
-        // go to the next condition
+        // Update condition
         setCondition(conditionList[index + 1])
     }
 
@@ -67,9 +65,7 @@ export default function MOS({
             />
             <Button
                 active={advance}
-                onClick={() => {
-                    advance && clickHandler()
-                }}
+                onClick={() => { advance && clickHandler() }}
             >
                 Next
             </Button>

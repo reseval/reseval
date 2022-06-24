@@ -53,7 +53,7 @@ CLIENT_JSON_DIRECTORY = CACHE / 'client' / 'src' / 'json'
 # Location that the client expects to find an assignment JSON file
 CLIENT_ASSIGNMENT_FILE = CLIENT_JSON_DIRECTORY / 'assignments.json'
 
-# Location that the client expects to find an assignment JSON file
+# Location that the client expects to find a JSON file of condition assignments
 CLIENT_CONDITION_FILE = CLIENT_JSON_DIRECTORY / 'conditions.json'
 
 # Location that the client expects to find a configuration JSON file

@@ -15,11 +15,17 @@ def destroy(name: str, force: bool = False):
         force: Destroy evaluation resources even if it is still running. Pays
             all participants who have taken the evaluation.
     """
+    # Evaluation doesn't exist
     if not (reseval.EVALUATION_DIRECTORY / name).exists():
         return
 
-    # Cleanup crowdsourcing
-    active = reseval.crowdsource.active(name)
+    # Is the evaluation currently active?
+    try:
+        active = reseval.crowdsource.active(name)
+    except Exception:
+        if force:
+            active = False
+
     paid = reseval.crowdsource.paid(name)
     if active or not paid:
 

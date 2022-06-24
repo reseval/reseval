@@ -28,21 +28,22 @@ def violin(results, file, yticks):
             else:
                 data[condition].extend(scores)
     keys = np.array(list(data.keys()))
-    values = np.array([sorted(value) for value in data.values()])
+    values = np.array(
+        [np.array(sorted(value), dtype=np.int) for value in data.values()])
 
     # Order data by average value
-    means = np.mean(values, axis=values.ndim - 1)
+    means = np.nan_to_num([value.mean() for value in values])
     indices = np.argsort(means)
     means, keys, values = means[indices], list(keys[indices]), values[indices]
 
     # No data
-    if not all(values):
+    if not all(len(value) for value in values):
         return
 
     # Create violin plot
     figure, ax = plt.subplots(1, 1, squeeze=True, figsize=(16, 6))
     ax.violinplot(
-        values.T,
+        values,
         showmeans=False,
         showmedians=False,
         showextrema=False)

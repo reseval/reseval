@@ -32,12 +32,12 @@ export const MediaContext = createContext({
 
 
 export default function TaskPage({
-                                     participant,
-                                     navigation,
-                                     files,
-                                     conditions,
-                                     evaluatorId: evaluatorId
-                                 }) {
+    participant,
+    navigation,
+    files,
+    conditions,
+    evaluatorId
+}) {
     /* Render the evaluation task */
     // Current progress
     const [index, setIndex] = useState(0);

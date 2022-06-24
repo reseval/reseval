@@ -14,6 +14,8 @@ class MUSHRA(Base):
     @classmethod
     def analyze(cls, conditions, responses, random_seed=0):
         """Perform statistical analysis on evaluation results"""
+        import pdb; pdb.set_trace()
+
         # Get MUSHRA ratings
         condition_scores, stem_scores = cls.scores(conditions, responses)
 
