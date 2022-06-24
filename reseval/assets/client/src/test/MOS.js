@@ -1,8 +1,8 @@
-import Chance from 'chance';
-import React, { useRef, useState } from 'react';
+import React, {useRef, useState} from 'react';
 
 import Media from '../components/Media';
 import RadioButtonGroup from '../components/RadioButtonGroup';
+import conditions from '../json/conditions.json';
 
 import '../css/components.css';
 
@@ -10,34 +10,31 @@ import Button from '../components/Button';
 
 
 /******************************************************************************
-Constants
-******************************************************************************/
-
-
-// Random number generator
-const chance = new Chance();
+ Constants
+ ******************************************************************************/
 
 
 /******************************************************************************
-Mean opinion score evaluation
-******************************************************************************/
+ Mean opinion score evaluation
+ ******************************************************************************/
 
 
 export default function MOS({
-    file,
-    conditions,
-    response,
-    setResponse,
-    onClick }) {
+                                file,
+                                index,
+                                response,
+                                setResponse,
+                                evaluatorId,
+                                onClick
+                            }) {
     /* Render a MOS evaluation task */
     const reference = useRef();
-
+    // get condition list from json file
+    const conditionList = conditions[evaluatorId % conditions.length]
     // Whether the media has ended
     const [ended, setEnded] = useState(false);
-
-    // Select random condition
-    // TODO - balanced selection over both files and conditions
-    const [condition, setCondition] = useState(chance.pickone(conditions));
+    // get condition for current evaluation file
+    const [condition, setCondition] = useState(conditionList[index]);
 
     function clickHandler() {
         // Send response to database and go to next question
@@ -46,8 +43,8 @@ export default function MOS({
         // Reset media files
         setEnded(false);
 
-        // Draw a new random condition
-        setCondition(chance.pickone(conditions));
+        // go to the next condition
+        setCondition(conditionList[index + 1])
     }
 
     // Can we advance?
@@ -64,13 +61,15 @@ export default function MOS({
             <RadioButtonGroup
                 response={
                     typeof response === 'undefined' ? response :
-                    Number(response.slice(-1))}
+                        Number(response.slice(-1))}
                 setResponse={index => setResponse(`${condition}-${index}`)}
                 active={ended}
             />
             <Button
                 active={advance}
-                onClick={() => {advance && clickHandler()}}
+                onClick={() => {
+                    advance && clickHandler()
+                }}
             >
                 Next
             </Button>

@@ -12,11 +12,11 @@ import reseval
 
 
 def create(
-    config: typing.Union[str, bytes, os.PathLike],
-    directory: typing.Union[str, bytes, os.PathLike],
-    local: bool = False,
-    production: bool = False,
-    detach: bool = False) -> str:
+        config: typing.Union[str, bytes, os.PathLike],
+        directory: typing.Union[str, bytes, os.PathLike],
+        local: bool = False,
+        production: bool = False,
+        detach: bool = False) -> str:
     """Setup a subjective evaluation
 
     Args:
@@ -54,7 +54,7 @@ def create(
         if prod_file.exists():
             raise ValueError(
                 f'Not overwriting results of evaluation {name}',
-                 'which has been run in production')
+                'which has been run in production')
 
     # Save configuration as json for the frontend to access
     with open(reseval.CLIENT_CONFIGURATION_FILE, 'w') as file:
@@ -66,6 +66,13 @@ def create(
     # Create and save assignments
     with open(reseval.CLIENT_ASSIGNMENT_FILE, 'w') as file:
         json.dump(test.assign(cfg['random_seed']), file, indent=4)
+    # MOS test requires deterministic conditions
+    with open(reseval.CLIENT_CONDITION_FILE, 'w') as file:
+        if test.__class__.__name__ == "MOS":
+            json.dump(test.assign_conditions(cfg['random_seed']), file, indent=4)
+        else:
+            # Create an empty conditions.json file for other tests
+            json.dump([], file, indent=4)
 
     # Copy configuration file
     file = reseval.EVALUATION_DIRECTORY / name / 'config.yaml'
@@ -89,7 +96,7 @@ def create(
 
         # If heroku is used for either the database or server, setup the app here
         if (not local and
-            (cfg['server'] == 'heroku' or cfg['database'] == 'heroku')):
+                (cfg['server'] == 'heroku' or cfg['database'] == 'heroku')):
             reseval.app.heroku.create(cfg)
 
         # Create database
