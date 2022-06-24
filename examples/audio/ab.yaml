@@ -68,10 +68,10 @@ crowdsource:
     autoapprove: 172800
 
 # The number of participants
-participants: 1
+participants: 2
 
 # The number of evaluations each participant performs
-samples_per_participant: 1
+samples_per_participant: 2
 
 # A seed to use for deterministic random sampling
 random_seed: 0
@@ -123,7 +123,7 @@ listening_test:
     how many tones you heard."
 
   # Number of questions to include on the listening test
-  num_questions: 2
+  num_questions: 1
 
   # Number of allowed retries before the participant fails the test
   retries: 2

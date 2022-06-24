@@ -240,9 +240,7 @@ export default function QualificationPage({
                 </Markdown>
                 <Media
                     reference={refTest}
-                    onEnded={() => {
-                        setAudioEnded(true)
-                    }}
+                    onEnded={() => setAudioEnded(true)}
                     src={'listening_test/' + file[testIndex]}
                 />
                 <ListeningTest

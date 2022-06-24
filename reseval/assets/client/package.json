@@ -11,7 +11,7 @@
     "react-dom": "^16.8.0",
     "react-hooks-helper": "^1.6.0",
     "react-markdown": "^8.0.0",
-    "react-scripts": "^5.0.0"
+    "react-scripts": "^5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",

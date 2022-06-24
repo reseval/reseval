@@ -70,7 +70,7 @@ export default function AB({
             />
             <Button
                 active={advance}
-                onClick={() => {advance && clickHandler()}}
+                onClick={() => advance && clickHandler()}
             >
                 Next
             </Button>

@@ -35,6 +35,10 @@ def violin(results, file, yticks):
     indices = np.argsort(means)
     means, keys, values = means[indices], list(keys[indices]), values[indices]
 
+    # No data
+    if not all(values):
+        return
+
     # Create violin plot
     figure, ax = plt.subplots(1, 1, squeeze=True, figsize=(16, 6))
     ax.violinplot(
@@ -47,7 +51,7 @@ def violin(results, file, yticks):
     _, medians, _ = np.percentile(
         values,
         [25, 50, 75],
-        axis=1)
+        axis=values.ndim - 1)
 
     # Style axes
     inds = np.arange(1, len(medians) + 1)
