@@ -37,15 +37,17 @@ export default function Media(props) {
         }
     }
 
-    props.onPlayed = onPlayed
+    // Add callback prop
+    const newProps = {...props};
+    newProps.onPlayed = onPlayed;
 
-    // Get file URL
+    // Update file source prop
     if (config['local']) {
-        props.src = '/evaluation-files/' + props.src;
+        newProps.src = '/evaluation-files/' + newProps.src;
     } else {
         switch (config.storage) {
             case 'aws':
-                props.src = `https://${config['bucket']}.s3.amazonaws.com/${props.src}`;
+                newProps.src = `https://${config['bucket']}.s3.amazonaws.com/${newProps.src}`;
                 break;
             default:
                 throw new Error(
@@ -53,19 +55,23 @@ export default function Media(props) {
         }
     }
 
+    // Lock props
+    Object.preventExtensions(newProps);
+
+    // Get datatype
     let media;
     switch (config.datatype) {
         case 'audio':
-            media = <Audio {...props} />;
+            media = <Audio {...newProps} />;
             break;
         case 'image':
-            media = <Image {...props} />;
+            media = <Image {...newProps} />;
             break;
         case 'text':
-            media = <Text {...props} />;
+            media = <Text {...newProps} />;
             break;
         case 'video':
-            media = <Video {...props} />;
+            media = <Video {...newProps} />;
             break;
         default:
             throw new Error(`Datatype ${config.datatype} is not recognized`);
@@ -80,5 +86,6 @@ export default function Media(props) {
             }}
         >
             {media}
-        </div>);
+        </div>
+    );
 }

@@ -3,7 +3,7 @@ export default function ListeningTest({response, setResponse, active}) {
     // enumerated answers
     let answers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
     return (
-        <ul className='MultipleChoice'>
+        <ul>
             {answers.map((item, key) =>
                 <Choice
                     key={key}
@@ -19,16 +19,22 @@ export default function ListeningTest({response, setResponse, active}) {
 
 function Choice({response, setResponse, label, active}) {
     return (
-        <li className='grid grid-20-80'>
+        <li className='listitem grid grid-20-80'>
             <div style={{display: 'flex', justifyContent: 'center', width: '100%'}}>
                 <div
-                    className={`check active col-1 ${label === response ? 'selected' : ''}`}
+                    className={`check col-1 ${active ? ' active' : ''}` +
+                               `${label === response ? ' selected' : ''}`}
                     onClick={() => active && setResponse(label)}>
                     <div className='inside'/>
                 </div>
             </div>
             <div style={{display: 'flex', width: '100%'}}>
-                <label onClick={() => active && setResponse(label)}>{label}</label>
+                <label
+                    className='choices'
+                    onClick={() => active && setResponse(label)}
+                >
+                    {label}
+                </label>
             </div>
         </li>
     )

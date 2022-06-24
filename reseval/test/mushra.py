@@ -14,6 +14,8 @@ class MUSHRA(Base):
     @classmethod
     def analyze(cls, conditions, responses, random_seed=0):
         """Perform statistical analysis on evaluation results"""
+        import pdb; pdb.set_trace()
+
         # Get MUSHRA ratings
         condition_scores, stem_scores = cls.scores(conditions, responses)
 
@@ -43,6 +45,11 @@ class MUSHRA(Base):
             all_results['conditions'][f'{condition_a}-{condition_b}'] = results
 
         return all_results, stem_scores
+
+    @classmethod
+    def plot(self, results, file):
+        """Create a plot of the results and save to disk"""
+        reseval.plot.violin(results, file, range(0, 101, 20))
 
     def response_type(self):
         """Retrieve the MySQL datatype of a participant response"""

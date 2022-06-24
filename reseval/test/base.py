@@ -69,6 +69,12 @@ class Base(ABC):
 
         return assignments
 
+    @classmethod
+    @abstractmethod
+    def plot(self, results, file):
+        """Create a plot of the results and save to disk"""
+        pass
+
     def response_type(self):
         """Retrieve the MySQL datatype of a participant response"""
         # By default, the response type is the name of the winning condition.

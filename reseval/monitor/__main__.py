@@ -13,8 +13,9 @@ def parse_args():
     parser = argparse.ArgumentParser(
         description='Monitor subjective evaluations')
     parser.add_argument(
-        '--name',
-        help='The name of the evaluation to monitor. ' +
+        '--names',
+        nargs='+',
+        help='The names of the evaluations to monitor. ' +
              'If not provided, monitors all evaluations.')
     parser.add_argument(
         '--interval',

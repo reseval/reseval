@@ -6,7 +6,7 @@ export default function Audio({src, reference, onEnded, onPlayed}) {
     /* Create an HTML audio element */
     // Reload audio when src changes
     useEffect(() => {
-        if (reference.current) {
+        if (typeof reference !== 'undefined' && reference.current) {
             reference.current.pause();
             reference.current.load();
         }

@@ -22,8 +22,7 @@ const url = window.location.protocol + '//' + window.location.host;
 // Global state of any currently playing media
 export const MediaContext = createContext({
     mediaRef: '',
-    setMediaRef: () => {
-    }
+    setMediaRef: () => {}
 });
 
 
@@ -36,7 +35,8 @@ export default function TaskPage({
     participant,
     navigation,
     files,
-    conditions
+    conditions,
+    evaluatorId
 }) {
     /* Render the evaluation task */
     // Current progress
@@ -45,9 +45,7 @@ export default function TaskPage({
     // Update context value whenever media changes
     const [mediaRef, setMediaRef] = useState(undefined);
     const value = useMemo(
-        () => {
-            return {mediaRef, setMediaRef}
-        },
+        () => { return {mediaRef, setMediaRef} },
         [mediaRef]
     );
 
@@ -64,6 +62,7 @@ export default function TaskPage({
     const file = files[index];
 
     function onClick() {
+
         // Upload response
         fetch(url + '/api/responses', {
             method: 'post',
@@ -98,6 +97,7 @@ export default function TaskPage({
         navigation: navigation,
         response: response,
         setResponse: setResponse,
+        evaluatorId: evaluatorId,
         onClick: onClick
     };
 

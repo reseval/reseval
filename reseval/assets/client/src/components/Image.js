@@ -5,7 +5,10 @@ import '../css/components.css';
 export default function Image({ src, onEnded }) {
     /* Render an image */
     // Call onEnded when the file changes
-    useEffect(onEnded, [src]);
+    useEffect(
+        () => typeof (onEnded) !== 'undefined' && onEnded(),
+        [src, onEnded]
+    );
 
     // Render
     return <img

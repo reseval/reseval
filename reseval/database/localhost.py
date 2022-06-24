@@ -16,12 +16,7 @@ def create(config):
     with connect() as (_, cursor):
 
         # Create database
-        # TEMPORARY - drop database
-        try:
-            cursor.execute(f'CREATE DATABASE `{config["name"]}`')
-        except Exception:
-            cursor.execute(f'DROP DATABASE `{config["name"]}`')
-            cursor.execute(f'CREATE DATABASE `{config["name"]}`')
+        cursor.execute(f'CREATE DATABASE `{config["name"]}`')
 
         # Return credentials
         return {
@@ -37,7 +32,12 @@ def destroy(config):
     with connect() as (_, cursor):
 
         # Destroy database
-        cursor.execute(f'DROP DATABASE `{config["name"]}`')
+        try:
+            cursor.execute(f'DROP DATABASE `{config["name"]}`')
+        except mysql.connector.errors.DatabaseError:
+
+            # Database doesn't exist
+            pass
 
 
 ###############################################################################

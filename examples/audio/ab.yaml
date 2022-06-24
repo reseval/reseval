@@ -96,7 +96,22 @@ welcome_text: "
 # perform evaluation. If a multiple choice question has correct_answer
 # defined, the participant must select that answer to be able to continue
 # to the evaluation.
-prescreen_questions: []
+prescreen_questions:
+
+  # Test question
+  - name: DummyQuestion
+
+    # The type of question. One of [free-response, multiple-choice].
+    type: multiple-choice
+
+    # Question text
+    text: Would you like to take a subjective evaluation?
+
+    # Possible answers
+    answers: ['Yes', 'No']
+
+    # Indicate a correct answer
+    correct_answer: 'Yes'
 
 # Include an audio listening test
 listening_test:
@@ -108,7 +123,10 @@ listening_test:
     how many tones you heard."
 
   # Number of questions to include on the listening test
-  num_questions: 2
+  num_questions: 1
+
+  # Number of allowed retries before the participant fails the test
+  retries: 2
 
 # Instructions presented to the participant during evaluation
 survey_instructions: "

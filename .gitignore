@@ -5,3 +5,10 @@
 dist/
 docs/_autosummary
 docs/_build
+reseval/assets/.env
+reseval/assets/node_modules/
+reseval/assets/client/build/
+reseval/assets/client/node_modules/
+reseval/assets/client/public/evaluation-files/
+reseval/assets/client/src/json/assignments.json
+reseval/assets/client/src/json/config.json

@@ -12,19 +12,23 @@ import reseval
 ###############################################################################
 
 
-def monitor(name: typing.Optional[str], interval: int = 60):
+def monitor(
+    names: typing.Optional[typing.List[str]],
+    interval: int = 60,
+    exit_on_finish: bool = False):
     """Monitor subjective evaluations
 
     Args:
-        name: The name of the evaluation to monitor. If not provided,
+        names: The names of the evaluations to monitor. If not provided,
             monitors all evaluations.
         interval: The time between monitoring updates in seconds
+        exit_on_finish: Whether to exit monitoring when the evaluation finishes
     """
     # List evaluations
-    names = (
-        [eval.name for eval in reseval.EVALUATION_DIRECTORY.glob('*')
+    if names is None:
+        names = [
+            eval.name for eval in reseval.EVALUATION_DIRECTORY.glob('*')
             if eval.is_dir()]
-        if name is None else [name])
 
     # Get total samples for each evaluation
     configs = [reseval.load.config_by_name(evaluation) for evaluation in names]
@@ -37,7 +41,7 @@ def monitor(name: typing.Optional[str], interval: int = 60):
 
     # Setup monitoring display
     analyses = [
-        reseval.results(evaluation)
+        reseval.results(evaluation, reseval.EVALUATION_DIRECTORY)
         for evaluation in names]
 
     # Render display and monitor
@@ -72,12 +76,20 @@ def monitor(name: typing.Optional[str], interval: int = 60):
                         participants,
                         analyses))
 
-            # If we're monitoring a single evaluation and it is done, exit
-            if (name is not None and
-                ((reseval.is_local(name) and
-                    analyses[0]['samples'] == total) or
-                not reseval.crowdsource.active(name))):
-                break
+            # Maybe exit when the evaluations are done
+            if exit_on_finish:
+
+                done = True
+                for name in names:
+
+                    # Don't exit if the evaluation is still active
+                    if not ((reseval.is_local(name) and
+                       analyses[0]['samples'] == total) or
+                       not reseval.crowdsource.active(name)):
+                       done = False
+
+                if done:
+                    break
 
             # Wait a while
             time.sleep(interval)

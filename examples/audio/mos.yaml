@@ -123,7 +123,10 @@ listening_test:
     how many tones you heard."
 
   # Number of questions to include on the listening test
-  num_questions: 2
+  num_questions: 1
+
+  # Number of allowed retries before the participant fails the test
+  retries: 2
 
 # Instructions presented to the participant during evaluation
 survey_instructions: "

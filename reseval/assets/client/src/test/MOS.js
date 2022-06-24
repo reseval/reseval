@@ -1,8 +1,8 @@
-import Chance from 'chance';
-import React, { useRef, useState } from 'react';
+import React, {useRef, useState} from 'react';
 
 import Media from '../components/Media';
 import RadioButtonGroup from '../components/RadioButtonGroup';
+import conditions from '../json/conditions.json';
 
 import '../css/components.css';
 
@@ -10,34 +10,29 @@ import Button from '../components/Button';
 
 
 /******************************************************************************
-Constants
-******************************************************************************/
-
-
-// Random number generator
-const chance = new Chance();
-
-
-/******************************************************************************
-Mean opinion score evaluation
-******************************************************************************/
+ Mean opinion score evaluation
+ ******************************************************************************/
 
 
 export default function MOS({
     file,
-    conditions,
+    index,
     response,
     setResponse,
-    onClick }) {
+    evaluatorId,
+    onClick
+}) {
     /* Render a MOS evaluation task */
     const reference = useRef();
 
+    // Conditions to use for this evaluator
+    const conditionList = conditions[evaluatorId % conditions.length]
+
+    // Condition of the current file
+    const [condition, setCondition] = useState(conditionList[index]);
+
     // Whether the media has ended
     const [ended, setEnded] = useState(false);
-
-    // Select random condition
-    // TODO - balanced selection over both files and conditions
-    const [condition, setCondition] = useState(chance.pickone(conditions));
 
     function clickHandler() {
         // Send response to database and go to next question
@@ -46,9 +41,12 @@ export default function MOS({
         // Reset media files
         setEnded(false);
 
-        // Draw a new random condition
-        setCondition(chance.pickone(conditions));
+        // Update condition
+        setCondition(conditionList[index + 1])
     }
+
+    // Can we advance?
+    const advance = typeof response !== 'undefined' && ended;
 
     // Render
     return (
@@ -61,16 +59,13 @@ export default function MOS({
             <RadioButtonGroup
                 response={
                     typeof response === 'undefined' ? response :
-                    Number(response.slice(-1))}
+                        Number(response.slice(-1))}
                 setResponse={index => setResponse(`${condition}-${index}`)}
                 active={ended}
             />
             <Button
-                onClick={() => {
-                    typeof response !== 'undefined' &&
-                    ended &&
-                    clickHandler()
-                }}
+                active={advance}
+                onClick={() => { advance && clickHandler() }}
             >
                 Next
             </Button>

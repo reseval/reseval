@@ -29,7 +29,7 @@ def config_by_name(name):
 
 def config_from_file(file):
     """Load configuration from file"""
-    with open(file) as file:
+    with open(file, encoding='utf-8') as file:
         return yaml.full_load(file)
 
 
@@ -58,7 +58,7 @@ def environment_variables_by_name(name):
         raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), file)
 
     # Load as environment variables
-    dotenv.load_dotenv(file)
+    dotenv.load_dotenv(file, override=True)
 
 
 ###############################################################################

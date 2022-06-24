@@ -22,7 +22,7 @@ app.use(routes);
 
 // Reroute bad requests to the index
 app.get('*', (_, response) => {
-	response.sendFile(path.join(__dirname, './client/public/index.html'));
+	response.sendFile(path.join(__dirname, './client/build/index.html'));
 });
 
 // Default to port 3001

@@ -23,13 +23,14 @@ def package_data():
 setup(
     name='reseval',
     description='Reproducible Subjective Evaluation',
-    version='0.0.2',
+    version='0.0.3',
     author='Max Morrison, Brian Tang, Gefei Tan, Bryan Pardo',
     author_email='maxrmorrison@gmail.com',
     url='https://github.com/reseval/reseval',
     install_requires=[
         'appdirs>=1.4.4',
         'boto3>=1.21.3',
+        'matplotlib>=3.5.2',
         'mysql-connector-python>=8.0.28',
         'psutil>=5.9.0',
         'python-dotenv>=0.19.2',

@@ -10,42 +10,22 @@ textarea {
 	box-sizing: border-box;
 }
 
-ul li{
+.listitem {
 	color: #AAAAAA;
-	display: block;
 	position: relative;
 	float: left;
 	width: 100%;
-	height: auto;
 	border-bottom: 2px solid #ddd;
 }
 
-ul li input[type=radio]{
-  position: absolute;
-  visibility: hidden;
-}
-
-ul li label{
-	position: relative;
-	font-weight: 300;
-	font-size: 1.35em;
-	padding: 25px 25px 25px 80px;
-	min-height: 30px;
-	z-index: 9;
-	min-width: 300px;
-	cursor: pointer;
-}
-
-ul li:hover label{
-	color: #FFFFFF;
-}
-
-ul.MultipleChoice li label {
+.choices {
 	color: #000;
 	position: relative;
 	font-weight: 300;
 	font-size: 1.35em;
 	margin: 10px 10px 10px;
+	min-height: 30px;
+	min-width: 300px;
 	padding: 0px 15px;
 	height: 30px;
 	z-index: 9;
@@ -57,15 +37,6 @@ ul.MultipleChoice li label {
 	margin: .7rem auto;
 	width: 100%;
 	max-width: 320px;
-}
-
-label .audio-single {
-	position: absolute;
-	top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    margin: auto;
 }
 
 .col-1 {
@@ -80,13 +51,6 @@ label .audio-single {
 	height: auto;
 	padding-top: 32px;
 	width: 800px;
-}
-
-.container ul{
-  list-style: none;
-  margin: 0;
-  padding: 0;
-	overflow: auto;
 }
 
 .user-study {
@@ -130,11 +94,20 @@ Navigation button
 	margin-top: 10px;
 	padding: 10px 15px;
 	background-color: #eeeeee;
-	color: #000000;
+	color: #444444;
 	min-width: 70px;
 }
 
 .button:hover.button {
+	cursor: default;
+}
+
+.button.active {
+	background-color: #dddddd;
+	color: #000000;
+}
+
+.button.active:hover.button {
     color: #ffffff;
     cursor: pointer;
     background-color: #000000;
@@ -154,6 +127,11 @@ Radio button
 	width: 20px;
 	z-index: 5;
 	justify-self: center;
+}
+
+.check:hover {
+	background: #ffffff;
+	cursor: default;
 }
 
 .check.active:hover {
