@@ -4,10 +4,10 @@
 [![](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![Downloads](https://pepy.tech/badge/reseval)](https://pepy.tech/project/reseval)
 
-ReSEval is a framework for quickly building subjective evaluations that are
-deployed on crowdworker platforms like
+ReSEval is a framework for quickly building subjective evaluation and
+annotation tasks that are deployed on crowdworker platforms like
 [Amazon Mechanical Turk](https://www.mturk.com/). ReSEval currently supports
-A/B, ABX, MOS, and MUSHRA tests on audio, image, text, and video data.
+A/B, ABX, MOS, MUSHRA, and Word Selection tests on audio, image, text, and video data.
 
 <h3 align="center">
     While our code is free to use, performing crowdsourced subjective
@@ -49,6 +49,7 @@ M. Morrison, B. Tang, G. Tan, and B. Pardo, "Reproducible Subjective Evaluation,
     * [ABX](#abx)
     * [MOS](#mos)
     * [MUSHRA](#mushra)
+    * [WordSelect](#wordselect)
 - [Credentials](#credentials)
     * [Heroku](#heroku)
     * [Amazon Web Services](#amazon-web-services)
@@ -130,7 +131,7 @@ ab
 │   ├── <file-1>
 │   ├── <file-2>
 │   ├── ...
-└── <condition-2>
+├── <condition-2>
 │   ├── <file-0>
 │   ├── <file-1>
 │   ├── <file-2>
@@ -214,6 +215,22 @@ mushra
 │   ├── ...
 └── ...
 ```
+
+
+### WordSelect
+
+```
+wordselect
+├── <file-0>
+├── <words-0>
+├── <file-1>
+├── <words-1>
+├── <file-2>
+├── <words-2>
+├── ...
+```
+
+`<words-x>` is `<file-x>` with `-words.txt` extension.
 
 
 ## Credentials

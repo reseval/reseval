@@ -23,6 +23,7 @@ def run(
     Args:
         config: The configuration file
         directory: The directory containing the files to evaluate
+        results_directory: The directory to save results
         local: Run subjective evaluation locally
         production: Deploy the subjective evaluation to crowdsource
             participants

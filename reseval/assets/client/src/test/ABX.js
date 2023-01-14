@@ -34,7 +34,7 @@ export default function ABX({
     const refA = useRef();
     const refB = useRef();
 
-    // Whether the audio has ended
+    // Whether the media has ended
     const [XEnded, setXEnded] = useState(false);
     const [AEnded, setAEnded] = useState(false);
     const [BEnded, setBEnded] = useState(false);
@@ -51,7 +51,7 @@ export default function ABX({
         // Send response to database and go to next question
         onClick();
 
-        // Reset audio files
+        // Reset media files
         setXEnded(false);
         setAEnded(false);
         setBEnded(false);

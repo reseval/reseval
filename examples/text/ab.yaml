@@ -1,7 +1,7 @@
 # A name to give to this evaluation configuration
 name: ab-text-example
 
-# The type of test to run. One of [ab, abx, mos, mushra].
+# The type of test to run. One of [ab, abx, mos, mushra, wordselect].
 test: ab
 
 # The type of data to use. One of [audio, image, text, video].

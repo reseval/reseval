@@ -46,7 +46,7 @@ class MOS(Base):
         return all_results, stem_scores
 
     @classmethod
-    def plot(self, results, file):
+    def plot(cls, results, file):
         """Create a plot of the results and save to disk"""
         reseval.plot.violin(results, file, range(0, 6))
 

@@ -1,6 +1,5 @@
 import os
 import random
-from abc import ABC, abstractmethod
 
 import reseval
 
@@ -10,7 +9,7 @@ import reseval
 ###############################################################################
 
 
-class Base(ABC):
+class Base:
 
     def __init__(self, config, directory):
         self.directory = directory
@@ -28,10 +27,9 @@ class Base(ABC):
             path.name for path in directory.iterdir() if path.is_dir()])
 
     @classmethod
-    @abstractmethod
     def analyze(cls, conditions, responses, random_seed=0):
         """Perform statistical analysis on evaluation results"""
-        pass
+        return {}, {}
 
     def assign(self, random_seed=0):
         """Randomly assign files to each participant"""
@@ -70,8 +68,7 @@ class Base(ABC):
         return assignments
 
     @classmethod
-    @abstractmethod
-    def plot(self, results, file):
+    def plot(cls, results, file):
         """Create a plot of the results and save to disk"""
         pass
 
@@ -89,7 +86,7 @@ class Base(ABC):
         """Retrieve file stems and extensions to be updated to the database"""
         cond = sorted([
             file for file in self.files
-            if file.parts[0] == self.conditions[0]])
+            if not self.conditions or file.parts[0] == self.conditions[0]])
         return [os.path.splitext('/'.join(file.parts[1:])) for file in cond]
 
     def validate(self):

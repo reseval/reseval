@@ -16,6 +16,6 @@ class ABX(Base):
         return reseval.test.AB.analyze(conditions, responses, random_seed)
 
     @classmethod
-    def plot(self, results, file):
+    def plot(cls, results, file):
         """Create a plot of the results and save to disk"""
         reseval.plot.barh(results, file)

@@ -4,6 +4,7 @@ import AB from '../test/AB';
 import ABX from '../test/ABX';
 import MOS from '../test/MOS';
 import MUSHRA from '../test/MUSHRA';
+import WordSelect from '../test/WordSelect';
 import Markdown from '../components/Markdown';
 
 import config from '../json/config.json';
@@ -115,6 +116,9 @@ export default function TaskPage({
             break;
         case 'mushra':
             test = <MUSHRA {...props} />;
+            break;
+        case 'wordselect':
+            test = <WordSelect {...props} />;
             break;
         default:
             throw new Error(`Test type ${config.test} is not recognized`);

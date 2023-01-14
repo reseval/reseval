@@ -18,4 +18,6 @@ def get(config):
         return reseval.test.MOS
     elif test == 'mushra':
         return reseval.test.MUSHRA
+    elif test == 'wordselect':
+        return reseval.test.WordSelect
     raise ValueError(f'Test {test} is not defined')
