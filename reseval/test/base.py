@@ -84,10 +84,12 @@ class Base:
 
     def stems_and_extensions(self):
         """Retrieve file stems and extensions to be updated to the database"""
-        cond = sorted([
-            file for file in self.files
-            if not self.conditions or file.parts[0] == self.conditions[0]])
-        return [os.path.splitext('/'.join(file.parts[1:])) for file in cond]
+        if self.conditions:
+            cond = sorted([
+                file for file in self.files
+                if file.parts[0] == self.conditions[0]])
+            return [os.path.splitext('/'.join(file.parts[1:])) for file in cond]
+        return [(file.stem, file.suffix) for file in self.files]
 
     def validate(self):
         """Perform validation on the directory of files to evaluate"""

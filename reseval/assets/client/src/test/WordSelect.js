@@ -26,6 +26,9 @@ export default function WordSelect({ file, response, setResponse, onClick }) {
 
         // Reset media files
         setEnded(false);
+
+        // Reset response
+        setResponse(undefined);
     }
 
     // Can we advance?

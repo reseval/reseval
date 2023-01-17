@@ -1,5 +1,4 @@
 import shutil
-from pathlib import Path
 
 import reseval
 
@@ -46,4 +45,4 @@ def upload(name, file_or_directory):
         shutil.copyfile(file_or_directory, destination)
 
     # Return URL
-    return f'/evaluation-files/{file_or_directory}'
+    return f'/evaluation-files/{file_or_directory.name}'
