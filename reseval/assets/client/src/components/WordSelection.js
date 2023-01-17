@@ -75,7 +75,7 @@ export default function WordSelection({
         fetch(file)
         .then(response => response.text())
         .then(response => {
-            const words = response.split(/\s+/);
+            const words = response.trim().split(/\s+/);
             setText(words);
             setResponse('0'.repeat(words.length));
         })
