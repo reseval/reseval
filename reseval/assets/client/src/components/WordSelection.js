@@ -35,13 +35,14 @@ function WordRadioButton({
     }
 
     // Render radio button and media
-    // TODO - styling
     return (
-        <div className='grid'>
-            <div className={`check col-1 ${state}`} onClick={onClick}>
-                <div className='inside'/>
-            </div>
-            {word}
+        <div className='word'>
+            <div
+                className={`check col-1 ${state}`}
+                style={{margin: 'auto'}}
+                onClick={onClick}
+            />
+            <div>{word}</div>
         </div>
     );
 };
@@ -96,5 +97,5 @@ export default function WordSelection({
     );
 
     // Render
-    return <>{radioButtonGroup}</>;
+    return <div className='wordselect'>{radioButtonGroup}</div>;
 };

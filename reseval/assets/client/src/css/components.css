@@ -162,3 +162,25 @@ Radio button
 .check.active.selected::before {
 	background: #000000;
 }
+
+
+/******************************************************************************
+Word selection
+******************************************************************************/
+
+
+.break {
+	flex-basis: 100%;
+	height: 0;
+}
+
+.wordselect {
+	align-content: flex-start;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 30px;
+}
+
+.word {
+	margin: auto;
+}
