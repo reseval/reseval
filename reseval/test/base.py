@@ -1,5 +1,6 @@
 import os
 import random
+from abc import ABC, abstractmethod
 
 import reseval
 
@@ -9,7 +10,7 @@ import reseval
 ###############################################################################
 
 
-class Base:
+class Base(ABC):
 
     def __init__(self, config, directory):
         self.directory = directory
@@ -27,9 +28,10 @@ class Base:
             path.name for path in directory.iterdir() if path.is_dir()])
 
     @classmethod
+    @abstractmethod
     def analyze(cls, conditions, responses, random_seed=0):
         """Perform statistical analysis on evaluation results"""
-        return {}, {}
+        pass
 
     def assign(self, random_seed=0):
         """Randomly assign files to each participant"""

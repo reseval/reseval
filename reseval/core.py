@@ -43,7 +43,9 @@ def run(
     except (Exception, KeyboardInterrupt) as exception:
 
         # Perform clean-up only if evaluation is local
-        if not local:
+        if local:
+            print(exception)
+        else:
             raise exception
 
     # Pay participants

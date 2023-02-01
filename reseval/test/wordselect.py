@@ -1,3 +1,5 @@
+import numpy as np
+
 import reseval
 from .base import Base
 
@@ -16,6 +18,30 @@ class WordSelect(Base):
         self.files = [
             file for file in self.files
             if not file.name.endswith('-words.txt')]
+
+    @classmethod
+    def analyze(cls, conditions, responses, random_seed=0):
+        """Perform statistical analysis on evaluation results"""
+        # Get number of times each stem is annotated
+        stem_counts = {
+            stem: len(response) for stem, response in responses.items()}
+
+        # Get total number of annotations
+        results = {
+            'samples': sum(stem_counts.values()),
+            'scores': cls.parse(responses) }
+
+        return results, stem_counts
+
+    @classmethod
+    def parse(cls, responses):
+        """Parse responses to produce per-word emphasis scores"""
+        results = {}
+        for stem, scores in responses.items():
+            scores = np.array([
+                [float(character) for character in score] for score in scores])
+            results[stem] = scores.mean(axis=0).tolist()
+        return results
 
     def response_type(self):
         """Retrieve the MySQL datatype of a participant response"""

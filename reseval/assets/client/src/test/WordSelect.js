@@ -18,21 +18,21 @@ export default function WordSelect({ file, response, setResponse, onClick }) {
     const ref = useRef();
 
     // Whether the media has ended
-    const [ended, setEnded] = useState(false);
+    const [ended, setEnded] = useState(0);
 
     function clickHandler() {
         // Send response to database and go to next question
         onClick();
 
         // Reset media files
-        setEnded(false);
+        setEnded(0);
 
         // Reset response
         setResponse(undefined);
     }
 
     // Can we advance?
-    const advance = typeof response !== 'undefined' && ended;
+    const advance = typeof response !== 'undefined' && ended >= 2;
 
     // Render
     return (
@@ -42,14 +42,14 @@ export default function WordSelect({ file, response, setResponse, onClick }) {
                 <Media
                     src={file}
                     reference={ref}
-                    onEnded={() => setEnded(true)}
+                    onEnded={() => setEnded(ended + 1)}
                 />
             </div>
             <WordSelection
                 file={file.substr(0, file.lastIndexOf('.')) + '-words.txt'}
                 response={response}
                 setResponse={setResponse}
-                active={ended}
+                active={true}
             />
             <Button
                 active={advance}

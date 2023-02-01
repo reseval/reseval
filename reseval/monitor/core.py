@@ -80,12 +80,13 @@ def monitor(
             if exit_on_finish:
 
                 done = True
-                for name in names:
+                for name, analysis, total in zip(names, analyses, totals):
 
                     # Don't exit if the evaluation is still active
-                    if not ((reseval.is_local(name) and
-                       analyses[0]['samples'] == total) or
-                       not reseval.crowdsource.active(name)):
+                    if (
+                        (reseval.is_local(name) and analysis['samples'] < total) or
+                        reseval.crowdsource.active(name)
+                    ):
                        done = False
 
                 if done:
@@ -114,14 +115,16 @@ def display(name, total, participants, analysis):
     table.add_column(justify='right')
     table.add_row('participants', f'{current}/{participants}')
     table.add_row('samples', f'{analysis["samples"]}/{total}')
-    for condition, items in analysis['conditions'].items():
-        for i, (test, values) in enumerate(items.items()):
-            for j, (key, val) in enumerate(values.items()):
-                table.add_row(
-                    condition if i == 0 and j == 0 else None,
-                    test if j == 0 else None,
-                    key,
-                    str(val))
+
+    if 'conditions' in analysis:
+        for condition, items in analysis['conditions'].items():
+            for i, (test, values) in enumerate(items.items()):
+                for j, (key, val) in enumerate(values.items()):
+                    table.add_row(
+                        condition if i == 0 and j == 0 else None,
+                        test if j == 0 else None,
+                        key,
+                        str(val))
 
     # Create progress bar
     bar = rich.progress.Progress(
@@ -138,6 +141,7 @@ def display(name, total, participants, analysis):
 
     # return table, bar
     return rich.panel.Panel(grid, title=name)
+
 
 def displays(names, totals, participants, analyses):
     """Format multiple evaluations for display"""
