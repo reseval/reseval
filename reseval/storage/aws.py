@@ -34,6 +34,13 @@ def create(config, directory):
     # Set bucket policy to public read-only
     client.put_bucket_policy(Bucket=bucket, Policy=policy)
 
+    # Load CORS policy as JSON
+    with open(reseval.ASSETS_DIR / 'cors.json') as file:
+        cors = {'CORSRules': json.load(file)}
+
+    # Set bucket CORS to allow reads
+    client.put_bucket_cors(Bucket=bucket, CORSConfiguration=cors)
+
     # Save bucket name as storage credential
     credentials_file = (
         reseval.EVALUATION_DIRECTORY /

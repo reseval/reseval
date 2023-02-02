@@ -72,7 +72,7 @@ export default function WordSelection({
 
     // Update text and reset response when the file changes
     useEffect(() => {
-        fetch(file)
+        fetch(file, { method: 'GET' })
         .then(response => response.text())
         .then(response => {
             const words = response.trim().split(/\s+/);

@@ -203,15 +203,20 @@ export default function QualificationPage({
 
                         // Get list of evaluation conditions
                         .then(_ => {
-                            fetch(url + '/api/conditions')
-                                .then(response => response.json())
-                                .then(response => {
-                                    setConditions(
-                                        response.map(
-                                            cond => cond.Condition))
 
-                                    // Go to evaluation
-                                }).then(_ => navigation.next())
+                            if (config.test === 'wordselect') {
+                                navigation.next();
+                            } else {
+                                fetch(url + '/api/conditions')
+                                    .then(response => response.json())
+                                    .then(response => {
+                                        setConditions(
+                                            response.map(
+                                                cond => cond.Condition))
+
+                                        // Go to evaluation
+                                    }).then(_ => navigation.next())
+                            }
                         });
                 }
             });

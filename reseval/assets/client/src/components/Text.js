@@ -15,7 +15,7 @@ export default function Text({ src, onEnded }) {
 
     // Update text when the file changes
     useEffect(() => {
-        fetch(src)
+        fetch(src, { method: 'GET' })
             .then(response => response.text())
             .then(response => setText(response))
     }, [src]);
