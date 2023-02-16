@@ -179,19 +179,20 @@ Word selection
 	display: flex;
 	flex-wrap: wrap;
 	gap: 30px;
+	justify-content: flex-start;
 }
 
 .word {
-	margin: auto;
+	margin-right: 1rem;
 	color: #666666;
+	cursor: pointer;
 }
 
 .word.active:hover {
 	color: #000000;
-	cursor: pointer;
 }
 
 .word.active.selected {
 	color: #000000;
-	font-weight: bold;
+	font-weight: 900;
 }

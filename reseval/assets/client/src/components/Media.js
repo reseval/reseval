@@ -19,7 +19,7 @@ export default function Media(props) {
     // Retrieve the global state, which contains any currently playing media
     let {mediaRef, setMediaRef} = useContext(MediaContext);
 
-    function onPlayed() {
+    function onPlay() {
         if (mediaRef !== props.reference) {
 
             // Do nothing if it is the same media that is being played
@@ -39,7 +39,7 @@ export default function Media(props) {
 
     // Add callback prop
     const newProps = {...props};
-    newProps.onPlayed = onPlayed;
+    newProps.onPlay = onPlay;
 
     // Update file source prop
     if (config['local']) {

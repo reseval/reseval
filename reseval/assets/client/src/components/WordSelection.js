@@ -24,7 +24,7 @@ function WordButton({
     }
 
     function onClick() {
-        // Do nothing if media hasn't finished
+        // Do nothing if media hasn't started
         if (!active) return;
 
         // Toggle response array

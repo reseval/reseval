@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 
 import '../css/components.css';
 
-export default function Audio({src, reference, onEnded, onPlayed}) {
+export default function Audio({src, reference, onEnded, onStarted, onPlay}) {
     /* Create an HTML audio element */
     // Reload audio when src changes
     useEffect(() => {
@@ -19,7 +19,10 @@ export default function Audio({src, reference, onEnded, onPlayed}) {
             controls
             controlsList='nodownload'
             ref={reference}
-            onPlay={() => typeof (onPlayed) !== 'undefined' && onPlayed()}
+            onPlay={() => {
+                if (typeof (onStarted) !== 'undefined') onStarted();
+                if (typeof (onPlay) !== 'undefined') onPlay();
+            }}
             onEnded={() => typeof (onEnded) !== 'undefined' && onEnded()}>
             <source src={src} type='audio/mpeg'/>
         </audio>
