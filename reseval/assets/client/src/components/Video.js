@@ -24,4 +24,4 @@ export default function Video({src, reference, onEnded, onPlayed}) {
             <source src={src} type='video/mp4'/>
         </video>
     );
-};
+}

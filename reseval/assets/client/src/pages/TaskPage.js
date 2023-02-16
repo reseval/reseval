@@ -55,7 +55,7 @@ export default function TaskPage({
 
     // Don't render anything until we have files and conditions
     if (typeof files === 'undefined' ||
-        (typeof conditions === 'undefined' && !config.test == 'wordselect')) {
+        (typeof conditions === 'undefined' && !config.test === 'wordselect')) {
         return null;
     }
 
@@ -136,4 +136,4 @@ export default function TaskPage({
             </MediaContext.Provider>
         </div>
     );
-};
+}

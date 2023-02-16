@@ -183,4 +183,15 @@ Word selection
 
 .word {
 	margin: auto;
+	color: #666666;
+}
+
+.word.active:hover {
+	color: #000000;
+	cursor: pointer;
+}
+
+.word.active.selected {
+	color: #000000;
+	font-weight: bold;
 }

@@ -116,7 +116,7 @@ function MediaSlider({
             />
         </div>
     );
-};
+}
 
 export default function MediaSliderGroup({
     file,
@@ -162,4 +162,4 @@ export default function MediaSliderGroup({
             {sliderGroup}
         </div>
     );
-};
+}

@@ -16,4 +16,4 @@ export default function Image({ src, onEnded }) {
         src={src}
         style={{ minWidth: '150px', maxWidth: '750px' }}
     />;
-};
+}

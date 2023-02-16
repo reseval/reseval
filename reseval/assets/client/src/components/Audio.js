@@ -24,4 +24,4 @@ export default function Audio({src, reference, onEnded, onPlayed}) {
             <source src={src} type='audio/mpeg'/>
         </audio>
     );
-};
+}

@@ -2,7 +2,7 @@ import { Query } from '..';
 
 function insert(participant: any) {
     /* Insert into the participant table */
-    const keys = Object.keys(participant)
+    const keys = Object.keys(participant);
     const values = Object.values(participant);
     const query =
         `INSERT INTO participants (${keys.join(', ')})` +

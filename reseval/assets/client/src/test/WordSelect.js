@@ -59,4 +59,4 @@ export default function WordSelect({ file, response, setResponse, onClick }) {
             </Button>
         </>
     );
-};
+}

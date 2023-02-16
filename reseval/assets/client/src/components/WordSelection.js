@@ -10,14 +10,14 @@ Word selection interface
 ******************************************************************************/
 
 
-function WordRadioButton({
+function WordButton({
     word,
     index,
     response,
     setResponse,
     active}) {
-    /* Create a word with a corresponding radio button */
-    // Get radio button state
+    /* Create a word that is also a button */
+    // Get button state
     let state = active ? 'active' : '';
     if (active && typeof response !== 'undefined' && response[index] === '1') {
         state = 'active selected';
@@ -34,18 +34,10 @@ function WordRadioButton({
             response.slice(index + 1));
     }
 
-    // Render radio button and media
-    return (
-        <div className='word'>
-            <div
-                className={`check col-1 ${state}`}
-                style={{margin: 'auto'}}
-                onClick={onClick}
-            />
-            <div>{word}</div>
-        </div>
-    );
-};
+    // Render word button
+    return <div className={`word ${state}`} onClick={onClick}>{word}</div>;
+}
+
 
 export default function WordSelection({
     file,
@@ -86,7 +78,7 @@ export default function WordSelection({
 
     // Give each word a radio button
     const radioButtonGroup = text.map((word, key) =>
-        <WordRadioButton
+        <WordButton
             word={word}
             key={key}
             index={key}
@@ -98,4 +90,4 @@ export default function WordSelection({
 
     // Render
     return <div className='wordselect'>{radioButtonGroup}</div>;
-};
+}

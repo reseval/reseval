@@ -42,7 +42,7 @@ export default function RadioButtonGroup({ response, setResponse, active }) {
 			</li>
 		</ul>
 	);
-};
+}
 
 function RadioButtonText({ onClick, state, text }) {
 	/* Render a radio button with corresponding text */

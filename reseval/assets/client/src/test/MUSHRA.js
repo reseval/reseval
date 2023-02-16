@@ -90,4 +90,4 @@ export default function MUSHRA({file, conditions, setResponse, onClick}) {
             </Button>
         </>
     );
-};
+}

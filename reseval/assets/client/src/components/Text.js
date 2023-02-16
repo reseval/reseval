@@ -35,4 +35,4 @@ export default function Text({ src, onEnded }) {
         >
             {text}
         </div>);
-};
+}

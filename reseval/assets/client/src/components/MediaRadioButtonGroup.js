@@ -40,7 +40,7 @@ function MediaRadioButton({
 			/>
 		</li>
 	);
-};
+}
 
 export default function MediaRadioButtonGroup({
 	file,
@@ -64,4 +64,4 @@ export default function MediaRadioButtonGroup({
 		/>
 	);
 	return <ul>{radioButtonGroup}</ul>;
-};
+}
