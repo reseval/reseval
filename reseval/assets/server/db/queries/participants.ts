@@ -1,5 +1,7 @@
 import { Query } from '..';
 
+const all = () => Query('SELECT * FROM participants');
+
 function insert(participant: any) {
     /* Insert into the participant table */
     const keys = Object.keys(participant);
@@ -33,4 +35,4 @@ function update(participant: any) {
     return Query(query);
 }
 
-export default { insert, update };
+export default { all, insert, update };

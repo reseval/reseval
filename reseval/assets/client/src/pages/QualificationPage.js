@@ -193,12 +193,13 @@ export default function QualificationPage({
                         return
                     }
                     // Get evaluation files for this evaluator
-                    fetch(url + '/api/evaluators/')
+                    fetch(url + '/api/participants/')
                         .then(response => response.json())
                         .then(response => {
+                            const evaluatorId = response.length - 1;
                             setFiles(
-                                assignments[response % assignments.length]);
-                            setEvaluatorId(response);
+                                assignments[evaluatorId % assignments.length]);
+                            setEvaluatorId(evaluatorId);
                         })
 
                         // Get list of evaluation conditions
