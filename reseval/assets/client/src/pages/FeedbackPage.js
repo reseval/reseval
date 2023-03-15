@@ -48,6 +48,7 @@ export default function FeedbackPage({ navigation, participant }) {
         // If the response is wrong, end the survey
         if ('correct_answer' in question &&
             response !== question.correct_answer) {
+            window.scroll(0, 0);
             navigation.go('end');
         }
 
@@ -55,10 +56,12 @@ export default function FeedbackPage({ navigation, participant }) {
         else if (index + 1 < questions.length) {
             setIndex(index + 1);
             setResponse(undefined);
+            window.scroll(0, 0);
         }
 
         // Finished survey
         else {
+            window.scroll(0, 0);
             navigation.next();
         }
     }

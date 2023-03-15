@@ -82,10 +82,12 @@ export default function TaskPage({
         if (index + 1 < files.length) {
             setIndex(index + 1);
             setResponse(undefined);
+            window.scroll(0, 0);
         }
 
         // Proceed to follow-up survey
         else {
+            window.scroll(0, 0);
             navigation.next();
         }
     }

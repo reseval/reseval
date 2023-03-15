@@ -117,6 +117,7 @@ export default function QualificationPage({
                 setRetries(retries - 1);
                 return;
             } else {
+                window.scroll(0, 0);
                 navigation.go('end');
             }
         } else {
@@ -133,6 +134,7 @@ export default function QualificationPage({
             setTestIndex(testIndex + 1);
             setRetries(config.listening_test.retries);
             setResponse(undefined);
+            window.scroll(0, 0);
         }
     }
 
@@ -216,7 +218,10 @@ export default function QualificationPage({
                                                 cond => cond.Condition))
 
                                         // Go to evaluation
-                                    }).then(_ => navigation.next())
+                                    }).then(_ => {
+                                        window.scroll(0, 0);
+                                        navigation.next();
+                                    })
                             }
                         });
                 }

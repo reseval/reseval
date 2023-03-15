@@ -12,7 +12,15 @@ export default function WelcomePage({ navigation }) {
 	return (
 		<div className='container'>
 			<Markdown>{config.welcome_text}</Markdown>
-			<Button active={true} onClick={navigation.next}>I Agree</Button>
+			<Button
+				active={true}
+				onClick={_ => {
+					window.scroll(0, 0);
+					navigation.next();
+				}}
+			>
+				I Agree
+			</Button>
 		</div>
 	);
 }

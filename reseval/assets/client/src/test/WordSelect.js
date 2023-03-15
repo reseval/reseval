@@ -35,8 +35,11 @@ export default function WordSelect({ file, response, setResponse, onClick }) {
         setResponse(undefined);
     }
 
-    // Can we advance?
-    const advance = typeof response !== 'undefined' && ended >= 2;
+    // We can advance after at least two listens and one word selected
+    const advance = (
+        typeof response !== 'undefined' &&
+        response.indexOf('1') > -1 &&
+        ended >= 2);
 
     // Render
     return (
