@@ -22,17 +22,18 @@ def create(config, directory):
     bucket = reseval.random.string(24)
 
     # Create bucket
-    client.create_bucket(Bucket=bucket)
-
-    # Load read-only policy as JSON string
-    with open(reseval.ASSETS_DIR / 'policy.json') as file:
-        policy = json.load(file)
-        policy['Statement'][0]['Resource'][0] = \
-            policy['Statement'][0]['Resource'][0].format(bucket)
-        policy = json.dumps(policy)
+    client.create_bucket(Bucket=bucket, ObjectOwnership='ObjectWriter')
 
     # Set bucket policy to public read-only
-    client.put_bucket_policy(Bucket=bucket, Policy=policy)
+    client.put_public_access_block(
+        Bucket=bucket,
+        PublicAccessBlockConfiguration={
+            'BlockPublicAcls': False,
+            'IgnorePublicAcls': False,
+            'BlockPublicPolicy': False,
+            'RestrictPublicBuckets': False
+        })
+    client.put_bucket_acl(ACL='public-read',Bucket=bucket)
 
     # Load CORS policy as JSON
     with open(reseval.ASSETS_DIR / 'cors.json') as file:
