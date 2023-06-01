@@ -69,6 +69,8 @@ def module(config, local=False):
     if local:
         return reseval.server.local
     server = config['server']
+    if server == 'aws':
+        return reseval.server.aws
     if server == 'heroku':
         return reseval.server.heroku
     raise ValueError(f'Server hosting service {server} not recognized')

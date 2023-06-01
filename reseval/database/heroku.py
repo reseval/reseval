@@ -27,10 +27,6 @@ def create(config):
         'MYSQL_USER': user,
         'MYSQL_PASS': password}
 
-    # Add credentials to Heroku application environment variables
-    for key, value in credentials.items():
-        reseval.app.heroku.configure(config['name'], key, value)
-
     return credentials
 
 

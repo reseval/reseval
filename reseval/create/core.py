@@ -101,7 +101,13 @@ def create(
             reseval.app.heroku.create(cfg)
 
         # Create database
-        reseval.database.create(cfg, test, local)
+        credentials = reseval.database.create(cfg, test, local)
+
+        # If heroku is used, add credentials to app environment variables
+        if (not local and
+            (cfg['server'] == 'heroku' or cfg['database'] == 'heroku')):
+            for key, value in credentials.items():
+                reseval.app.heroku.configure(config['name'], key, value)
 
         # Create server
         url = reseval.server.create(cfg, local, detach=detach)

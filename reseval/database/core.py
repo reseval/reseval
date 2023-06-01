@@ -150,6 +150,8 @@ def create(config, test, local=False):
         for key, value in credentials.items():
             file.write(f'{key}={value}\n')
 
+    return credentials
+
 
 def destroy(name):
     """Destroy a database"""
@@ -306,6 +308,8 @@ def module(config, local=False):
     if local:
         return reseval.database.localhost
     database = config['database']
+    if database == 'aws':
+        return reseval.database.aws
     if database == 'heroku':
         return reseval.database.heroku
     raise ValueError(f'Database service {database} is not recognized')
