@@ -1,3 +1,5 @@
+import os
+
 import boto3
 
 import reseval
@@ -11,7 +13,8 @@ import reseval
 def create(config):
     """Create an AWS server"""
     # Connect to AWS
-    client = boto3.client('elasticbeanstalk')
+    client = connect()
+    import pdb; pdb.set_trace()
 
     # Load database credentials
     environment_file = (
@@ -22,6 +25,9 @@ def create(config):
     with open(environment_file) as file:
         credentials = dict(
             line.strip().split('=') for line in file.readlines())
+
+    # TODO - create a unique name to avoid "already exists" during long
+    #        deletion process
 
     # Create the Elastic Beanstalk environment
     response = client.create_environment(
@@ -43,7 +49,7 @@ def create(config):
 def destroy(config, credentials):
     """Destroy an AWS server"""
     # Connect to AWS
-    client = boto3.client('elasticbeanstalk')
+    client = connect()
 
     # Delete environment
     client.terminate_environment(
@@ -73,5 +79,21 @@ def status(name):
         return 'success'
     elif status == 'Launching':
         return 'pending'
-    else:
-        return 'failed'
+    return 'failed'
+
+
+###############################################################################
+# Utilities
+###############################################################################
+
+
+def connect():
+    """Connect to AWS"""
+    # Load API keys into environment variables
+    reseval.load.api_keys()
+
+    # Add credentials and connect
+    return boto3.Session(
+        aws_access_key_id=os.environ['AWSAccessKeyId'],
+        aws_secret_access_key=os.environ['AWSSecretKey']
+    ).client('elasticbeanstalk', region_name='us-east-2')

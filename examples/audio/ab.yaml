@@ -10,11 +10,11 @@ datatype: audio
 # The location to store files used for evaluation. One of [aws].
 storage: aws
 
-# The third-party platform hosting the MySQL database. One of [heroku].
-database: heroku
+# The third-party platform hosting the MySQL database. One of [aws, heroku].
+database: aws
 
-# The third-party platform hosting the server. One of [heroku].
-server: heroku
+# The third-party platform hosting the server. One of [aws, heroku].
+server: aws
 
 # Crowdsourcing configuration
 crowdsource:
