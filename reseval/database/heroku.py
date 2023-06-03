@@ -8,10 +8,10 @@ import reseval
 ###############################################################################
 
 
-def create(config):
+def create(name):
     """Create a MySQL database on Heroku"""
     # Get the heroku application
-    app = reseval.app.heroku.get(config['name'])
+    app = reseval.app.heroku.get(name)
 
     # Add the ClearDB MySQL database add-on
     app.install_addon(plan_id_or_name='cleardb:ignite', config={})
@@ -30,6 +30,6 @@ def create(config):
     return credentials
 
 
-def destroy(config):
+def destroy(name):
     """Destroy a MySQL database on Heroku"""
-    reseval.app.heroku.destroy(config)
+    reseval.app.heroku.destroy(name)

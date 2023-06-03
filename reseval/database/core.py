@@ -88,7 +88,7 @@ def create(config, test, local=False):
     print('Creating database...')
 
     # Create new database and retrieve credentials
-    credentials = module(config, local).create(config)
+    credentials = module(config, local).create(config['name'])
 
     # Load environment variables
     for key, value in credentials.items():
@@ -164,7 +164,7 @@ def destroy(name):
     # Destroy database
     local = reseval.is_local(name)
     config = reseval.load.config_by_name(name)
-    module(config, local).destroy(config)
+    module(config, local).destroy(name)
 
     # Cleanup credentials
     (
@@ -244,7 +244,7 @@ def upload_previous(name):
         return
 
     # Connect to MySQL database
-    with reseval.database.connect() as (connection, cursor):
+    with connect() as (connection, cursor):
 
         # Upload previous results
         for table in tables:
@@ -285,7 +285,7 @@ def upload_previous(name):
 def upload_test(test):
     """Upload test information to database"""
     # Connect to MySQL database
-    with reseval.database.connect() as (connection, cursor):
+    with connect() as (connection, cursor):
 
         # Add conditions to the database
         command = (

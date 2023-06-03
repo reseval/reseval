@@ -1,5 +1,4 @@
 import os
-import re
 
 import boto3
 
@@ -11,33 +10,28 @@ import reseval
 ###############################################################################
 
 
-def create(config):
+def create(name):
     """Create a MySQL database on AWS"""
+    # Get unique identifier
+    unique = reseval.load.credentials_by_name(name, 'unique')['unique']
+
     # Connect to AWS RDS
     client = connect()
 
-    # Remove non-alphanumeric
-    pattern = re.compile('[\W_]+')
-    name = pattern.sub('', config['name'])
-
-    # TODO - create a unique name to avoid "already exists" during long
-    #        deletion process
-
     # Create database
     response = client.create_db_instance(
-        DBName=name,
-        DBInstanceIdentifier=config['name'],
+        DBName=unique,
+        DBInstanceIdentifier=unique,
         DBInstanceClass='db.t2.micro',
         Engine='mysql',
         MasterUsername='root',
         MasterUserPassword='password',
         AllocatedStorage=64)['DBInstance']
-    print(response)
     import pdb; pdb.set_trace()
 
     # Get credentials
     credentials = {
-        'MYSQL_DBNAME': config['name'],
+        'MYSQL_DBNAME': unique,
         'MYSQL_HOST': response['Endpoint']['Address'],
         'MYSQL_USER': 'root',
         'MYSQL_PASS': 'password'}
@@ -45,14 +39,17 @@ def create(config):
     return credentials
 
 
-def destroy(config):
+def destroy(name):
     """Destroy a MySQL database on AWS"""
+    # Get unique identifier
+    unique = reseval.load.credentials_by_name(name, 'unique')['unique']
+
     # Connect to AWS RDS
     client = connect()
 
     # Delete database
     client.delete_db_instance(
-        DBInstanceIdentifier=config['name'],
+        DBInstanceIdentifier=unique,
         SkipFinalSnapshot=True,
         DeleteAutomatedBackups=True)
 

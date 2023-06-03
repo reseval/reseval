@@ -1,6 +1,4 @@
-import json
 import os
-import string
 
 import heroku3
 
@@ -22,33 +20,24 @@ def connect():
     return heroku3.from_key(os.environ['HerokuAccessKey'])
 
 
-def create(config):
+def create(name):
     """Create a Heroku web application"""
-    # Create a globally unique name to prevent collision
-    name = (
-        reseval.random.string(1, string.ascii_lowercase) +
-        reseval.random.string(23))
+    # Get unique identifier
+    unique = reseval.load.credentials_by_name(name, 'unique')['unique']
 
     # Create Heroku app
-    connect().create_app(name=name)
-
-    # Save name as application credentials
-    credentials_file = (
-        reseval.EVALUATION_DIRECTORY /
-        config['name'] /
-        'credentials' /
-        'app.json')
-    credentials_file.parent.mkdir(exist_ok=True, parents=True)
-    with open(credentials_file, 'w') as file:
-        json.dump({'name': name}, file)
+    connect().create_app(name=unique)
 
 
-def destroy(config):
+def destroy(name):
     """Destroy a Heroku app"""
+    # Get unique identifier
+    unique = reseval.load.credentials_by_name(name, 'unique')['unique']
+
     try:
 
         # Destroy app
-        get(config['name']).delete()
+        get(unique).delete()
 
     except (FileNotFoundError, KeyError):
 
@@ -58,7 +47,7 @@ def destroy(config):
     # Delete credentials file
     (
         reseval.EVALUATION_DIRECTORY /
-        config['name'] /
+        name /
         'credentials' /
         'app.json'
     ).unlink(missing_ok=True)

@@ -10,8 +10,11 @@ import reseval
 ###############################################################################
 
 
-def create(config):
+def create(name):
     """Create an AWS server"""
+    # Get unique identifier
+    unique = reseval.load.credentials_by_name(name, 'unique')['unique']
+
     # Connect to AWS
     client = connect()
     import pdb; pdb.set_trace()
@@ -19,7 +22,7 @@ def create(config):
     # Load database credentials
     environment_file = (
         reseval.EVALUATION_DIRECTORY /
-        config['name'] /
+        name /
         'credentials' /
         '.env')
     with open(environment_file) as file:
@@ -31,8 +34,8 @@ def create(config):
 
     # Create the Elastic Beanstalk environment
     response = client.create_environment(
-        ApplicationName=config['name'],
-        EnvironmentName=config['name'],
+        ApplicationName=unique,
+        EnvironmentName=unique,
         SolutionStackName='64bit Amazon Linux 2023 v4.0.1 running Python 3.9',
         OptionSettings=[
             {
@@ -46,14 +49,17 @@ def create(config):
     return {'URL': response['EndpointURL']}
 
 
-def destroy(config, credentials):
+def destroy(name, credentials):
     """Destroy an AWS server"""
+        # Get unique identifier
+    unique = reseval.load.credentials_by_name(name, 'unique')['unique']
+
     # Connect to AWS
     client = connect()
 
     # Delete environment
     client.terminate_environment(
-        EnvironmentName=config['name'],
+        EnvironmentName=unique,
         TerminateResources=True,
         ForceTerminate=True)
 

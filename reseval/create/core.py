@@ -1,6 +1,7 @@
 import json
 import os
 import shutil
+import string
 import typing
 
 import reseval
@@ -92,13 +93,28 @@ def create(
 
     try:
 
+        # Create a globally unique name to prevent collision
+        unique = (
+            reseval.random.string(1, string.ascii_lowercase) +
+            reseval.random.string(23))
+
+        # Save unique name
+        credentials_file = (
+            reseval.EVALUATION_DIRECTORY /
+            name /
+            'credentials' /
+            'unique.json')
+        credentials_file.parent.mkdir(exist_ok=True, parents=True)
+        with open(credentials_file, 'w') as file:
+            json.dump({'unique': unique}, file)
+
         # Create file storage and upload
         reseval.storage.create(cfg, directory, local)
 
         # If heroku is used for either the database or server, setup the app here
         if (not local and
             (cfg['server'] == 'heroku' or cfg['database'] == 'heroku')):
-            reseval.app.heroku.create(cfg)
+            reseval.app.heroku.create(name)
 
         # Create database
         credentials = reseval.database.create(cfg, test, local)
@@ -107,7 +123,7 @@ def create(
         if (not local and
             (cfg['server'] == 'heroku' or cfg['database'] == 'heroku')):
             for key, value in credentials.items():
-                reseval.app.heroku.configure(config['name'], key, value)
+                reseval.app.heroku.configure(name, key, value)
 
         # Create server
         url = reseval.server.create(cfg, local, detach=detach)

@@ -15,82 +15,67 @@ def create(config, directory):
     """Create an AWS S3 bucket for file storage"""
     name = config['name']
 
+    # Get unique identifier
+    unique = reseval.load.credentials_by_name(name, 'unique' )['unique']
+
     # Connect to S3
     client = connect()
 
-    # Create unique name for bucket
-    bucket = reseval.random.string(24)
-
     # Create bucket
-    client.create_bucket(Bucket=bucket, ObjectOwnership='ObjectWriter')
+    client.create_bucket(Bucket=unique, ObjectOwnership='ObjectWriter')
 
     # Set bucket policy to public read-only
     client.put_public_access_block(
-        Bucket=bucket,
+        Bucket=unique,
         PublicAccessBlockConfiguration={
             'BlockPublicAcls': False,
             'IgnorePublicAcls': False,
             'BlockPublicPolicy': False,
             'RestrictPublicBuckets': False
         })
-    client.put_bucket_acl(ACL='public-read',Bucket=bucket)
+    client.put_bucket_acl(ACL='public-read',Bucket=unique)
 
     # Load CORS policy as JSON
     with open(reseval.ASSETS_DIR / 'cors.json') as file:
         cors = {'CORSRules': json.load(file)}
 
     # Set bucket CORS to allow reads
-    client.put_bucket_cors(Bucket=bucket, CORSConfiguration=cors)
-
-    # Save bucket name as storage credential
-    credentials_file = (
-        reseval.EVALUATION_DIRECTORY /
-        name /
-        'credentials' /
-        'storage.json')
-    credentials_file.parent.mkdir(exist_ok=True, parents=True)
-    with open(credentials_file, 'w') as file:
-        json.dump({'bucket': bucket}, file)
+    client.put_bucket_cors(Bucket=unique, CORSConfiguration=cors)
 
     # Update client json
     with open(reseval.CLIENT_CONFIGURATION_FILE) as file:
         config = json.load(file)
     with open(reseval.CLIENT_CONFIGURATION_FILE, 'w') as file:
-        json.dump(config | {'bucket': bucket}, file, indent=4)
+        json.dump(config | {'bucket': unique}, file, indent=4)
 
     # Upload evaluation files
     upload(name, directory)
 
     # Maybe upload listening test files
     if 'listening_test' in config:
-        bucket = reseval.load.credentials_by_name(name, 'storage')['bucket']
         directory = reseval.LISTENING_TEST_DIRECTORY
         files = [item for item in directory.rglob('*') if not item.is_dir()]
         for file in files:
             destination = str('listening_test/' + file.name).replace('\\', '/')
             client.upload_file(
                 str(file).replace('\\', '/'),
-                bucket,
+                unique,
                 destination)
 
 
 def destroy(name):
     """Delete an AWS S3 bucket"""
+    # Get unique identifier
+    unique = reseval.load.credentials_by_name(name, 'unique')['unique']
+
     # Load API keys as environment variables
     reseval.load.api_keys()
-
-    # Get bucket to delete
-    try:
-        bucket_name = \
-            reseval.load.credentials_by_name(name, 'storage')['bucket']
-    except FileNotFoundError:
-        return
 
     # Connect to AWS
     bucket = boto3.Session(
         aws_access_key_id=os.environ['AWSAccessKeyId'],
         aws_secret_access_key=os.environ['AWSSecretKey']
-    ).resource('s3').Bucket(bucket_name)
+    ).resource('s3').Bucket(unique)
 
     try:
 
@@ -116,7 +101,7 @@ def destroy(name):
 def upload(name, file_or_directory):
     """Upload directory to AWS S3 bucket"""
     # Get bucket name
-    bucket = reseval.load.credentials_by_name(name, 'storage')['bucket']
+    unique = reseval.load.credentials_by_name(name, 'unique')['unique']
 
     # Connect to S3
     client = connect()
@@ -129,7 +114,7 @@ def upload(name, file_or_directory):
             destination = str(file.relative_to(directory)).replace('\\', '/')
             client.upload_file(
                 str(file).replace('\\', '/'),
-                bucket,
+                unique,
                 destination)
 
     else:
@@ -137,10 +122,10 @@ def upload(name, file_or_directory):
         # Upload file
         file = file_or_directory
         destination = file.name
-        client.upload_file(str(file), bucket, file.name)
+        client.upload_file(str(file), unique, file.name)
 
     # Return URL
-    return f'https://{bucket}.s3.amazonaws.com/{destination}'
+    return f'https://{unique}.s3.amazonaws.com/{destination}'
 
 
 ###############################################################################

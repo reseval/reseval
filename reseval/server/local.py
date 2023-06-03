@@ -13,7 +13,7 @@ import reseval
 ###############################################################################
 
 
-def create(config):
+def create(name, detach=False):
     """Deploy a local server"""
     # Maybe install server
     if not (reseval.CACHE / 'node_modules').exists():
@@ -45,7 +45,7 @@ def create(config):
     credentials = {'URL': reseval.LOCALHOST_URL, 'PID': process.pid}
     file = (
         reseval.EVALUATION_DIRECTORY /
-        config['name'] /
+        name /
         'credentials' /
         'server.json')
     file.parent.mkdir(exist_ok=True, parents=True)
@@ -53,13 +53,13 @@ def create(config):
         json.dump(credentials, file, indent=4, sort_keys=True)
 
     # Maybe wait for process to finish
-    if not config['detach']:
+    if not detach:
         process.wait()
 
     return credentials
 
 
-def destroy(config, credentials):
+def destroy(name, credentials):
     """Shutdown a local server"""
     try:
         parent = psutil.Process(credentials['PID'])

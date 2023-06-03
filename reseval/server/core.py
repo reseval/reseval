@@ -13,8 +13,7 @@ def create(config, local=False, detach=False):
     print('Creating server...')
 
     # Create server
-    credentials = module(config, local).create(
-        config | {'detach': detach})
+    credentials = module(config, local).create(config, detach=detach)
 
     # Save server credentials
     file = (
@@ -48,7 +47,7 @@ def destroy(name):
         return
 
     # Destroy server
-    module(config, local).destroy(config, credentials)
+    module(config, local).destroy(name, credentials)
 
     # Cleanup credentials
     (

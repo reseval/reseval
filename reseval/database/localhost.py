@@ -7,8 +7,11 @@ import mysql.connector
 import reseval
 
 
-def create(config):
+def create(name):
     """Create a local MySQL database"""
+    # Get unique identifier
+    unique = reseval.load.credentials_by_name(name, 'unique')['unique']
+
     # Load environment variables
     dotenv.load_dotenv(reseval.ENVIRONMENT_FILE)
 
@@ -16,24 +19,27 @@ def create(config):
     with connect() as (_, cursor):
 
         # Create database
-        cursor.execute(f'CREATE DATABASE `{config["name"]}`')
+        cursor.execute(f'CREATE DATABASE `{unique}`')
 
         # Return credentials
         return {
-            'MYSQL_DBNAME': config['name'],
+            'MYSQL_DBNAME': unique,
             'MYSQL_HOST': os.environ['MYSQL_HOST'],
             'MYSQL_USER': os.environ['MYSQL_USER'],
             'MYSQL_PASS': os.environ['MYSQL_PASS']}
 
 
-def destroy(config):
+def destroy(name):
     """Destroy a local MySQL database"""
+    # Get unique identifier
+    unique = reseval.load.credentials_by_name(name, 'unique')['unique']
+
     # Create connection
     with connect() as (_, cursor):
 
         # Destroy database
         try:
-            cursor.execute(f'DROP DATABASE `{config["name"]}`')
+            cursor.execute(f'DROP DATABASE `{unique}`')
         except mysql.connector.errors.DatabaseError:
 
             # Database doesn't exist

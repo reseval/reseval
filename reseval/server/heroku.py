@@ -14,8 +14,11 @@ import reseval
 ###############################################################################
 
 
-def create(config):
+def create(name):
     """Create a Heroku server"""
+    # Get unique identifier
+    unique = reseval.load.credentials_by_name(name, 'unique')['unique']
+
     # Connect to Heroku
     connection = http.client.HTTPSConnection('api.heroku.com')
 
@@ -45,7 +48,7 @@ def create(config):
                 tar.add(reseval.CACHE / file)
 
         # Upload tarball and get a URL
-        tarball_url = reseval.storage.upload(config['name'], tarball)
+        tarball_url = reseval.storage.upload(name, tarball)
 
         # Server configuration
         data = {
@@ -58,10 +61,9 @@ def create(config):
             'Authorization': f'Bearer {os.environ["HerokuAccessKey"]}'}
 
         # Create server
-        name = reseval.load.credentials_by_name(config['name'], 'app')['name']
         connection.request(
             'POST',
-            f'/apps/{name}/builds',
+            f'/apps/{unique}/builds',
             json.dumps(data),
             headers=headers)
 
@@ -70,25 +72,25 @@ def create(config):
 
         # if app doesn't exist, raise error
         if response['id'] == 'not_found':
-            raise ValueError(f'app name: {config["name"]} does not exist')
+            raise ValueError(f'app name: {unique} does not exist')
 
     # Close the connection
     connection.close()
 
     # Wait until server is setup
-    while status(config['name']) == 'pending':
+    while status(name) == 'pending':
         time.sleep(3)
 
-    if status(config['name']) == 'failure':
+    if status(name) == 'failure':
         raise ValueError('Heroku server failed to start')
 
     # Return application URL
     return {'URL': f'http://{name}.herokuapp.com/'}
 
 
-def destroy(config, credentials):
+def destroy(name, credentials):
     """Destroy a Heroku server"""
-    reseval.app.heroku.destroy(config)
+    reseval.app.heroku.destroy(name)
 
 
 ###############################################################################
@@ -98,6 +100,9 @@ def destroy(config, credentials):
 
 def status(name):
     """Get current build status. One of ['succeeded', 'failed', 'pending']"""
+    # Get unique identifier
+    unique = reseval.load.credentials_by_name(name, 'unique')['unique']
+
     # Connect to Heroku
     connection = http.client.HTTPSConnection('api.heroku.com')
 
@@ -106,8 +111,7 @@ def status(name):
     headers = {
         'Accept': 'application/vnd.heroku+json; version=3',
         'Authorization': f'Bearer {os.environ["HerokuAccessKey"]}'}
-    unique_name = reseval.load.credentials_by_name(name, 'app')['name']
-    connection.request('GET', f'/apps/{unique_name}/builds', headers=headers)
+    connection.request('GET', f'/apps/{unique}/builds', headers=headers)
 
     # Get response
     data = json.loads(connection.getresponse().read().decode())

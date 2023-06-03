@@ -18,7 +18,7 @@ def create(config, directory):
         upload(config['name'], reseval.LISTENING_TEST_DIRECTORY)
 
 
-def destroy(config):
+def destroy(name):
     """Remove all evaluation files in client public directory"""
     try:
         for path in reseval.CLIENT_PUBLIC_DIRECTORY.iterdir():
