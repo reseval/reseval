@@ -10,7 +10,7 @@ import reseval
 ###############################################################################
 
 
-def create(name):
+def create(name, detach=True):
     """Create an AWS server"""
     # Get unique identifier
     unique = reseval.load.credentials_by_name(name, 'unique')['unique']
@@ -29,14 +29,11 @@ def create(name):
         credentials = dict(
             line.strip().split('=') for line in file.readlines())
 
-    # TODO - create a unique name to avoid "already exists" during long
-    #        deletion process
-
     # Create the Elastic Beanstalk environment
     response = client.create_environment(
         ApplicationName=unique,
         EnvironmentName=unique,
-        SolutionStackName='64bit Amazon Linux 2023 v4.0.1 running Python 3.9',
+        SolutionStackName='64bit Amazon Linux 2 v5.8.2 running Node.js 18',
         OptionSettings=[
             {
                 'Namespace': 'aws:elasticbeanstalk:application:environment',
@@ -102,4 +99,4 @@ def connect():
     return boto3.Session(
         aws_access_key_id=os.environ['AWSAccessKeyId'],
         aws_secret_access_key=os.environ['AWSSecretKey']
-    ).client('elasticbeanstalk', region_name='us-east-2')
+    ).client('elasticbeanstalk', region_name='us-east-1')

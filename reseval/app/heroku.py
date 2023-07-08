@@ -56,7 +56,7 @@ def destroy(name):
 def get(name):
     """Retrieve a Heroku application"""
     # Load application credentials
-    credentials = reseval.load.credentials_by_name(name, 'app')
+    unique = reseval.load.credentials_by_name(name, 'unique')['unique']
 
     # Get Heroku application
-    return connect().apps()[credentials['name']]
+    return connect().apps()[unique]

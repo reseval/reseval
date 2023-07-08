@@ -20,9 +20,9 @@ def create(name):
     url = app.config()['CLEARDB_DATABASE_URL']
 
     # Parse URL to obtain credentials
-    user, password, host, name = re.split('[/@?:]', url[8:])[:4]
+    user, password, host, unique = re.split('[/@?:]', url[8:])[:4]
     credentials = {
-        'MYSQL_DBNAME': name,
+        'MYSQL_DBNAME': unique,
         'MYSQL_HOST': host,
         'MYSQL_USER': user,
         'MYSQL_PASS': password}

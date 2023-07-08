@@ -1,4 +1,5 @@
 import os
+import time
 
 import boto3
 
@@ -26,10 +27,16 @@ def create(name):
         Engine='mysql',
         MasterUsername='root',
         MasterUserPassword='password',
-        AllocatedStorage=64)['DBInstance']
-    import pdb; pdb.set_trace()
+        AllocatedStorage=64,
+        PubliclyAccessible=True)['DBInstance']
 
     # Get credentials
+    while response['DBInstanceStatus'] == 'creating':
+        time.sleep(5)
+        response = client.describe_db_instances(
+            DBInstanceIdentifier=unique
+        )['DBInstances'][0]
+
     credentials = {
         'MYSQL_DBNAME': unique,
         'MYSQL_HOST': response['Endpoint']['Address'],
@@ -68,4 +75,4 @@ def connect():
     return boto3.Session(
         aws_access_key_id=os.environ['AWSAccessKeyId'],
         aws_secret_access_key=os.environ['AWSSecretKey']
-    ).client('rds', region_name='us-east-2')
+    ).client('rds', region_name='us-east-1')

@@ -90,7 +90,7 @@ def create(config, test, local=False):
     # Create new database and retrieve credentials
     credentials = module(config, local).create(config['name'])
 
-    # Load environment variables
+    # Save environment variables
     for key, value in credentials.items():
         os.environ[key] = value
 

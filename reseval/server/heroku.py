@@ -14,7 +14,7 @@ import reseval
 ###############################################################################
 
 
-def create(name):
+def create(name, detach=True):
     """Create a Heroku server"""
     # Get unique identifier
     unique = reseval.load.credentials_by_name(name, 'unique')['unique']

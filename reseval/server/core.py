@@ -13,14 +13,11 @@ def create(config, local=False, detach=False):
     print('Creating server...')
 
     # Create server
-    credentials = module(config, local).create(config, detach=detach)
+    name = config['name']
+    credentials = module(config, local).create(name, detach=detach)
 
     # Save server credentials
-    file = (
-        reseval.EVALUATION_DIRECTORY /
-        config['name'] /
-        'credentials' /
-        'server.json')
+    file = reseval.EVALUATION_DIRECTORY / name / 'credentials' / 'server.json'
     file.parent.mkdir(exist_ok=True, parents=True)
     with open(file, 'w') as file:
         json.dump(credentials, file, indent=4, sort_keys=True)
