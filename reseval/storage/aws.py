@@ -33,7 +33,7 @@ def create(config, directory):
             'BlockPublicPolicy': False,
             'RestrictPublicBuckets': False
         })
-    client.put_bucket_acl(ACL='public-read',Bucket=unique)
+    client.put_bucket_acl(ACL='public-read', Bucket=unique)
 
     # Load CORS policy as JSON
     with open(reseval.ASSETS_DIR / 'cors.json') as file:

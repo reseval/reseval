@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Reproducible Subjective Evaluation (ReSEval) server",
   "engines": {
-    "node": "17.4.0",
-    "npm": "8.3.1"
+    "node": "18.16.1",
+    "npm": "9.5.1"
   },
   "main": "server.ts",
   "scripts": {

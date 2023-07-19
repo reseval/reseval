@@ -24,10 +24,10 @@ def create(name):
         DBName=unique,
         DBInstanceIdentifier=unique,
         DBInstanceClass='db.t2.micro',
+        AllocatedStorage=64,
         Engine='mysql',
         MasterUsername='root',
         MasterUserPassword='password',
-        AllocatedStorage=64,
         PubliclyAccessible=True)['DBInstance']
 
     # Get credentials
@@ -36,12 +36,16 @@ def create(name):
         response = client.describe_db_instances(
             DBInstanceIdentifier=unique
         )['DBInstances'][0]
-
     credentials = {
         'MYSQL_DBNAME': unique,
         'MYSQL_HOST': response['Endpoint']['Address'],
         'MYSQL_USER': 'root',
-        'MYSQL_PASS': 'password'}
+        'MYSQL_PASS': 'password',
+        'RDS_HOSTNAME': response['Endpoint']['Address'],
+        'RDS_PORT': '3306',
+        'RDS_DB_NAME': unique,
+        'RDS_USERNAME': 'root',
+        'RDS_PASSWORD': 'password'}
 
     return credentials
 

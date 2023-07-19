@@ -1,4 +1,9 @@
+import json
 import os
+import shutil
+import tempfile
+import time
+from pathlib import Path
 
 import boto3
 
@@ -15,32 +20,122 @@ def create(name, detach=True):
     # Get unique identifier
     unique = reseval.load.credentials_by_name(name, 'unique')['unique']
 
+    # Copy client and server to cache
+    for path in reseval.ASSETS_DIR.rglob('*'):
+        if path.is_dir():
+            continue
+        destination = reseval.CACHE / path.relative_to(reseval.ASSETS_DIR)
+        destination.parent.mkdir(exist_ok=True, parents=True)
+        shutil.copy(path, destination)
+
+    # Install npm dependencies to build client
+    client_directory = reseval.CACHE / 'client'
+    client_directory.mkdir(exist_ok=True, parents=True)
+    if not (client_directory / 'node_modules').exists():
+        with reseval.chdir(client_directory):
+            reseval.npm.install().wait()
+
+    # Build client
+    with reseval.chdir(reseval.CACHE / 'client'):
+        reseval.npm.build().wait()
+
     # Connect to AWS
     client = connect()
-    import pdb; pdb.set_trace()
 
-    # Load database credentials
-    environment_file = (
-        reseval.EVALUATION_DIRECTORY /
-        name /
-        'credentials' /
-        '.env')
-    with open(environment_file) as file:
-        credentials = dict(
-            line.strip().split('=') for line in file.readlines())
+    # Create server bundle
+    with tempfile.TemporaryDirectory() as directory:
+        directory = Path(directory)
+        root = directory / 'reseval'
+        root.mkdir()
+        paths = [
+            'client/build',
+            'server',
+            'package-lock.json',
+            'package.json',
+            'Procfile',
+            'server.ts',
+            'tsconfig.json']
+        for path in paths:
+            try:
+                shutil.copytree(reseval.CACHE / path, root / path)
+            except NotADirectoryError:
+                shutil.copy(reseval.CACHE / path, root / path)
 
-    # Create the Elastic Beanstalk environment
-    response = client.create_environment(
+        # Zip
+        shutil.make_archive(directory / 'reseval', 'zip', root)
+
+        # TEMPORARY - inspect tarball
+        shutil.copy(directory / 'reseval.zip', '.')
+
+        # Upload tarball
+        reseval.storage.aws.upload(name, directory / 'reseval.zip')
+
+        # Wait for upload to complete
+        reseval.storage.aws.connect().get_waiter('object_exists').wait(
+            Bucket=unique,
+            Key='reseval.zip',
+            WaiterConfig={'Delay': 2, 'MaxAttempts': 5})
+
+        # Update application
+        response = client.create_application_version(
+            ApplicationName=unique,
+            VersionLabel='Sample',
+            SourceBundle={
+                'S3Bucket': unique,
+                'S3Key': 'reseval.zip'
+            },
+            AutoCreateApplication=True,
+            Process=True)
+
+        # Wait for build to finish
+        response = client.describe_application_versions(
+            ApplicationName=unique,
+            VersionLabels=['Sample']
+        )['ApplicationVersions'][0]
+        while response['Status'].lower() in ['building', 'processing', 'unprocessed']:
+            time.sleep(5)
+            response = client.describe_application_versions(
+                ApplicationName=unique,
+                VersionLabels=['Sample']
+            )['ApplicationVersions'][0]
+
+    # Create elastic beanstalk environment
+    client.create_environment(
         ApplicationName=unique,
         EnvironmentName=unique,
-        SolutionStackName='64bit Amazon Linux 2 v5.8.2 running Node.js 18',
+        SolutionStackName='64bit Amazon Linux 2 v5.8.3 running Node.js 18',
         OptionSettings=[
             {
                 'Namespace': 'aws:elasticbeanstalk:application:environment',
                 'OptionName': key,
-                'Value': value
-            } for key, value in credentials.items()
-        ])
+                'Value': os.environ[key]
+            } for key in [
+                'RDS_HOSTNAME',
+                'RDS_PORT',
+                'RDS_DB_NAME',
+                'RDS_USERNAME',
+                'RDS_PASSWORD']
+        ] + [{
+            'Namespace': 'aws:autoscaling:launchconfiguration',
+            'OptionName': 'IamInstanceProfile',
+            'Value': 'aws-elasticbeanstalk-ec2-role'
+        }])
+
+    # Wait for environment build to finish
+    response = client.describe_environments(
+        ApplicationName=unique,
+        EnvironmentNames=[unique])['Environments'][0]
+    while response['Status'].lower() != 'ready':
+        time.sleep(5)
+        response = client.describe_environments(
+            ApplicationName=unique,
+            EnvironmentNames=[unique])['Environments'][0]
+
+    # Process and deploy
+    response = client.update_environment(
+        ApplicationName=unique,
+        EnvironmentName=unique,
+        VersionLabel='Sample')
 
     # Return application URL
     return {'URL': response['EndpointURL']}
@@ -48,17 +143,51 @@ def create(name, detach=True):
 
 def destroy(name, credentials):
     """Destroy an AWS server"""
-        # Get unique identifier
+    # Get unique identifier
     unique = reseval.load.credentials_by_name(name, 'unique')['unique']
 
     # Connect to AWS
     client = connect()
+
+    # Get S3 bucket name
+    arn = client.describe_application_versions(
+            ApplicationName=unique,
+            VersionLabels=['Sample']
+        )['ApplicationVersions'][0]['ApplicationVersionArn']
+    bucket = f'elasticbeanstalk-{arn.split(":")[3]}-{arn.split(":")[4]}'
 
     # Delete environment
     client.terminate_environment(
         EnvironmentName=unique,
         TerminateResources=True,
         ForceTerminate=True)
+
+    # Delete application
+    client.delete_application(ApplicationName=unique)
+
+    # Connect to S3
+    client = reseval.storage.aws.connect()
+
+    # Get current bucket policy
+    policy = json.loads(client.get_bucket_policy(Bucket=bucket)['Policy'])
+
+    # Update bucket policy to allow deletion
+    policy['Statement'] = [
+        s for s in policy['Statement']
+        if not (s['Action'] == 's3:DeleteBucket' and s['Effect'].lower() == 'deny')]
+    client.put_bucket_policy(Bucket=bucket, Policy=json.dumps(policy))
+
+    # Connect to S3 bucket
+    bucket = boto3.Session(
+        aws_access_key_id=os.environ['AWSAccessKeyId'],
+        aws_secret_access_key=os.environ['AWSSecretKey']
+    ).resource('s3').Bucket(bucket)
+
+    # Delete contents
+    bucket.objects.all().delete()
+
+    # Delete bucket
+    bucket.delete()
 
 
 ###############################################################################
