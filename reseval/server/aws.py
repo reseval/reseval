@@ -64,9 +64,6 @@ def create(name, detach=True):
         # Zip
         shutil.make_archive(directory / 'reseval', 'zip', root)
 
-        # TEMPORARY - inspect tarball
-        shutil.copy(directory / 'reseval.zip', '.')
-
         # Upload tarball
         reseval.storage.aws.upload(name, directory / 'reseval.zip')
 
@@ -104,18 +101,7 @@ def create(name, detach=True):
         ApplicationName=unique,
         EnvironmentName=unique,
         SolutionStackName='64bit Amazon Linux 2 v5.8.3 running Node.js 18',
-        OptionSettings=[
-            {
-                'Namespace': 'aws:elasticbeanstalk:application:environment',
-                'OptionName': key,
-                'Value': os.environ[key]
-            } for key in [
-                'RDS_HOSTNAME',
-                'RDS_PORT',
-                'RDS_DB_NAME',
-                'RDS_USERNAME',
-                'RDS_PASSWORD']
-        ] + [{
+        OptionSettings=[{
             'Namespace': 'aws:autoscaling:launchconfiguration',
             'OptionName': 'IamInstanceProfile',
             'Value': 'aws-elasticbeanstalk-ec2-role'
@@ -126,7 +112,7 @@ def create(name, detach=True):
         ApplicationName=unique,
         EnvironmentNames=[unique])['Environments'][0]
     while response['Status'].lower() != 'ready':
-        time.sleep(5)
+        time.sleep(3)
         response = client.describe_environments(
             ApplicationName=unique,
             EnvironmentNames=[unique])['Environments'][0]
@@ -136,6 +122,16 @@ def create(name, detach=True):
         ApplicationName=unique,
         EnvironmentName=unique,
         VersionLabel='Sample')
+
+    # Wait for environment update to finish
+    response = client.describe_environments(
+        ApplicationName=unique,
+        EnvironmentNames=[unique])['Environments'][0]
+    while response['Status'].lower() != 'ready':
+        time.sleep(3)
+        response = client.describe_environments(
+            ApplicationName=unique,
+            EnvironmentNames=[unique])['Environments'][0]
 
     # Return application URL
     return {'URL': response['EndpointURL']}
@@ -193,6 +189,35 @@ def destroy(name, credentials):
 ###############################################################################
 # Utilities
 ###############################################################################
+
+
+def configure(name, configuration):
+    """Add configuration variables to server"""
+    # Get unique identifier
+    unique = reseval.load.credentials_by_name(name, 'unique')['unique']
+
+    # Connect to AWS
+    client = connect()
+
+    # Update environment variables
+    client.update_environment(
+        ApplicationName=unique,
+        EnvironmentName=unique,
+        OptionSettings=[{
+                'Namespace': 'aws:elasticbeanstalk:application:environment',
+                'OptionName': key,
+                'Value': value
+            } for key, value in configuration.items()])
+
+    # Wait for environment update to finish
+    response = client.describe_environments(
+        ApplicationName=unique,
+        EnvironmentNames=[unique])['Environments'][0]
+    while response['Status'].lower() != 'ready':
+        time.sleep(3)
+        response = client.describe_environments(
+            ApplicationName=unique,
+            EnvironmentNames=[unique])['Environments'][0]
 
 
 def status(name):

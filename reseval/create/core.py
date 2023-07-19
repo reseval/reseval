@@ -116,17 +116,19 @@ def create(
             (cfg['server'] == 'heroku' or cfg['database'] == 'heroku')):
             reseval.app.heroku.create(name)
 
+        # Create server
+        url = reseval.server.create(cfg, local, detach=detach)
+
         # Create database
         credentials = reseval.database.create(cfg, test, local)
 
         # If heroku is used, add credentials to app environment variables
-        if (not local and
-            (cfg['server'] == 'heroku' or cfg['database'] == 'heroku')):
-            for key, value in credentials.items():
-                reseval.app.heroku.configure(name, key, value)
-
-        # Create server
-        url = reseval.server.create(cfg, local, detach=detach)
+        if not local:
+            if cfg['server'] == 'aws':
+                reseval.server.aws.configure(name, credentials)
+            elif cfg['server'] == 'heroku':
+                for key, value in credentials.items():
+                    reseval.app.heroku.configure(name, key, value)
 
         # Launch crowdsourced evaluation
         reseval.crowdsource.create(cfg, url, local, production)

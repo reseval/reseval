@@ -7,6 +7,46 @@ import reseval
 
 
 ###############################################################################
+# Constants
+###############################################################################
+
+
+# Cross-origin resource sharing
+CORS = [
+    {
+        "AllowedHeaders": [
+            "*"
+        ],
+        "AllowedMethods": [
+            "GET"
+        ],
+        "AllowedOrigins": [
+            "*"
+        ],
+        "ExposeHeaders": [],
+        "MaxAgeSeconds": 3600
+    }
+]
+
+# Public read policy
+POLICY = {
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "PublicRead",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": [
+                "s3:GetObject",
+                "s3:GetObjectVersion"
+            ],
+            "Resource": "arn:aws:s3:::{}/*"
+        }
+    ]
+}
+
+
+###############################################################################
 # AWS S3 file storage
 ###############################################################################
 
@@ -35,12 +75,16 @@ def create(config, directory):
         })
     client.put_bucket_acl(ACL='public-read', Bucket=unique)
 
-    # Load CORS policy as JSON
-    with open(reseval.ASSETS_DIR / 'cors.json') as file:
-        cors = {'CORSRules': json.load(file)}
-
     # Set bucket CORS to allow reads
-    client.put_bucket_cors(Bucket=unique, CORSConfiguration=cors)
+    client.put_bucket_cors(
+        Bucket=unique,
+        CORSConfiguration={'CORSRules': CORS})
+
+    # Set bucket policy to allow reads
+    policy = POLICY.copy()
+    policy['Statement'][0]['Resource'] = \
+        policy['Statement'][0]['Resource'].format(unique)
+    client.put_bucket_policy(Bucket=unique, Policy=json.dumps(policy))
 
     # Update client json
     with open(reseval.CLIENT_CONFIGURATION_FILE) as file:
