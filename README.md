@@ -239,18 +239,6 @@ API keys are required to use the third-party services that ReSEval depends on.
 These are not required for local development. Do not share these API keys.
 
 
-### Heroku
-
-Sign up for a Heroku account. Go to `Account Settings`. At the bottom of the page in the `API Key` section is a `Reveal` button.
-
-<p align="center">
-    <img src="docs/images/heroku-00.png" width="400" alt="Heroku API key instructions">
-    <img src="docs/images/heroku-01.png" width="400" alt="Heroku API key instructions">
-</p>
-
-You will also need to enable billing. You can do so [here](https://heroku.com/verify).
-
-
 ### Amazon Web Services
 
 Sign up for an AWS account. Go to `Security Credentials`. Under `Access keys`, click `Create New Access Key`.
@@ -264,6 +252,18 @@ Sign up for an AWS account. Go to `Security Credentials`. Under `Access keys`, c
 ### Amazon Mechanical Turk
 
 Follow the instructions [here](https://docs.aws.amazon.com/AWSMechTurk/latest/AWSMechanicalTurkGettingStartedGuide/SetUp.html) for setting up MTurk and connecting it to your AWS account.
+
+
+### Heroku (Optional if you don't want to use AWS)
+
+Sign up for a Heroku account. Go to `Account Settings`. At the bottom of the page in the `API Key` section is a `Reveal` button.
+
+<p align="center">
+    <img src="docs/images/heroku-00.png" width="400" alt="Heroku API key instructions">
+    <img src="docs/images/heroku-01.png" width="400" alt="Heroku API key instructions">
+</p>
+
+You will also need to enable billing. You can do so [here](https://heroku.com/verify).
 
 
 ## Usage
@@ -412,18 +412,22 @@ reseval.run(config, directory, production=True)
 
 ## Additional monitoring
 
-### Heroku
-
-To monitor, edit, or delete Heroku databases and servers, use the
-[Heroku application dashboard](https://dashboard.heroku.com/apps). You can see
-any costs on the
-[billing dashboard](https://dashboard.heroku.com/account/billing).
-
-
 ### AWS S3
 
 To monitor, edit, or delete AWS S3 storage buckets, or see any costs, use the
-[AWS S3 console](https://aws.amazon.com/s3/).
+[AWS S3 console](https://s3.console.aws.amazon.com/s3).
+
+
+### AWS Elastic Beanstalk
+
+To monitor, edit, or delete the server compute, use the
+[AWS Elastic Beanstalk console](https://console.aws.amazon.com/elasticbeanstalk).
+
+
+### AWS Relational Database Service
+
+To monitor, edit, or delete the database, use the
+[AWS RDS console](https://console.aws.amazon.com/rds).
 
 
 ### MTurk
@@ -432,3 +436,11 @@ HITs not created on the MTurk dashboard are not visible on the MTurk dashboard.
 You can use the MTurk CLI to monitor, edit, or delete HITs. MTurk costs appear
 on the [AWS billing dashboard](https://console.aws.amazon.com/billing/home)
 at the end of the billing period.
+
+
+### Heroku
+
+To monitor, edit, or delete Heroku databases and servers, use the
+[Heroku application dashboard](https://dashboard.heroku.com/apps). You can see
+any costs on the
+[billing dashboard](https://dashboard.heroku.com/account/billing).

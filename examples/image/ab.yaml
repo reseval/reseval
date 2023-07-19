@@ -11,10 +11,10 @@ datatype: image
 storage: aws
 
 # The third-party platform hosting the MySQL database. One of [aws, heroku].
-database: heroku
+database: aws
 
 # The third-party platform hosting the server. One of [aws, heroku].
-server: heroku
+server: aws
 
 # Crowdsourcing configuration
 crowdsource:
