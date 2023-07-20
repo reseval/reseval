@@ -248,6 +248,8 @@ Sign up for an AWS account. Go to `Security Credentials`. Under `Access keys`, c
     <img src="docs/images/aws-01.png" width="400" alt="AWS API key instructions">
 </p>
 
+Note that this gives you a root access key. You can alternatively use the Identity & Access Management (IAM) system to setup more restrictive permissions for a user.
+
 
 ### Amazon Mechanical Turk
 
