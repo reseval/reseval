@@ -97,7 +97,7 @@ nvm use 17.4.0
 ### Deploying locally
 
 To be able to preview your subjective evaluation locally, you must
-[setup a local MySQL database](https://dev.mysql.com/doc/mysql-getting-started/en/)
+[setup a local MySQL database server](https://dev.mysql.com/doc/mysql-getting-started/en/)
 and obtain a username and password. The default username is `root`.
 
 Run the following to store the username and password in
