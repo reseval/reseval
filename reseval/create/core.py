@@ -111,19 +111,25 @@ def create(
         # Create file storage and upload
         reseval.storage.create(cfg, directory, local)
 
-        # If heroku is used for either the database or server, setup the app here
-        if (not local and
-            (cfg['server'] == 'heroku' or cfg['database'] == 'heroku')):
-            reseval.app.heroku.create(name)
+        if local:
 
-        # Create server
-        url = reseval.server.create(cfg, local, detach=detach)
+            # Create database before server
+            credentials = reseval.database.create(cfg, test, local)
+            url = reseval.server.create(cfg, local, detach=detach)
 
-        # Create database
-        credentials = reseval.database.create(cfg, test, local)
+        else:
 
-        # If heroku is used, add credentials to app environment variables
-        if not local:
+            # If heroku is used for either the database or server, setup the app here
+            if cfg['server'] == 'heroku' or cfg['database'] == 'heroku':
+                reseval.app.heroku.create(name)
+
+            # Create server
+            url = reseval.server.create(cfg, local, detach=detach)
+
+            # Create database
+            credentials = reseval.database.create(cfg, test, local)
+
+            # Add database environment variables to server
             if cfg['server'] == 'aws':
                 reseval.server.aws.configure(name, credentials)
             elif cfg['server'] == 'heroku':

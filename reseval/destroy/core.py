@@ -45,11 +45,11 @@ def destroy(name: str, force: bool = False):
     # Maybe destroy crowdsource task
     reseval.crowdsource.destroy(name)
 
-    # Destroy server
-    reseval.server.destroy(name)
-
     # Destroy database
     reseval.database.destroy(name)
+
+    # Destroy server
+    reseval.server.destroy(name)
 
     # Destroy storage
     reseval.storage.destroy(name)
