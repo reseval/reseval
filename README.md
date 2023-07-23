@@ -79,17 +79,17 @@ First, install the Python module. ReSEval requires Python 3.9 or higher.
 
 `pip install reseval`
 
-Next, [download Node.js](https://nodejs.org/en/). You can check that your installation is correct by running `node --version`. ReSEval uses Node.js version 17.4.0 and is not guaranteed to work on all versions. If needed, Linux and OS X users can use `n` to change their version of Node.js, and Windows users can use [NVM for Windows](https://github.com/coreybutler/nvm-windows).
+Next, [download Node.js](https://nodejs.org/en/). You can check that your installation is correct by running `node --version`. ReSEval uses Node.js version 18.16.1 and is not guaranteed to work on all versions. If needed, Linux and OS X users can use `n` to change their version of Node.js, and Windows users can use [NVM for Windows](https://github.com/coreybutler/nvm-windows).
 
 ```
 # Linux or OS X
 sudo npm install -g n
-sudo n 17.4.0
+sudo n 18.16.1
 
 # Windows
 # Must be run with administrator privileges
-nvm install 17.4.0
-nvm use 17.4.0
+nvm install 18.16.1
+nvm use 18.16.1
 ```
 
 **Note** - You must restart your terminal after changing versions of node for the change to take effect
