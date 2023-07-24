@@ -254,6 +254,8 @@ Sign up for an AWS account. Go to `Security Credentials`. Under `Access keys`, c
 
 Note that this gives you a root access key. You can alternatively use the Identity & Access Management (IAM) system to setup more restrictive permissions for a user.
 
+If you have never used AWS Elastic Beanstalk, one more step is required. Elastic Beanstalk instances created from Python (as opposed to the AWS console) currently have an issue where they do not instantiate default IAM roles. The solution is to either create (and then delete) an Elastic Beanstalk instance from the console, or to create the required IAM role manually. The IAM role is called `aws-elasticbeanstalk-ec2-role` and contains three permissions: (1) `AWSElasticBeanstalkWebTier`, (2) `AWSElasticBeanstalkMulticontainerDocker`, and (3) `AWSElasticBeanstalkWorkerTier`.
+
 
 ### Amazon Mechanical Turk
 
