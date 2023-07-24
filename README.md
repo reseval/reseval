@@ -281,9 +281,13 @@ Once you have your configuration file and a properly formatted directory of eval
 If you are not deploying locally, add your API keys.
 
 ```
+# AWS credentials
 python -m reseval.credentials \
     --aws_api_key <aws_api_key> \
-    --aws_api_secret_key <aws_api_secret_key> \
+    --aws_api_secret_key <aws_api_secret_key>
+
+# (Optional) Heroku credentials
+python -m reseval.credentials \
     --heroku_api_key <heroku_api_key>
 ```
 
