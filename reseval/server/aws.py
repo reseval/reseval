@@ -134,7 +134,7 @@ def create(name, detach=True):
             EnvironmentNames=[unique])['Environments'][0]
 
     # Return application URL
-    return {'URL': response['EndpointURL']}
+    return {'URL': response['CNAME']}
 
 
 def destroy(name, credentials):

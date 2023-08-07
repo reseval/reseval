@@ -40,7 +40,7 @@ def create(name):
 
     # Add ingress rules for local IP and MySQL
     local_ip = json.loads(
-        requests.get('https://ip.seeip.org/jsonip?').text
+        requests.get('https://api.seeip.org/jsonip?').text
     )['ip']
     for group_id in group_ids:
         client.authorize_security_group_ingress(
