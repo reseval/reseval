@@ -23,7 +23,7 @@ def package_data():
 setup(
     name='reseval',
     description='Reproducible Subjective Evaluation',
-    version='0.1.1',
+    version='0.1.2',
     author='Max Morrison, Brian Tang, Gefei Tan, Bryan Pardo',
     author_email='maxrmorrison@gmail.com',
     url='https://github.com/reseval/reseval',
