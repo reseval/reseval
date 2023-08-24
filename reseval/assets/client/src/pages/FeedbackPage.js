@@ -25,8 +25,14 @@ export default function FeedbackPage({ navigation, participant }) {
     const [index, setIndex] = useState(0);
     const [response, setResponse] = useState(undefined);
 
-    // Get the current question
+    // Skip if we have no questions
     const questions = config.followup_questions;
+    if (questions.length == 0) {
+        window.scroll(0, 0);
+        navigation.next();
+    }
+
+    // Get the current question
     const question = questions[index];
 
     function onClick() {
@@ -67,26 +73,30 @@ export default function FeedbackPage({ navigation, participant }) {
     }
 
     // Render
-    return (
-        <div className='container'>
-            <Markdown>
-                {
-                    `## **Post-Evaluation Survey**\n` +
-                    `**Question ${index + 1} of ${questions.length}**\n` +
-                    question.text
-                }
-            </Markdown>
-            <Question
-                question={question}
-                response={response}
-                setResponse={setResponse}
-            />
-            <Button
-                active={typeof response !== 'undefined' && response.trim()}
-                onClick={onClick}
-            >
-                Submit
-            </Button>
-        </div>
-    );
+    if (typeof question === 'undefined') {
+        return <></>;
+    } else {
+        return (
+            <div className='container'>
+                <Markdown>
+                    {
+                        `## **Post-Evaluation Survey**\n` +
+                        `**Question ${index + 1} of ${questions.length}**\n` +
+                        question.text
+                    }
+                </Markdown>
+                <Question
+                    question={question}
+                    response={response}
+                    setResponse={setResponse}
+                />
+                <Button
+                    active={typeof response !== 'undefined' && response.trim()}
+                    onClick={onClick}
+                >
+                    Submit
+                </Button>
+            </div>
+        );
+    }
 }
