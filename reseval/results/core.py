@@ -23,12 +23,8 @@ def results(
     Returns:
         dict: Evaluation results
     """
-    # Download and save crowdsource results
+    # Download crowdsource results
     crowdsource = reseval.crowdsource.assignments(name)
-    crowdsource_file = directory / name / 'crowdsource' / 'crowdsource.json'
-    crowdsource_file.parent.mkdir(exist_ok=True, parents=True)
-    with open(crowdsource_file, 'w') as file:
-        json.dump(crowdsource, file, indent=4, default=str)
 
     # Download database tables
     reseval.database.download(
@@ -41,6 +37,25 @@ def results(
     config = reseval.load.config_by_name(name)
     conditions = reseval.load.conditions(name)
     responses = reseval.load.responses(name)
+    participants = reseval.load.participants(name)
+
+    # Match participant IDs
+    for assignment in crowdsource:
+        try:
+            completion_code = assignment['Answer'].split(
+                '<FreeText>')[1].split('</FreeText>')[0].replace('&amp;', '&')
+            participant = [
+                p['ID'] for p in participants
+                if p['CompletionCode'] == completion_code]
+            assignment['ParticipantID'] = participant[0] if participant else ''
+        except IndexError as error:
+            assignment['ParticipantID'] = ''
+
+    # Save crowdsource results
+    crowdsource_file = directory / name / 'crowdsource' / 'crowdsource.json'
+    crowdsource_file.parent.mkdir(exist_ok=True, parents=True)
+    with open(crowdsource_file, 'w') as file:
+        json.dump(crowdsource, file, indent=4, default=str)
 
     # No responses yet
     if len(responses) == 0:
