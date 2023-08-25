@@ -184,8 +184,9 @@ def pay(config, credentials):
         # Find matching completion code
         match = None
         for pid in participant_responses:
-            if (participant_responses[pid]['CompletionCode'] ==
-                    result['completion_code']):
+            participant_code = participant_responses[pid]['CompletionCode']
+            completion_code = result['completion_code']
+            if participant_code == completion_code:
                 match = pid
 
         # Only process payment if the participant has not already been paid
@@ -197,17 +198,31 @@ def pay(config, credentials):
                     credentials,
                     result['assignment_id'],
                     'Survey completion code does not match')
+                block(
+                    config,
+                    credentials,
+                    result['worker_id'],
+                    'Survey completion code does not match')
                 continue
 
             # Approve work
             approve(credentials, result['assignment_id'])
 
+            # Block workers who do not complete evaluations
+            if (
+                len(participant_responses[match]['responses']) !=
+                config['samples_per_participant']
+            ):
+                block(
+                    config,
+                    credentials,
+                    result['worker_id'],
+                    'Incomplete evaluation')
+
             # If they passed prescreening and completed evaluation, give
             # the participant a bonus
-            if (len(participant_responses[pid]['responses']) ==
-                    config['samples_per_participant']):
+            else:
                 bonus(config, credentials, result['assignment_id'])
-
 
 def progress(credentials):
     """Retrieve the number of participants that have taken the evaluation"""
@@ -250,6 +265,15 @@ def assignments(credentials, statuses=None):
     # Get assignments
     return list(itertools.chain.from_iterable(
         page['Assignments'] for page in iterator))
+
+
+def block(config, credentials, worker_id, reason):
+    """Block a worker"""
+    # Connect to MTurk
+    mturk = connect(credentials['PRODUCTION'])
+
+    # Block worker
+    mturk.create_worker_block(WorkerId=worker_id, Reason=reason)
 
 
 def bonus(config, credentials, assignment_id):
