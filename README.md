@@ -4,7 +4,7 @@
 [![PyPI](https://img.shields.io/pypi/v/reseval.svg)](https://pypi.python.org/pypi/reseval)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
-[![Downloads](https://pepy.tech/badge/reseval)](https://pepy.tech/project/reseval)
+[![Downloads](https://static.pepy.tech/badge/reseval)](https://pepy.tech/project/reseval)
 
 </div>
 
