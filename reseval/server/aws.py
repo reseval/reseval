@@ -164,26 +164,33 @@ def destroy(name, credentials):
     # Connect to S3
     client = reseval.storage.aws.connect()
 
-    # Get current bucket policy
-    policy = json.loads(client.get_bucket_policy(Bucket=bucket)['Policy'])
+    try:
 
-    # Update bucket policy to allow deletion
-    policy['Statement'] = [
-        s for s in policy['Statement']
-        if not (s['Action'] == 's3:DeleteBucket' and s['Effect'].lower() == 'deny')]
-    client.put_bucket_policy(Bucket=bucket, Policy=json.dumps(policy))
+        # Get current bucket policy
+        policy = json.loads(client.get_bucket_policy(Bucket=bucket)['Policy'])
 
-    # Connect to S3 bucket
-    bucket = boto3.Session(
-        aws_access_key_id=os.environ['AWSAccessKeyId'],
-        aws_secret_access_key=os.environ['AWSSecretKey']
-    ).resource('s3').Bucket(bucket)
+        # Update bucket policy to allow deletion
+        policy['Statement'] = [
+            s for s in policy['Statement']
+            if not (s['Action'] == 's3:DeleteBucket' and s['Effect'].lower() == 'deny')]
+        client.put_bucket_policy(Bucket=bucket, Policy=json.dumps(policy))
 
-    # Delete contents
-    bucket.objects.all().delete()
+        # Connect to S3 bucket
+        bucket = boto3.Session(
+            aws_access_key_id=os.environ['AWSAccessKeyId'],
+            aws_secret_access_key=os.environ['AWSSecretKey']
+        ).resource('s3').Bucket(bucket)
 
-    # Delete bucket
-    bucket.delete()
+        # Delete contents
+        bucket.objects.all().delete()
+
+        # Delete bucket
+        bucket.delete()
+
+    except Exception:
+
+        # Bucket was already deleted when environment was deleted
+        pass
 
 
 ###############################################################################
