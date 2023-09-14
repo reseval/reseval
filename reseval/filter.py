@@ -18,3 +18,26 @@ def anchors(responses, conditions, low_anchor, high_anchor):
             filtered.append(response)
 
     return filtered
+
+
+def count(responses, num):
+    """Filter out participants that have an incorrect number of responses"""
+    # Count responses
+    participants = {}
+    for response in responses:
+        participant = response['Participant']
+        if participant not in participants:
+            participants[participant] = 1
+        else:
+            participants[participant] += 1
+
+    # Filter out bad participants
+    blacklist = [
+        participant for participant, count in participants.items()
+        if count != num]
+    filtered = []
+    for response in responses:
+        if response['Participant'] not in blacklist:
+            filtered.append(response)
+
+    return filtered

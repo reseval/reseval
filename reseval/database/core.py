@@ -103,9 +103,12 @@ def create(config, test, local=False):
             # Add prescreen questions from configuration file
             if table == 'participants':
                 questions = ''
-                all_questions = (
-                    config['prescreen_questions'] +
-                    config['followup_questions'])
+
+                all_questions = []
+                if 'prescreen_questions' in config:
+                    all_questions += config['prescreen_questions']
+                if 'followup_questions' in config:
+                    all_questions += config['followup_questions']
                 for question in all_questions:
                     name = question['name']
 

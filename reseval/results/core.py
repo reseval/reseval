@@ -93,6 +93,6 @@ def results(
         json.dump(analysis | {'stems': stem_scores}, file, indent=4)
 
     # Create and save figure
-    test.plot(stem_scores, directory / name / 'results.jpg')
+    test.plot(stem_scores, directory / name / 'results.pdf')
 
     return analysis

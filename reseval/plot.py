@@ -33,8 +33,19 @@ def violin(results, file, yticks):
 
     # Order data by average value
     means = np.nan_to_num([value.mean() for value in values])
+
+    # Get medians
+    _, medians, _ = np.percentile(
+        values,
+        [25, 50, 75],
+        axis=values.ndim - 1)
+
     indices = np.argsort(means)
-    means, keys, values = means[indices], list(keys[indices]), values[indices]
+    means, keys, values, medians = (
+        means[indices],
+        list(keys[indices]),
+        values[indices],
+        medians[indices])
 
     # No data
     if not all(len(value) for value in values):
@@ -43,18 +54,12 @@ def violin(results, file, yticks):
     # Create violin plot
     figure, ax = plt.subplots(1, 1, squeeze=True, figsize=(16, 6))
     ax.violinplot(
-        values,
+        values.T,
         showmeans=False,
         showmedians=False,
         showextrema=False)
 
-    # Get locations of start and ends of violins
-    _, medians, _ = np.percentile(
-        values,
-        [25, 50, 75],
-        axis=values.ndim - 1)
-
-    # Style axes
+    # Add mean and median markers
     inds = np.arange(1, len(medians) + 1)
     ax.scatter(inds, means, marker='o', color='black', s=80, zorder=3)
     ax.scatter(inds, medians, marker='o', color='white', s=80, zorder=3)
@@ -70,7 +75,7 @@ def violin(results, file, yticks):
         ax.hlines(
             y=y,
             xmin=0,
-            xmax=5.3,
+            xmax=len(keys) + .3,
             linewidth=1,
             color='#666666',
             alpha=.3)
