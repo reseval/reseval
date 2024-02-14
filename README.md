@@ -98,12 +98,31 @@ nvm use 18.16.1
 
 To be able to preview your subjective evaluation locally, you must
 [setup a local MySQL database server](https://dev.mysql.com/doc/mysql-getting-started/en/)
-and obtain a username and password. The default username is `root`.
+and create a user with database creation privileges.
+
+```bash
+# Linux installation
+sudo apt install mysql-server
+
+# MySQL setup
+sudo mysql_secure_installation
+
+# Login to MySQL as root
+sudo mysql -u root
+```
+
+```sql
+-- Create a user (change new_user and new_password)
+mysql> CREATE USER 'new_user'@'localhost' IDENTIFIED BY 'new_password';
+
+-- Give user database creation privileges
+mysql> GRANT ALL PRIVILEGES ON * . * TO 'new_user'@'localhost';
+```
 
 Run the following to store the username and password in
 `reseval.CACHE / '.env'`.
 
-```
+```bash
 python -m reseval.credentials \
     --mysql_local_user <mysql_user> \
     --mysql_local_password <mysql_local_password>
@@ -280,7 +299,7 @@ Once you have your configuration file and a properly formatted directory of eval
 
 If you are not deploying locally, add your API keys.
 
-```
+```bash
 # AWS credentials
 python -m reseval.credentials \
     --aws_api_key <aws_api_key> \
@@ -309,7 +328,7 @@ Create a subjective evaluation either locally, in remote development mode (e.g.,
 
 **Note** - `reseval.create` is not currently thread-safe. Wait until the first call has finished before calling it again. See [this GitHub issue](https://github.com/reseval/reseval/issues/5).
 
-```
+```bash
 # Local development
 python -m reseval.create <config> <directory> --local
 
@@ -323,7 +342,7 @@ python -m reseval.create <config> <directory> --production
 
 #### Monitor
 
-```
+```bash
 # Monitor all subjective evaluations
 python -m reseval.monitor
 
@@ -334,7 +353,7 @@ python -m reseval.monitor --name <name>
 
 **Note** - By default, the monitor updates once every minute. You can update the monitor more or less often by providing an update interval in seconds.
 
-```
+```bash
 # Update the monitor once every ten seconds
 python -m reseval.monitor --interval 10
 ```
@@ -342,7 +361,7 @@ python -m reseval.monitor --interval 10
 
 #### Results
 
-```
+```bash
 # Get the results of a subjective evaluation.
 # Results are stored in <directory>/<name>.
 # <directory> defaults to the current directory.
@@ -352,7 +371,7 @@ python -m reseval.results <name> --directory <directory>
 
 #### Pay
 
-```
+```bash
 # Pay participants
 python -m reseval.pay <name>
 ```
@@ -360,7 +379,7 @@ python -m reseval.pay <name>
 
 #### Destroy
 
-```
+```bash
 # Destroy the compute resources of a subjective evaluation (e.g., any cloud
 # storage, databases, or servers)
 python -m reseval.destroy <name>
@@ -373,7 +392,7 @@ python -m reseval.destroy <name> --force
 
 #### Extend
 
-```
+```bash
 # Add <participants> additional participants to a finished evaluation
 python -m reseval.extend <name> <participants>
 ```
@@ -394,7 +413,7 @@ only a single command.
 
 ### CLI
 
-```
+```bash
 # Local development
 python -m reseval <config> <directory> --local
 
@@ -408,7 +427,7 @@ python -m reseval <config> <directory> --production
 
 ### API
 
-```
+```python
 import reseval
 
 # Local development
@@ -426,7 +445,7 @@ reseval.run(config, directory, production=True)
 
 ### AWS S3
 
-To monitor, edit, or delete AWS S3 storage buckets, or see any costs, use the
+To monitor, edit, or delete AWS S3 storage buckets, or see storage costs, use the
 [AWS S3 console](https://s3.console.aws.amazon.com/s3).
 
 

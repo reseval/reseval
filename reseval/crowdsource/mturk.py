@@ -224,6 +224,7 @@ def pay(config, credentials):
             else:
                 bonus(config, credentials, result['assignment_id'])
 
+
 def progress(credentials):
     """Retrieve the number of participants that have taken the evaluation"""
     return len(assignments(credentials))

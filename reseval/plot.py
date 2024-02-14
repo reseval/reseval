@@ -29,7 +29,7 @@ def violin(results, file, yticks):
                 data[condition].extend(scores)
     keys = np.array(list(data.keys()))
     values = np.array(
-        [np.array(sorted(value), dtype=np.int) for value in data.values()])
+        [np.array(sorted(value), dtype=int) for value in data.values()])
 
     # Order data by average value
     means = np.nan_to_num([value.mean() for value in values])
@@ -80,8 +80,24 @@ def violin(results, file, yticks):
             color='#666666',
             alpha=.3)
 
+    # TEMPORARY
+    # label_map = {
+    #     'bitcrush': 'Low anchor',
+    #     'bottleneck': 'ASR bottleneck',
+    #     'w2v2fc': 'Charsiu',
+    #     'mel': 'Mels',
+    #     'encodec': 'EnCodec',
+    #     'w2v2fb': 'Wav2vec 2.0',
+    #     'original': 'Original',
+    # }
+
+
     # Add labels
-    ax.set_xticks(np.arange(1, len(keys) + 1), labels=keys)
+    ax.set_xticks(
+        np.arange(1, len(keys) + 1),
+        # labels=[label_map[key] for key in keys],
+        labels=keys,
+        fontsize=16)
     ax.set_xlim(0.25, len(keys) + 0.75)
 
     # Save figure

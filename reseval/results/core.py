@@ -70,6 +70,13 @@ def results(
     # Get condition names
     conditions = [condition['Condition'] for condition in conditions]
 
+    # TEMPORARY
+    # responses, residual = reseval.filter.anchors(
+    #     responses,
+    #     conditions,
+    #     'bitcrush',
+    #     'original')
+
     # Group results by file stems
     responses_by_stem = {}
     for response in responses:

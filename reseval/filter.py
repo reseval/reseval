@@ -11,13 +11,20 @@ def anchors(responses, conditions, low_anchor, high_anchor):
         if scores[low_index] > scores[high_index]:
             blacklist.add(response['Participant'])
 
-    # Filter out bad participants
-    filtered = []
+    # Split responses using blacklist
+    filtered, residual = [], []
     for response in responses:
-        if response['Participant'] not in blacklist:
-            filtered.append(response)
+        (
+            residual if response['Participant'] in blacklist else filtered
+        ).append(response)
 
-    return filtered
+    # Print the impact of the filter
+    participants = set(response['Participant'] for response in responses)
+    print(
+        f'Filtered out {len(blacklist)} of the {len(participants)} '
+        'participants that ranked the low-anchor above the high-anchor')
+
+    return filtered, residual
 
 
 def count(responses, num):

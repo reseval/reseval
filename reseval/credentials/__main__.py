@@ -20,8 +20,7 @@ def parse_args():
     parser.add_argument('--heroku_api_key', help='The API key for Heroku')
     parser.add_argument(
         '--mysql_local_user',
-        help='The username of the local MySQL database',
-        default='root')
+        help='The username of the local MySQL database')
     parser.add_argument(
         '--mysql_local_password',
         help='The corresponding password of the local MySQL database')
