@@ -1,6 +1,7 @@
 import json
 import os
 import requests
+import string
 import time
 
 import boto3
@@ -36,19 +37,23 @@ def create(name):
             }
         ]
     )['SecurityGroups']
-    group_ids = [group['GroupId'] for group in security_groups]
 
     # Add ingress rules for local IP and MySQL
     local_ip = json.loads(
         requests.get('https://api.seeip.org/jsonip?').text
     )['ip']
+    group_ids = [
+        group['GroupId'] for group in security_groups
+        if any(tag['Value'] == 'AWSEBSecurityGroup' for tag in group['Tags'])]
     for group_id in group_ids:
         client.authorize_security_group_ingress(
             GroupId=group_id,
             IpPermissions=[
                 {
-                    'IpProtocol': '-1',
-                    'IpRanges': [{'CidrIp': f'{local_ip}/32'}]
+                    'IpProtocol': 'tcp',
+                    'IpRanges': [{'CidrIp': f'{local_ip}/32'}],
+                    'FromPort': 22,
+                    'ToPort': 22
                 },
                 {
                     'IpProtocol': 'tcp',
@@ -62,6 +67,14 @@ def create(name):
     # Connect to AWS RDS
     client = connect()
 
+    # Create random username and password so our database is harder to access
+    random_user = (
+        reseval.random.string(1, string.ascii_lowercase) +
+        reseval.random.string(15))
+    random_pass = (
+        reseval.random.string(1, string.ascii_lowercase) +
+        reseval.random.string(31))
+
     # Create database
     response = client.create_db_instance(
         DBName=unique,
@@ -69,8 +82,8 @@ def create(name):
         DBInstanceClass='db.t2.micro',
         AllocatedStorage=64,
         Engine='mysql',
-        MasterUsername='root',
-        MasterUserPassword='password',
+        MasterUsername=random_user,
+        MasterUserPassword=random_pass,
         VpcSecurityGroupIds=group_ids,
         PubliclyAccessible=True)['DBInstance']
 
@@ -83,13 +96,13 @@ def create(name):
     credentials = {
         'MYSQL_DBNAME': unique,
         'MYSQL_HOST': response['Endpoint']['Address'],
-        'MYSQL_USER': 'root',
-        'MYSQL_PASS': 'password',
+        'MYSQL_USER': random_user,
+        'MYSQL_PASS': random_pass,
         'RDS_HOSTNAME': response['Endpoint']['Address'],
         'RDS_PORT': '3306',
         'RDS_DB_NAME': unique,
-        'RDS_USERNAME': 'root',
-        'RDS_PASSWORD': 'password'}
+        'RDS_USERNAME': random_user,
+        'RDS_PASSWORD': random_pass}
 
     return credentials
 
@@ -124,3 +137,11 @@ def connect():
         aws_access_key_id=os.environ['AWSAccessKeyId'],
         aws_secret_access_key=os.environ['AWSSecretKey']
     ).client('rds', region_name='us-east-1')
+
+
+def has_tag(group, tag):
+    """Check if security group description contains a specified tag"""
+    for tag in group['Tags']:
+        if tag['Value'] == tag:
+            return True
+    return False
