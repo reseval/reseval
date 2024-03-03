@@ -47,4 +47,7 @@ def count(responses, num):
         if response['Participant'] not in blacklist:
             filtered.append(response)
 
+    # Print the impact of the filter
+    print(f'Filtered out {len(blacklist)} participants: {blacklist}')
+
     return filtered

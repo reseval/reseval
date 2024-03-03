@@ -77,6 +77,11 @@ def results(
     #     'bitcrush',
     #     'original')
 
+    # TEMPORARY - filter out incomplete evaluations
+    # responses = reseval.filter.count(
+    #     responses,
+    #     config['samples_per_participant'])
+
     # Group results by file stems
     responses_by_stem = {}
     for response in responses:

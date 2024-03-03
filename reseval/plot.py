@@ -34,6 +34,9 @@ def violin(results, file, yticks):
     # Order data by average value
     means = np.nan_to_num([value.mean() for value in values])
 
+    # TEMPORARY
+    # print([(key, mean) for key, mean in zip(keys, means)])
+
     # Get medians
     _, medians, _ = np.percentile(
         values,
@@ -90,7 +93,6 @@ def violin(results, file, yticks):
     #     'w2v2fb': 'Wav2vec 2.0',
     #     'original': 'Original',
     # }
-
 
     # Add labels
     ax.set_xticks(
